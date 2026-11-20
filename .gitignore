@@ -1,0 +1,13 @@
+﻿# OS / editor junk
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+
+# Tooling
+.vscode/
+.idea/
+node_modules/
+
+# Local preview artifacts
+*.log

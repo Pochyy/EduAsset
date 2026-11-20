@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Central · Reorder Alerts</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
+a{color:#7B1113}a:hover{color:#5A0F14}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+@keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <dc-import name="TopBar" portal="central" hint-size="100%,72px"></dc-import>
+  <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+      <dc-import name="Sidebar" portal="central" active="C-ReorderAlerts" hint-size="100%,900px"></dc-import>
+    </div>
+    <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
+      <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 1 · Demand</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Reorder Alerts</span></nav>
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 1 · PREDICTIVE CONSUMABLE DEMAND</p>
+    <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Reorder lead-time &amp; depletion alerts</h1>
+    <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">BR = units consumed in the last 14 days ÷ 14 · D = remaining stock ÷ BR · alert when D ≤ L<sub>procure</sub> + S<sub>buffer</sub></p>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+    <button type="button" onClick="{{recalc}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8M21 3v5h-5"></path></svg> Recalculate</button>
+  </div>
+</header>
+
+<section aria-label="Summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 16px">
+  <div style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 18px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #1F1A1A"><span style="width: 32px; height: 4px; border-radius: 2px; background: #F2B705"></span><span style="font-size: 13px; color: #6B6466">Items at / below trigger</span><span style="font-size: 30px; font-weight: 700; color: #7B1113; line-height: 1.1">{{alertCount}}</span></div>
+  <div style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 18px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #1F1A1A"><span style="width: 32px; height: 4px; border-radius: 2px; background: #F2B705"></span><span style="font-size: 13px; color: #6B6466">Purchase Requisition Forms drafted</span><span style="font-size: 30px; font-weight: 700; color: #7B1113; line-height: 1.1">{{alertCount}}</span></div>
+  <div style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 18px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #1F1A1A"><span style="width: 32px; height: 4px; border-radius: 2px; background: #F2B705"></span><span style="font-size: 13px; color: #6B6466">Consumables tracked</span><span style="font-size: 30px; font-weight: 700; color: #7B1113; line-height: 1.1">{{total}}</span></div>
+  <div style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 18px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #1F1A1A"><span style="width: 32px; height: 4px; border-radius: 2px; background: #F2B705"></span><span style="font-size: 13px; color: #6B6466">Data source</span><span style="font-size: 15px; font-weight: 600; color: #1F1A1A">Verified QR issuance scans</span></div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+  <div role="tablist" aria-label="Filter items" style="display: flex; gap: 6px; flex-wrap: wrap">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+      <button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}} <span style="{{t.countStyle}}">{{t.count}}</span></button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+    <div aria-busy="true" aria-label="Recalculating forecast" style="display: flex; flex-direction: column; gap: 14px; padding: 8px 0">
+      <span style="height: 14px; border-radius: 7px; background: linear-gradient(90deg, #EFEAE9 0%, #F8F5F4 50%, #EFEAE9 100%); background-size: 200% 100%; animation: eaShimmer 1.2s infinite; width: 40%"></span><span style="height: 14px; border-radius: 7px; background: linear-gradient(90deg, #EFEAE9 0%, #F8F5F4 50%, #EFEAE9 100%); background-size: 200% 100%; animation: eaShimmer 1.2s infinite; width: 90%"></span><span style="height: 14px; border-radius: 7px; background: linear-gradient(90deg, #EFEAE9 0%, #F8F5F4 50%, #EFEAE9 100%); background-size: 200% 100%; animation: eaShimmer 1.2s infinite; width: 85%"></span><span style="height: 14px; border-radius: 7px; background: linear-gradient(90deg, #EFEAE9 0%, #F8F5F4 50%, #EFEAE9 100%); background-size: 200% 100%; animation: eaShimmer 1.2s infinite; width: 70%"></span>
+      <span style="font-size: 12px; color: #6B6466">Recomputing burn rates from the last 14 days of issuance scans…</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{showTable}}" hint-placeholder-val="{{true}}">
+    <div style="overflow-x: auto; border: 1px solid #DDD6D5; border-radius: 10px; background: #FFFFFF">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; min-width: 880px">
+        <thead><tr>
+          <th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Item</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Stock</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">BR / day</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">D (days)</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">L + S</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Status</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap"><span style="position: absolute; left: -9999px">Actions</span></th>
+        </tr></thead>
+        <tbody>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+            <tr>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">{{r.name}}</span><span style="font-size: 12px; color: #6B6466">{{r.code}} · {{r.consumed}} used in 14 days</span></span></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.stock}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.br}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; font-weight: 600">{{r.d}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.ls}}</td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="{{r.badgeStyle}}">{{r.status}}</span></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; text-align: right; white-space: nowrap">
+                <sc-if value="{{r.alert}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.openPR}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"></path></svg> View PR</button></sc-if>
+                <button type="button" onClick="{{r.openSettings}}" aria-label="{{r.settingsLabel}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings</button>
+              </td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </sc-if>
+  <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 16px; text-align: center">
+      <span style="width: 56px; height: 56px; border-radius: 28px; background: #E6F4EA; color: #1E6B24; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <strong style="font-size: 16px">No items in this view</strong>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466; max-width: 360px">Every consumable has more days of stock than its procurement lead time plus safety buffer.</p>
+    </div>
+  </sc-if>
+</section>
+
+<sc-if value="{{pr}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
+    <div role="dialog" aria-modal="true" aria-labelledby="pr-title" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 16px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(31, 10, 10, 0.25); max-width: 620px">
+      <div style="display: flex; justify-content: space-between; gap: 12px; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 4px"><p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">PRE-GENERATED · AUDIT-READY</p><h2 id="pr-title" style="margin: 0; font-size: 20px; font-weight: 700">Purchase Requisition Form</h2></div>
+        <button type="button" onClick="{{closePR}}" aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: #F6F3F2; cursor: pointer; font-size: 20px">×</button>
+      </div>
+      <div style="border: 1px solid #DDD6D5; border-radius: 12px; overflow: hidden">
+        <div style="background: #7B1113; color: #FFFFFF; padding: 12px 16px; display: flex; justify-content: space-between; font-size: 13px"><strong>CIT Property Office · Requisition</strong><span>{{prNo}}</span></div>
+        <dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0">
+          <sc-for list="{{prFields}}" as="f" hint-placeholder-count="8">
+            <div style="padding: 10px 16px; border-top: 1px solid #EFEAE9"><dt style="font-size: 11px; font-weight: 600; color: #6B6466">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div>
+          </sc-for>
+        </dl>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">Requested quantity covers lead time + safety buffer at the current burn rate. The form follows the normal CIT purchasing approval route (14–21 days).</span></div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
+        <button type="button" onClick="{{closePR}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Close</button>
+        <button type="button" onClick="{{downloadPR}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg> Download PR form</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{settings}}" hint-placeholder-val="{{false}}">
+  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
+    <form role="dialog" aria-modal="true" aria-labelledby="st-title" onSubmit="{{saveSettings}}" novalidate="" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 16px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(31, 10, 10, 0.25)">
+      <div style="display: flex; flex-direction: column; gap: 4px"><h2 id="st-title" style="margin: 0; font-size: 20px; font-weight: 700">Forecast settings</h2><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">{{settingsName}}</p></div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="lp" style="font-size: 12px; font-weight: 600; color: #6B6466">Procurement lead time, L<sub>procure</sub> (days)</label>
+        <input id="lp" type="number" inputmode="numeric" value="{{fL}}" onInput="{{onL}}" style="{{lStyle}}">
+        <span style="font-size: 12px; color: #6B6466">Standard CIT purchasing approval is 14–21 calendar days.</span>
+        <sc-if value="{{lErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B71C1C">{{lErr}}</span></sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="sb" style="font-size: 12px; font-weight: 600; color: #6B6466">Safety buffer, S<sub>buffer</sub> (days of average demand)</label>
+        <input id="sb" type="number" inputmode="numeric" value="{{fS}}" onInput="{{onS}}" style="{{sStyle}}">
+        <sc-if value="{{sErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B71C1C">{{sErr}}</span></sc-if>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><span style="font-size: 13px">New trigger: alert when D ≤ <strong>{{previewTrigger}}</strong> days. Current D = {{settingsD}} days.</span></div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
+        <button type="button" onClick="{{closeSettings}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Cancel</button>
+        <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Save settings</button>
+      </div>
+    </form>
+  </div>
+</sc-if>
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+  <div role="status" aria-live="polite" style="{{toastStyle}}">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+  </div>
+</sc-if>
+
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1150}}'>
+
+var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
+function eaToast(self) {
+  var t = self.state.toast;
+  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
+  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
+}
+function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { tab: 'all', loading: false, pr: null, edit: null, fL: '', fS: '', tried: false, toast: null,
+      items: [
+        { id: 'tnr', name: 'HP LaserJet Toner', code: 'W9004MC', stock: 2, consumed: 3, L: 21, S: 7 },
+        { id: 'a4', name: 'Bond paper A4 (ream)', code: 'BP-A4', stock: 40, consumed: 22, L: 21, S: 7 },
+        { id: 'ctn', name: 'Color toner (cyan)', code: 'W9001MC', stock: 4, consumed: 2, L: 21, S: 7 },
+        { id: 'pla', name: 'PLA filament spool 1 kg', code: 'FIL-PLA', stock: 12, consumed: 4, L: 14, S: 7 },
+        { id: 'drm', name: 'Imaging drum unit', code: 'W1104A', stock: 3, consumed: 1, L: 21, S: 7 }
+      ] };
+  }
+  calc(it) {
+    const br = it.consumed / 14; const d = br > 0 ? it.stock / br : Infinity; const trig = it.L + it.S;
+    return { br, d, trig, alert: d <= trig, need: Math.max(0, Math.ceil(br * trig - it.stock)) };
+  }
+  renderVals() {
+    const s = this.state;
+    const all = s.items.map(it => ({ it, c: this.calc(it) }));
+    const alerts = all.filter(x => x.c.alert);
+    const pick = s.tab === 'alert' ? alerts : s.tab === 'ok' ? all.filter(x => !x.c.alert) : all;
+    const rows = pick.map(({ it, c }) => ({
+      name: it.name, code: it.code, consumed: it.consumed, stock: it.stock, br: c.br.toFixed(2), d: isFinite(c.d) ? c.d.toFixed(1) : '—', ls: c.trig + ' d',
+      alert: c.alert, status: c.alert ? 'ALERT · PR DRAFTED' : 'OK', badgeStyle: eaBadge(c.alert ? (c.d < 14 ? 'danger' : 'warning') : 'success'),
+      settingsLabel: 'Forecast settings for ' + it.name,
+      openPR: () => this.setState({ pr: it.id }), openSettings: () => this.setState({ edit: it.id, fL: String(it.L), fS: String(it.S), tried: false })
+    }));
+    const tabDef = [['all', 'All', all.length], ['alert', 'At / below trigger', alerts.length], ['ok', 'OK', all.length - alerts.length]];
+    const tabs = tabDef.map(([id, label, count]) => ({ label, count, sel: s.tab === id ? 'true' : 'false', pick: () => this.setState({ tab: id }),
+      style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5'),
+      countStyle: 'padding: 1px 8px; border-radius: 999px; font-size: 11px; ' + (s.tab === id ? 'background: #F2B705; color: #5A0F14' : 'background: #F0ECEB; color: #4F494A') }));
+    const prItem = s.items.find(x => x.id === s.pr); const prc = prItem ? this.calc(prItem) : null;
+    const ed = s.items.find(x => x.id === s.edit); const edc = ed ? this.calc(ed) : null;
+    const Ln = Number(s.fL), Sn = Number(s.fS);
+    const lErr = s.tried && !(Number.isInteger(Ln) && Ln >= 14 && Ln <= 21) ? 'Enter a whole number from 14 to 21.' : '';
+    const sErr = s.tried && !(Number.isInteger(Sn) && Sn >= 0 && Sn <= 30) ? 'Enter a whole number from 0 to 30.' : '';
+    const fld = e => 'min-height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; border: 1px solid ' + (e ? '#C62828' : '#DDD6D5');
+    return {
+      ...eaToast(this), loading: s.loading, showTable: !s.loading && rows.length > 0, empty: !s.loading && rows.length === 0, rows, tabs,
+      alertCount: alerts.length, total: all.length,
+      recalc: () => { this.setState({ loading: true }); setTimeout(() => { this.setState({ loading: false }); eaShow(this, 'info', 'Forecast recalculated', 'Burn rates use issuance scans from the last 14 days.'); }, 1400); },
+      pr: !!prItem, closePR: () => this.setState({ pr: null }),
+      prNo: prItem ? 'PR-2026-' + (prItem.id === 'tnr' ? '0412' : prItem.id === 'a4' ? '0413' : '0414') : '',
+      prFields: prItem ? [
+        { k: 'Item', v: prItem.name + ' (' + prItem.code + ')' }, { k: 'Requesting unit', v: 'WildCat Innovation Labs' },
+        { k: 'Current stock', v: String(prItem.stock) }, { k: 'Burn rate (14-day SMA)', v: prc.br.toFixed(2) + ' / day' },
+        { k: 'Days to depletion', v: prc.d.toFixed(1) + ' days' }, { k: 'Trigger (L + S)', v: prc.trig + ' days' },
+        { k: 'Projected demand over L + S', v: Math.ceil(prc.br * prc.trig) + ' units' }, { k: 'Requested quantity', v: Math.max(1, prc.need) + ' units' }
+      ] : [],
+      downloadPR: () => { this.setState({ pr: null }); eaShow(this, 'info', 'Download prepared', 'Prototype: the PDF export connects to the backend in the build.'); },
+      settings: !!ed, settingsName: ed ? ed.name + ' · ' + ed.code : '', settingsD: edc ? edc.d.toFixed(1) : '',
+      fL: s.fL, fS: s.fS, lErr, sErr, lStyle: fld(lErr), sStyle: fld(sErr), previewTrigger: (Ln || 0) + (Sn || 0),
+      onL: e => this.setState({ fL: e.target.value }), onS: e => this.setState({ fS: e.target.value }),
+      closeSettings: () => this.setState({ edit: null }),
+      saveSettings: (e) => { e.preventDefault();
+        const ok = Number.isInteger(Ln) && Ln >= 14 && Ln <= 21 && Number.isInteger(Sn) && Sn >= 0 && Sn <= 30;
+        if (!ok) { this.setState({ tried: true }); return; }
+        this.setState({ items: s.items.map(x => x.id === s.edit ? { ...x, L: Ln, S: Sn } : x), edit: null, tried: false });
+        eaShow(this, 'success', 'Forecast settings updated', 'Status recalculated with the new trigger of ' + (Ln + Sn) + ' days.'); }
+    };
+  }
+}
+</script>
+</body>
+</html>
