@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Turnover Scan</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Turnover Scan</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 2 · 1-TO-1 TURNOVER</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Turnover scan</h1>
@@ -57,7 +57,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px"><label for="id" style="font-size: 12px; font-weight: 600; color: #6B6466">Or type the asset ID</label><input id="id" value="{{input}}" onInput="{{onInput}}" placeholder="e.g. TNR-WIL-2026-001" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace"></div>
       <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
     </form>
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Demo scans:</span><button type="button" onClick="{{demoRight}}" style="min-height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.active}}</button><button type="button" onClick="{{demoWrong}}" style="min-height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.wrong}}</button></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Demo scans:</span><button type="button" onClick="{{demoRight}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.active}}</button><button type="button" onClick="{{demoWrong}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.wrong}}</button></div>
   </section>
   <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
     <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Scan result</h2>
@@ -68,16 +68,30 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       </dl>
       <span style="{{resultBadge}}">{{resultLabel}}</span>
     </sc-if>
-    <sc-if value="{{matched}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">The Central Property Custodian now verifies the turnover and approves the release. You will see {{m.newUnit}} become ACTIVE on {{m.id}}.</p></sc-if>
+    <sc-if value="{{matched}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">The Central Property Custodian now verifies the turnover and approves the release. You will see {{m.newUnit}} become ISSUED / IN_USE and active on {{m.id}}.</p></sc-if>
     <sc-if value="{{mismatch}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; color: #B71C1C; line-height: 1.5">This is not the unit active on {{m.id}}. Issuance stays locked and the scan was recorded in the audit log. Find the spent unit that was in the machine and scan it.</p></sc-if>
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><sc-if value="{{showResult}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Scan again</button></sc-if><a href="L-Dashboard.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Back to dashboard</a></div>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><sc-if value="{{showResult}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Scan again</button></sc-if><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Back to dashboard</a></div>
   </section>
 </div>
+<sc-if value="{{hasLog}}" hint-placeholder-val="{{false}}">
+  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Scan audit trail</h2>
+    <sc-for list="{{log}}" as="l" hint-placeholder-count="2">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #EFEAE9; border-radius: 10px; font-size: 13px">
+        <strong style="font-family: ui-monospace, Menlo, monospace">{{l.id}}</strong>
+        <span style="color: #6B6466">{{l.machine}}</span>
+        <span style="{{l.badgeStyle}}">{{l.result}}</span>
+        <span style="margin-left: auto; color: #6B6466">{{l.when}}</span>
+      </div>
+    </sc-for>
+    <span style="font-size: 12px; color: #6B6466">Every attempt is kept, including mismatches, with the account and time.</span>
+  </section>
+</sc-if>
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -101,13 +115,15 @@ function eaToast(self) {
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
 
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { machine: 'prn', input: '', result: null, toast: null }; }
+  constructor(p) { super(p); this.state = { machine: 'prn', input: '', result: null, log: [], toast: null }; }
   renderVals() {
     const s = this.state;
     const M = { prn: { id: 'WIL-PRN-01', active: 'TNR-WIL-2026-001', newUnit: 'TNR-WIL-2026-002', wrong: 'TNR-WIL-2026-003' }, '3dp': { id: 'WIL-3DP-001', active: 'FIL-WIL-2026-014', newUnit: 'FIL-WIL-2026-015', wrong: 'FIL-WIL-2026-009' } };
     const m = M[s.machine];
     const check = (raw) => { const id = raw.trim().toUpperCase(); if (!id) return;
-      const ok = id === m.active; this.setState({ result: { id, ok }, input: '' });
+      const ok = id === m.active;
+      const entry = { id, machine: m.id, when: 'Just now · Lab Assistant', ok, result: ok ? 'RETURNED_EMPTY' : 'MISMATCH · LOGGED' };
+      this.setState({ result: { id, ok }, input: '', log: [entry, ...s.log] });
       if (ok) eaShow(this, 'success', id + ' returned empty', 'Turnover recorded. Waiting for the custodian to release ' + m.newUnit + '.');
       else eaShow(this, 'error', 'Scan does not match', id + ' is not active on ' + m.id + '. Issuance stays locked.'); };
     const r = s.result;
@@ -124,6 +140,7 @@ class Component extends DCLogic {
       idle: !r, showResult: !!r, matched: state === 'ok', mismatch: state === 'bad',
       resultRows: r ? [{ k: 'Scanned', v: r.id }, { k: 'Expected', v: m.active }, { k: 'Status', v: r.ok ? 'RETURNED_EMPTY' : 'Unchanged' }] : [],
       resultLabel: r && r.ok ? 'VERIFIED MATCH' : 'MISMATCH · LOGGED', resultBadge: eaBadge(r && r.ok ? 'success' : 'danger'),
+      hasLog: s.log.length > 0, log: s.log.map(l => ({ ...l, badgeStyle: eaBadge(l.ok ? 'success' : 'danger') })),
       reset: () => this.setState({ result: null })
     };
   }

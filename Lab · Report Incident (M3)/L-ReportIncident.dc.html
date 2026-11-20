@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Report Incident</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Report Incident</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · INCIDENT REPORTING</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Report a defect, jam or broken item</h1>
@@ -68,7 +68,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <li>A broken item is inspected by staff. If it is repairable and BER is below 50%, it goes <strong>UNDER_REPAIR</strong> and returns with the same asset ID.</li>
       <li>Otherwise it is <strong>CONDEMNED / BER</strong> and replaced through a verified replacement.</li>
     </ol>
-    <a href="L-WorkOrders.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; padding: 0">Track work orders <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
+    <a href="../Lab%20%C2%B7%20Work%20Orders%20%28M3%29/L-WorkOrders.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; padding: 0">Track work orders <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
   </section>
 </div>
 
@@ -85,7 +85,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -112,7 +112,7 @@ class Component extends DCLogic {
   constructor(p) { super(p); this.state = { asset: '', type: '', recurring: false, desc: '', photo: false, tried: false, confirm: false, toast: null }; }
   renderVals() {
     const s = this.state;
-    const known = { 'WIL-PRN-02': 'HP LaserJet Pro · WIL Lab 2 · OPERATIONAL', 'WIL-PRN-01': 'HP LaserJet MFP · WIL Lab 3 · OPERATIONAL', 'KB-0031': 'Keyboard · WIL Lab 3 · IN_USE', 'WIL-3DP-001': '3D printer · WIL Lab 1 · OPERATIONAL' };
+    const known = { 'WIL-PRN-02': 'HP LaserJet Pro · WIL Lab 2 · OPERATIONAL', 'WIL-PRN-01': 'HP LaserJet MFP · WIL Lab 3 · OPERATIONAL', 'KB-0031': 'Keyboard · WIL Lab 3 · ISSUED / IN_USE', 'WIL-3DP-001': '3D printer · WIL Lab 1 · OPERATIONAL' };
     const id = s.asset.trim().toUpperCase();
     const info = known[id];
     const assetErr = s.tried && !info ? (id ? id + ' is not registered in your lab. Check the label or scan again.' : 'Scan or type the asset ID.') : '';
@@ -123,7 +123,7 @@ class Component extends DCLogic {
     const types = [['defect', 'Defect'], ['jam', 'Jam'], ['broken', 'Broken']].map(([v, label]) => ({ label, on: s.type === v ? 'true' : 'false', pick: () => this.setState({ type: v }),
       style: 'min-height: 44px; padding: 0 18px; border-radius: 10px; cursor: pointer; font: 600 14px Inter, sans-serif; ' + (s.type === v ? 'background: #FBF4F4; color: #7B1113; border: 2px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid ' + (typeErr ? '#C62828' : '#DDD6D5')) }));
     const valid = !!info && !!s.type && s.desc.trim().length >= 10 && s.photo;
-    const outcome = s.type === 'broken' ? 'Inspection by staff (repair or retire)' : s.recurring ? 'NEEDS_MAINTENANCE + service ticket' : 'Logged in asset history';
+    const outcome = s.recurring ? 'NEEDS_MAINTENANCE + service ticket' : s.type === 'broken' ? 'Inspection by staff (repair or retire)' : 'Logged in asset history';
     return {
       ...eaToast(this), asset: s.asset, assetInfo: info ? '✓ ' + info : '', assetErr, assetStyle: fld(assetErr) + '; font-family: ui-monospace, Menlo, monospace',
       onAsset: e => this.setState({ asset: e.target.value }), scanDemo: () => this.setState({ asset: 'WIL-PRN-02' }),
@@ -135,7 +135,7 @@ class Component extends DCLogic {
       confirm: s.confirm, cancel: () => this.setState({ confirm: false }),
       summary: [{ k: 'Asset', v: id }, { k: 'Type', v: s.type + (s.recurring ? ' (recurring)' : '') }, { k: 'Photo', v: s.photo ? 'Attached' : '—' }, { k: 'Expected outcome', v: outcome }],
       send: () => { this.setState({ confirm: false, asset: '', type: '', recurring: false, desc: '', photo: false, tried: false });
-        eaShow(this, 'success', 'Report submitted', s.type === 'broken' ? 'Staff will inspect ' + id + '. Follow it in Work Orders.' : s.recurring ? id + ' set to NEEDS_MAINTENANCE; service ticket WO-0032 dispatched.' : 'Logged in the history of ' + id + '.'); }
+        eaShow(this, 'success', 'Report submitted', s.recurring ? id + ' set to NEEDS_MAINTENANCE; service ticket WO-0032 dispatched.' : s.type === 'broken' ? 'Staff will inspect ' + id + '. Follow it in Work Orders.' : 'Logged in the history of ' + id + '.'); }
     };
   }
 }

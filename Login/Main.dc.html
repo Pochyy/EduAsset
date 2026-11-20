@@ -93,7 +93,7 @@ class Component extends DCLogic {
       portals, email: s.email, pw: s.pw, emailErr, pwErr, ready: s.ready,
       emailStyle: field(emailErr), pwStyle: field(pwErr),
       portalName: s.portal === 'central' ? 'Central Property Custodian Portal' : 'WIL Lab Custodian Portal',
-      portalHref: s.portal === 'central' ? 'C-Dashboard.dc.html' : 'L-Dashboard.dc.html',
+      portalHref: s.portal === 'central' ? '../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html' : '../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html',
       onEmail: (e) => this.setState({ email: e.target.value, ready: false }),
       onPw: (e) => this.setState({ pw: e.target.value, ready: false }),
       submit: (e) => { e.preventDefault(); const ok = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email) && s.pw.length >= 8; this.setState({ tried: true, ready: ok }); }

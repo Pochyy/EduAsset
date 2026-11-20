@@ -53,7 +53,7 @@ class Component extends DCLogic {
       { label: 'OVERVIEW', items: [['C-Dashboard', 'Dashboard', 'dashboard']] },
       { label: 'MODULE 1 · DEMAND', items: [['C-ReorderAlerts', 'Reorder Alerts', 'bell', 3], ['C-RequisitionReview', 'Requisition Review', 'clipboard', 2]] },
       { label: 'MODULE 2 · TURNOVER', items: [['C-TurnoverApproval', 'Turnover Approval', 'repeat', 1]] },
-      { label: 'MODULE 3 · UNITS & ASSETS', items: [['C-MasterLedger', 'Master Ledger', 'ledger'], ['C-RepairBER', 'Repair & BER', 'wrench'], ['C-Replacement', 'Replacements', 'swap'], ['C-Reconciliation', 'Reconciliation', 'scan'], ['C-AuditQueue', 'Audit Queue', 'shield', 4]] },
+      { label: 'MODULE 3 · UNITS & ASSETS', items: [['C-MasterLedger', 'Master Ledger', 'ledger'], ['C-RepairBER', 'Repair & BER', 'wrench'], ['C-Replacement', 'Replacements', 'swap'], ['C-Reconciliation', 'Reconciliation', 'scan'], ['C-AuditQueue', 'Audit Queue', 'shield', 8]] },
       { label: 'MODULE 4 · INTAKE', items: [['C-ReceiveItems', 'Receive New Items', 'pkg']] }
     ];
     const labNav = [
@@ -61,12 +61,30 @@ class Component extends DCLogic {
       { label: 'SUPPLIES', items: [['L-Requisition', 'Supply Requisition', 'clipboard'], ['L-TurnoverScan', 'Turnover Scan', 'repeat']] },
       { label: 'EQUIPMENT', items: [['L-ReportIncident', 'Report Incident', 'alert'], ['L-LabInventory', 'Lab Inventory', 'boxes'], ['L-WorkOrders', 'Work Orders', 'checks', 2]] }
     ];
+    const folderOf = {
+      'C-Dashboard': 'Central · Dashboard',
+      'C-ReorderAlerts': 'Central · Reorder Alerts (M1)',
+      'C-RequisitionReview': 'Central · Requisition Review (M1)',
+      'C-TurnoverApproval': 'Central · Turnover Approval (M2)',
+      'C-MasterLedger': 'Central · Master Ledger (M3)',
+      'C-RepairBER': 'Central · Repair & BER (M3)',
+      'C-Replacement': 'Central · Verified Replacement (M3)',
+      'C-Reconciliation': 'Central · Reconciliation (M3)',
+      'C-AuditQueue': 'Central · Audit Queue (M3)',
+      'C-ReceiveItems': 'Central · Receive New Items (M4)',
+      'L-Dashboard': 'Lab · Dashboard',
+      'L-Requisition': 'Lab · Supply Requisition (M1)',
+      'L-TurnoverScan': 'Lab · Turnover Scan (M2)',
+      'L-ReportIncident': 'Lab · Report Incident (M3)',
+      'L-LabInventory': 'Lab · Lab Inventory (M2 M3)',
+      'L-WorkOrders': 'Lab · Work Orders (M3)'
+    };
     const groups = (lab ? labNav : central).map(g => ({
       label: g.label,
       items: g.items.map(([id, label, icon, count]) => {
         const on = id === active;
         return {
-          href: id + '.dc.html', label, d: I[icon], count: count || '', current: on ? 'page' : 'false',
+          href: '../' + encodeURIComponent(folderOf[id]) + '/' + id + '.dc.html', label, d: I[icon], count: count || '', current: on ? 'page' : 'false',
           iconColor: on ? '#F2B705' : '#F8D46A',
           style: 'position: relative; display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; text-decoration: none; font-size: 14px; ' + (on ? 'background: #5A0F14; color: #FFFFFF; font-weight: 600; box-shadow: inset 4px 0 0 #F2B705' : 'color: #FFF4D1; font-weight: 500')
         };

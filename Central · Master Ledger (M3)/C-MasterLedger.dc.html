@@ -28,14 +28,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Master Ledger</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Master Ledger</span></nav>
 <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
   <div style="display: flex; flex-direction: column; gap: 6px">
     <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · UNIT LIFECYCLE INTEGRITY</p>
     <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Master property &amp; supply ledger</h1>
     <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">One unit, one record, one QR code. Inventory status and health state are tracked separately.</p>
   </div>
-  <a href="C-ReceiveItems.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg> Receive new items</a>
+  <a href="../Central%20%C2%B7%20Receive%20New%20Items%20%28M4%29/C-ReceiveItems.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg> Receive new items</a>
 </header>
 
 <section aria-label="Filters" style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; align-items: end">
@@ -95,12 +95,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <svg width="112" height="112" viewBox="0 0 25 25" role="img" aria-label="{{qrLabel}}" style="flex: 0 0 auto; background: #FFFFFF"><path d="{{qr}}" fill="#1F1A1A"></path></svg>
         <div style="display: flex; flex-direction: column; gap: 8px">
           <span style="font-size: 12px; color: #6B6466; line-height: 1.5">The QR code only encodes the asset ID. Status is always decided by the database.</span>
-          <button type="button" onClick="{{reprint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 40px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"></path></svg> Reprint QR label</button>
+          <button type="button" onClick="{{reprint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"></path></svg> Reprint QR label</button>
         </div>
       </div>
       <dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px">
         <sc-for list="{{fields}}" as="f" hint-placeholder-count="8"><div><dt style="font-size: 12px; font-weight: 600; color: #6B6466">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div></sc-for>
       </dl>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #DDD6D5; border-radius: 12px">
+        <label for="ser" style="font-size: 12px; font-weight: 600; color: #6B6466">Edit manufacturer serial (optional)</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <input id="ser" value="{{serialDraft}}" onInput="{{onSerial}}" placeholder="e.g. CR3V3P-88120" style="flex: 1 1 180px; min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; box-sizing: border-box">
+          <button type="button" onClick="{{saveSerial}}" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer">Save serial</button>
+        </div>
+        <span style="font-size: 12px; line-height: 1.5; color: #6B6466">Optional. Changing the serial does not change the asset ID or QR code.</span>
+      </div>
       <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #DDD6D5; border-radius: 12px">
         <label style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600"><input type="checkbox" checked="{{oneToOne}}" onChange="{{toggleOne}}" style="width: 20px; height: 20px; accent-color: #7B1113"><span>Require 1-to-1 Return</span><span style="{{oneBadge}}">{{oneLabel}}</span></label>
         <span style="font-size: 12px; line-height: 1.5; color: #6B6466">A new unit is released only after the spent unit is scanned and marked RETURNED_EMPTY. This is an item setting and applies to all units of {{u.item}}.</span>
@@ -114,8 +122,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         </ol>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
-        <sc-if value="{{u.durable}}" hint-placeholder-val="{{false}}"><a href="C-RepairBER.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Repair &amp; BER</a></sc-if>
-        <a href="C-Replacement.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Start replacement <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
+        <sc-if value="{{u.durable}}" hint-placeholder-val="{{false}}"><a href="../Central%20%C2%B7%20Repair%20%26%20BER%20%28M3%29/C-RepairBER.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Repair &amp; BER</a></sc-if>
+        <a href="../Central%20%C2%B7%20Verified%20Replacement%20%28M3%29/C-Replacement.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Start replacement <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
       </div>
     </aside>
   </div>
@@ -124,7 +132,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -148,7 +156,7 @@ function eaToast(self) {
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
 
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { q: '', cat: 'all', inv: 'all', open: null, toast: null, flags: { 'HP LaserJet Toner W9004MC': true }, flagLog: {} }; }
+  constructor(p) { super(p); this.state = { q: '', cat: 'all', inv: 'all', open: null, toast: null, flags: { 'HP LaserJet Toner W9004MC': true }, flagLog: {}, serials: {}, serialLog: {}, serialDraft: '' }; }
   qrPath(id) {
     let h = 2166136261; for (const ch of id) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
     const n = 25, cells = [];
@@ -163,23 +171,42 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const H = (e, m) => ({ e, m });
-    const units = [
-      { id: 'KB-0007', item: 'Keyboard (USB)', cat: 'Durable', loc: 'WIL workstation 5', inv: 'RETIRED', health: 'CONDEMNED / BER', dr: 'DR-071', serial: '—', machine: '—', history: [H('Received under DR-071', 'Jan 2025 · IN_STOCK'), H('Issued to WIL workstation 5', 'Feb 2025 · IN_USE'), H('Reported broken (photo attached), RR-0043 raised', 'Nov 17 · Lab Assistant'), H('Inspected: not repairable → CONDEMNED / BER', 'Nov 17 · Property Custodian')] },
-      { id: 'KB-0099', item: 'Keyboard (USB)', cat: 'Durable', loc: 'WIL workstation 2', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-090', serial: '—', machine: '—', history: [H('Received under DR-090', 'Mar 2025'), H('Issued to WIL workstation 2', 'Mar 2025'), H('Rejected as a replacement candidate (previously issued)', 'Nov 19 · System')] },
+    const rawUnits = [
+      { id: 'KB-0007', item: 'Keyboard (USB)', cat: 'Durable', loc: 'WIL workstation 5', inv: 'RETIRED', health: 'CONDEMNED / BER', dr: 'DR-071', serial: '—', machine: '—', history: [H('Received under DR-071', 'Jan 2025 · Property Custodian'), H('Issued to WIL workstation 5', 'Feb 2025 · Lab Assistant'), H('Reported broken (photo attached), RR-0043 raised', 'Nov 17 · Lab Assistant'), H('Inspected: not repairable → CONDEMNED / BER', 'Nov 17 · Property Custodian')] },
+      { id: 'KB-0099', item: 'Keyboard (USB)', cat: 'Durable', loc: 'WIL workstation 2', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-090', serial: '—', machine: '—', history: [H('Received under DR-090', 'Mar 2025 · Property Custodian'), H('Issued to WIL workstation 2', 'Mar 2025 · Lab Assistant'), H('Rejected as a replacement candidate (previously issued)', 'Nov 19 · System')] },
       { id: 'KB-0150', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-118', serial: '—', machine: '—', history: [H('Received under DR-118 (AI-assisted intake)', 'Nov 18 · Property Custodian')] },
       { id: 'KB-0152', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-118', serial: '—', machine: '—', history: [H('Received under DR-118 (AI-assisted intake)', 'Nov 18 · Property Custodian'), H('Selected for replacement RR-0043', 'Nov 19 · pending second approver')] },
-      { id: 'WIL-3DP-002', item: 'Creality Ender-3 V3 Plus', cat: 'Durable', loc: 'WIL Lab 1', inv: 'ISSUED / IN_USE', health: 'UNDER_REPAIR', dr: 'DR-044', serial: 'CR3V3P-88120', machine: '—', history: [H('Repair 1: extruder assembly ₱4,500 (16.0%)', 'Month 4 · approved'), H('Repair 2: mainboard and motor ₱6,000 (37.5%)', 'Month 9 · approved'), H('Quote ₱5,000 → BER 55.3%: maintenance blocked', 'Month 14 · awaiting condemnation')] },
-      { id: 'WIL-PRN-01', item: 'HP LaserJet MFP', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-012', serial: 'HPX-552901', machine: '—', history: [H('Registered and tagged', '2024'), H('Toner TNR-WIL-2026-001 linked', 'Oct 2026')] },
+      { id: 'WIL-3DP-002', item: 'Creality Ender-3 V3 Plus', cat: 'Durable', loc: 'WIL Lab 1', inv: 'ISSUED / IN_USE', health: 'UNDER_REPAIR', dr: 'DR-044', serial: 'CR3V3P-88120', machine: '—', history: [H('Repair 1: extruder assembly ₱4,500 (16.0%)', 'Month 4 · Property Custodian'), H('Repair 2: mainboard and motor ₱6,000 (37.5%)', 'Month 9 · Property Custodian'), H('Quote ₱5,000 → BER 55.3%: maintenance blocked', 'Month 14 · Property Custodian')] },
+      { id: 'WIL-PRN-01', item: 'HP LaserJet MFP', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-012', serial: 'HPX-552901', machine: '—', history: [H('Registered and tagged', '2024 · Property Custodian'), H('Toner TNR-WIL-2026-001 linked', 'Oct 2026 · Lab Assistant')] },
       { id: 'WIL-PRN-02', item: 'HP LaserJet Pro', cat: 'Durable', loc: 'WIL Lab 2', inv: 'ISSUED / IN_USE', health: 'NEEDS_MAINTENANCE', dr: 'DR-013', serial: 'HPX-552944', machine: '—', history: [H('Recurring jam reported', 'Nov 18 · Lab Assistant'), H('Service ticket WO-0031 dispatched', 'Nov 18 · System')] },
-      { id: 'TNR-WIL-2026-001', item: 'HP LaserJet Toner W9004MC', cat: 'Consumable', loc: 'WIL Lab 3', inv: 'RETURNED_EMPTY', health: '—', dr: 'DR-102', serial: '—', machine: 'WIL-PRN-01', history: [H('Issued to WIL-PRN-01', 'Oct 2026'), H('Scanned as RETURNED_EMPTY (turnover)', 'Nov 19 · Lab Assistant')] },
-      { id: 'TNR-WIL-2026-002', item: 'HP LaserJet Toner W9004MC', cat: 'Consumable', loc: 'Property storeroom', inv: 'IN_STOCK', health: '—', dr: 'DR-102', serial: '—', machine: 'WIL-PRN-01 (pending)', history: [H('Received under DR-102', 'Oct 2026'), H('Requested for WIL-PRN-01', 'Nov 19 · awaiting disbursement')] },
-      { id: 'BP-A4-0031', item: 'Bond paper A4 (ream)', cat: 'Consumable', loc: 'Property storeroom', inv: 'IN_STOCK', health: '—', dr: 'DR-110', serial: '—', machine: '—', history: [H('Received under DR-110', 'Nov 2026')] }
+      { id: 'TNR-WIL-2026-001', item: 'HP LaserJet Toner W9004MC', cat: 'Consumable', loc: 'WIL Lab 3', inv: 'RETURNED_EMPTY', health: '—', dr: 'DR-102', serial: '—', machine: 'WIL-PRN-01', history: [H('Issued to WIL-PRN-01', 'Oct 2026 · Lab Assistant'), H('Scanned as RETURNED_EMPTY (turnover)', 'Nov 19 · Lab Assistant')] },
+      { id: 'TNR-WIL-2026-002', item: 'HP LaserJet Toner W9004MC', cat: 'Consumable', loc: 'Property storeroom', inv: 'IN_STOCK', health: '—', dr: 'DR-102', serial: '—', machine: 'WIL-PRN-01 (pending)', history: [H('Received under DR-102', 'Oct 2026 · Property Custodian'), H('Requested for WIL-PRN-01', 'Nov 19 · Lab Assistant')] },
+      { id: 'BP-A4-0031', item: 'Bond paper A4 (ream)', cat: 'Consumable', loc: 'Property storeroom', inv: 'IN_STOCK', health: '—', dr: 'DR-110', serial: '—', machine: '—', history: [H('Received under DR-110', 'Nov 2026 · Property Custodian')] },
+      { id: 'KB-0151', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-118', serial: '—', machine: '—', history: [H('Received under DR-118 (AI-assisted intake)', 'Nov 18 · Property Custodian'), H('Proposed as a replacement for KB-0007', 'Nov 19 · pending verification')] },
+      { id: 'KB-0153', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-118', serial: '—', machine: '—', history: [H('Received under DR-118 (AI-assisted intake)', 'Nov 18 · Property Custodian')] },
+      { id: 'KB-0154', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-118', serial: '—', machine: '—', history: [H('Received under DR-118 (AI-assisted intake)', 'Nov 18 · Property Custodian')] },
+      { id: 'KB-0101', item: 'Keyboard (USB)', cat: 'Durable', loc: 'Property storeroom', inv: 'IN_STOCK', health: 'OPERATIONAL', dr: 'DR-097', serial: '—', machine: '—', history: [H('Received under DR-097', 'Oct 30 · Property Custodian')] },
+      { id: 'WIL-3DP-001', item: '3D printer', cat: 'Durable', loc: 'WIL Lab 1', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-021', serial: 'CR3V3P-77015', machine: '—', history: [H('Registered and tagged', '2024 · Property Custodian'), H('Filament FIL-WIL-2026-014 linked', 'Oct 2026 · Lab Assistant')] },
+      { id: 'SHR-0003', item: 'Document shredder', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-033', serial: 'SHR-99301', machine: '—', history: [H('Received under DR-033', 'Jan 2026 · Property Custodian')] },
+      { id: 'WS-0301', item: 'Lab workstation 1', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-025', serial: 'WS-3F-8812', machine: '—', history: [H('Received under DR-025', 'Feb 2026 · Property Custodian'), H('Installed in WIL Lab 3', 'Feb 2026 · Lab Assistant')] },
+      { id: 'WS-0302', item: 'Lab workstation 2', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-026', serial: 'WS-3F-8813', machine: '—', history: [H('Received under DR-026', 'Feb 2026 · Property Custodian'), H('Installed in WIL Lab 3', 'Feb 2026 · Lab Assistant')] },
+      { id: 'KB-0031', item: 'Keyboard', cat: 'Durable', loc: 'WIL Lab 3 · WS 1', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-088', serial: '—', machine: 'WS-0301', history: [H('Received under DR-088', 'Mar 2026 · Property Custodian'), H('Assigned to WS-0301', 'Mar 2026 · Lab Assistant')] },
+      { id: 'KB-0032', item: 'Keyboard', cat: 'Durable', loc: 'WIL Lab 3 · WS 2', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-089', serial: '—', machine: 'WS-0302', history: [H('Received under DR-089', 'Mar 2026 · Property Custodian'), H('Assigned to WS-0302', 'Mar 2026 · Lab Assistant')] },
+      { id: 'MS-0031', item: 'Mouse', cat: 'Durable', loc: 'WIL Lab 3 · WS 1', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-088', serial: '—', machine: 'WS-0301', history: [H('Received under DR-088', 'Mar 2026 · Property Custodian'), H('Assigned to WS-0301', 'Mar 2026 · Lab Assistant')] },
+      { id: 'MON-0031', item: 'Testing monitor', cat: 'Durable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-091', serial: '—', machine: '—', history: [H('Received under DR-091', 'Apr 2026 · Property Custodian'), H('Installed in WIL Lab 3', 'Apr 2026 · Lab Assistant')] },
+      { id: 'LAM-0001', item: 'Heavy laminator', cat: 'Durable', loc: 'WIL Lab 1', inv: 'ISSUED / IN_USE', health: 'OPERATIONAL', dr: 'DR-019', serial: 'LAM-77120', machine: '—', history: [H('Received under DR-019', 'Aug 2025 · Property Custodian'), H('Last usage recorded', 'Sep 17 · Lab Assistant')] },
+      { id: 'DRM-WIL-2026-003', item: 'Imaging drum unit W1104A', cat: 'Consumable', loc: 'WIL Lab 2', inv: 'RETURNED_EMPTY', health: '—', dr: 'DR-096', serial: '—', machine: 'WIL-PRN-02', history: [H('Received under DR-096', 'Aug 2026 · Property Custodian'), H('Scanned as RETURNED_EMPTY (turnover)', 'Nov 19 · Lab Assistant')] },
+      { id: 'DRM-WIL-2026-004', item: 'Imaging drum unit W1104A', cat: 'Consumable', loc: 'WIL Lab 2', inv: 'ISSUED / IN_USE', health: '—', dr: 'DR-102', serial: '—', machine: 'WIL-PRN-02', history: [H('Received under DR-102', 'Oct 2026 · Property Custodian'), H('Issued to WIL-PRN-02', 'Oct 2026 · Lab Assistant')] },
+      { id: 'FIL-WIL-2026-014', item: 'PLA filament spool 1 kg', cat: 'Consumable', loc: 'WIL Lab 1', inv: 'ISSUED / IN_USE', health: '—', dr: 'DR-105', serial: '—', machine: 'WIL-3DP-001', history: [H('Received under DR-105', 'Oct 2026 · Property Custodian'), H('Issued to WIL-3DP-001', 'Oct 2026 · Lab Assistant')] },
+      { id: 'FIL-WIL-2026-015', item: 'PLA filament spool 1 kg', cat: 'Consumable', loc: 'Property storeroom', inv: 'IN_STOCK', health: '—', dr: 'DR-105', serial: '—', machine: 'WIL-3DP-001 (pending)', history: [H('Received under DR-105', 'Oct 2026 · Property Custodian'), H('Requested for WIL-3DP-001', 'Nov 19 · awaiting disbursement')] },
+      { id: 'BP-A4-0028', item: 'Bond paper A4 (ream)', cat: 'Consumable', loc: 'WIL Lab 3', inv: 'ISSUED / IN_USE', health: '—', dr: 'DR-110', serial: '—', machine: '—', history: [H('Received under DR-110', 'Nov 2026 · Property Custodian'), H('Issued to WIL Lab 3', 'Nov 2026 · Lab Assistant')] }
     ];
+    const units = rawUnits.map(x => s.serials[x.id] !== undefined ? { ...x, serial: s.serials[x.id] } : x);
     const q = s.q.trim().toLowerCase();
     const list = units.filter(u => (!q || u.id.toLowerCase().includes(q) || u.item.toLowerCase().includes(q)) && (s.cat === 'all' || u.cat === s.cat) && (s.inv === 'all' || u.inv === s.inv));
     const invTone = { 'IN_STOCK': 'info', 'ISSUED / IN_USE': 'success', 'RETURNED_EMPTY': 'neutral', 'RETIRED': 'danger' };
     const hTone = { 'OPERATIONAL': 'success', 'NEEDS_MAINTENANCE': 'warning', 'UNDER_REPAIR': 'warning', 'CONDEMNED / BER': 'danger', '—': 'neutral' };
-    const rows = list.map(u => ({ ...u, cat: u.cat === 'Durable' ? 'Durable asset' : 'Consumable', invStyle: eaBadge(invTone[u.inv]), healthStyle: eaBadge(hTone[u.health]), open: () => this.setState({ open: u.id }) }));
+    const rows = list.map(u => ({ ...u, cat: u.cat === 'Durable' ? 'Durable asset' : 'Consumable', invStyle: eaBadge(invTone[u.inv]), healthStyle: eaBadge(hTone[u.health]), open: () => this.setState({ open: u.id, serialDraft: (s.serials[u.id] !== undefined ? s.serials[u.id] : (u.serial === '—' ? '' : u.serial)) }) }));
     const u = units.find(x => x.id === s.open);
     const req = u ? !!s.flags[u.item] : false;
     return {
@@ -187,9 +214,17 @@ class Component extends DCLogic {
       countText: 'Showing ' + rows.length + ' of ' + units.length + ' units (sample data)',
       onQ: e => this.setState({ q: e.target.value }), onCat: e => this.setState({ cat: e.target.value }), onInv: e => this.setState({ inv: e.target.value }),
       clear: () => this.setState({ q: '', cat: 'all', inv: 'all' }),
-      drawer: !!u, u: u ? { ...u, durable: u.cat === 'Durable', history: u.history.concat(s.flagLog[u.item] || []) } : { history: [] }, closeDrawer: () => this.setState({ open: null }),
+      drawer: !!u, u: u ? { ...u, durable: u.cat === 'Durable', history: u.history.concat(s.flagLog[u.item] || []).concat(s.serialLog[u.id] || []) } : { history: [] }, closeDrawer: () => this.setState({ open: null }),
       qr: u ? this.qrPath(u.id) : '', qrLabel: u ? 'QR code for ' + u.id : '',
       fields: u ? [{ k: 'Category', v: u.cat === 'Durable' ? 'Durable capital asset' : 'High-turnover consumable' }, { k: 'Location', v: u.loc }, { k: 'Inventory status', v: u.inv }, { k: 'Health state', v: u.health }, { k: 'Delivery record', v: u.dr }, { k: 'Manufacturer serial (optional)', v: u.serial }, { k: 'Linked machine', v: u.machine }, { k: 'QR payload', v: '/items/' + u.id }] : [],
+      serialDraft: s.serialDraft, onSerial: e => this.setState({ serialDraft: e.target.value }),
+      saveSerial: () => {
+        if (!u) return;
+        const v = s.serialDraft.trim();
+        const entry = H('Manufacturer serial updated', 'Just now · Property Custodian');
+        this.setState({ serials: { ...s.serials, [u.id]: v || '—' }, serialLog: { ...s.serialLog, [u.id]: (s.serialLog[u.id] || []).concat([entry]) } });
+        eaShow(this, 'success', 'Serial saved', u.id + ' · ' + (v || 'no serial recorded') + '. The asset ID and QR code are unchanged.');
+      },
       oneToOne: req, oneLabel: req ? 'Required' : 'Not required', oneBadge: eaBadge(req ? 'success' : 'neutral'),
       toggleOne: () => {
         if (!u) return;

@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 1 · Demand</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Requisition Review</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 1 · Demand</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Requisition Review</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 1 · CONSUMPTION VARIANCE</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Requisition review</h1>
@@ -52,7 +52,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
               <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.item}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.qty}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.hb}} → {{r.cur}}</td>
               <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; font-weight: 700; color: {{r.vColor}}">{{r.v}}</td>
               <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start"><span style="{{r.badgeStyle}}">{{r.status}}</span><span style="font-size: 12px; color: #6B6466">{{r.note}}</span></span></td>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; text-align: right"><sc-if value="{{r.reviewable}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{r.open}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 40px">Review</button></sc-if></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; text-align: right"><sc-if value="{{r.reviewable}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{r.open}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 44px">Review</button></sc-if></td>
             </tr>
           </sc-for>
         </tbody>
@@ -105,7 +105,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -148,7 +148,7 @@ class Component extends DCLogic {
     const tabs = ['locked', 'justified', 'auto', 'decided'].map(id => {
       const n = s.reqs.filter(r => r.state === id).length;
       return { label: labels[id], count: n, sel: s.tab === id ? 'true' : 'false', pick: () => this.setState({ tab: id }),
-        style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5'),
+        style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5'),
         countStyle: 'padding: 1px 8px; border-radius: 999px; font-size: 11px; ' + (s.tab === id ? 'background: #F2B705; color: #5A0F14' : 'background: #F0ECEB; color: #4F494A') };
     });
     const rows = s.reqs.filter(r => r.state === s.tab).map(r => {

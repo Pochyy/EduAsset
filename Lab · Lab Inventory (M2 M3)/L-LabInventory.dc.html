@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Lab Inventory</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Lab Inventory</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULES 2 &amp; 3 · LAB INVENTORY</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Lab inventory &amp; equipment status</h1>
@@ -51,7 +51,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <sc-if value="{{none}}" hint-placeholder-val="{{false}}">
     <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 16px; text-align: center"><span style="width: 56px; height: 56px; border-radius: 28px; background: #FBF4F4; color: #7B1113; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"></path></svg></span><strong style="font-size: 16px">No matching units in your lab</strong><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Try another asset ID, or switch views.</p></div>
   </sc-if>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Something broken or jamming? <a href="L-ReportIncident.dc.html">Report an incident</a>. Need a new cartridge? <a href="L-TurnoverScan.dc.html">Do a turnover scan</a>.</p>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Something broken or jamming? <a href="../Lab%20%C2%B7%20Report%20Incident%20%28M3%29/L-ReportIncident.dc.html">Report an incident</a>. Need a new cartridge? <a href="../Lab%20%C2%B7%20Turnover%20Scan%20%28M2%29/L-TurnoverScan.dc.html">Do a turnover scan</a>.</p>
 </section>
 
       </div>
@@ -77,17 +77,17 @@ class Component extends DCLogic {
   constructor(p) { super(p); this.state = { tab: 'machines', q: '' }; }
   renderVals() {
     const s = this.state;
-    const ht = { OPERATIONAL: 'success', NEEDS_MAINTENANCE: 'warning', UNDER_REPAIR: 'warning', 'CONDEMNED / BER': 'danger', IN_STOCK: 'info', 'ISSUED / ACTIVE': 'success', RETURNED_EMPTY: 'neutral', 'IN_USE': 'success' };
+    const ht = { OPERATIONAL: 'success', NEEDS_MAINTENANCE: 'warning', UNDER_REPAIR: 'warning', 'CONDEMNED / BER': 'danger', IN_STOCK: 'info', 'ISSUED / IN_USE': 'success', RETURNED_EMPTY: 'neutral' };
     const data = {
       machines: [['WIL-PRN-01', 'HP LaserJet MFP', 'Lab 3', 'Toner TNR-WIL-2026-001', 'OPERATIONAL'], ['WIL-PRN-02', 'HP LaserJet Pro', 'Lab 2', 'Drum DRM-WIL-2026-004', 'NEEDS_MAINTENANCE'], ['WIL-3DP-001', '3D printer', 'Lab 1', 'Filament FIL-WIL-2026-014', 'OPERATIONAL'], ['WIL-3DP-002', 'Creality Ender-3 V3 Plus', 'Lab 1', '—', 'UNDER_REPAIR'], ['SHR-0003', 'Document shredder', 'Lab 3', '—', 'OPERATIONAL']],
-      consumables: [['TNR-WIL-2026-001', 'HP LaserJet Toner W9004MC', 'Lab 3', 'WIL-PRN-01', 'RETURNED_EMPTY'], ['DRM-WIL-2026-004', 'Imaging drum unit W1104A', 'Lab 2', 'WIL-PRN-02', 'ISSUED / ACTIVE'], ['FIL-WIL-2026-014', 'PLA filament spool', 'Lab 1', 'WIL-3DP-001', 'ISSUED / ACTIVE'], ['BP-A4-0028', 'Bond paper A4 (ream)', 'Lab 3', 'Shelf B', 'IN_USE']],
+      consumables: [['TNR-WIL-2026-001', 'HP LaserJet Toner W9004MC', 'Lab 3', 'WIL-PRN-01', 'RETURNED_EMPTY'], ['DRM-WIL-2026-004', 'Imaging drum unit W1104A', 'Lab 2', 'WIL-PRN-02', 'ISSUED / IN_USE'], ['FIL-WIL-2026-014', 'PLA filament spool', 'Lab 1', 'WIL-3DP-001', 'ISSUED / IN_USE'], ['BP-A4-0028', 'Bond paper A4 (ream)', 'Lab 3', '—', 'ISSUED / IN_USE']],
       peripherals: [['KB-0031', 'Keyboard', 'Lab 3 · WS 1', 'Workstation WS-0301', 'OPERATIONAL'], ['KB-0032', 'Keyboard', 'Lab 3 · WS 2', 'Workstation WS-0302', 'OPERATIONAL'], ['MS-0031', 'Mouse', 'Lab 3 · WS 1', 'Workstation WS-0301', 'OPERATIONAL'], ['MON-0031', 'Testing monitor', 'Lab 3', '—', 'OPERATIONAL']]
     };
     const q = s.q.trim().toLowerCase();
     const rows = data[s.tab].filter(r => !q || r[0].toLowerCase().includes(q) || r[1].toLowerCase().includes(q)).map(([id, item, loc, extra, status]) => ({ id, item, loc, extra, status, badgeStyle: eaBadge(ht[status]) }));
     const tabs = [['machines', 'Machines'], ['consumables', 'Consumables'], ['peripherals', 'Peripherals']].map(([id, label]) => ({ label, sel: s.tab === id ? 'true' : 'false', pick: () => this.setState({ tab: id }),
-      style: 'min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5') }));
-    return { tabs, rows, has: rows.length > 0, none: rows.length === 0, q: s.q, onQ: e => this.setState({ q: e.target.value }), col4: s.tab === 'machines' ? 'Active consumable' : s.tab === 'consumables' ? 'Linked machine' : 'Assigned to' };
+      style: 'min-height: 44px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5') }));
+    return { tabs, rows, has: rows.length > 0, none: rows.length === 0, q: s.q, onQ: e => this.setState({ q: e.target.value }), col4: s.tab === 'machines' ? 'Installed consumable' : s.tab === 'consumables' ? 'Installed on / location' : 'Assigned to' };
   }
 }
 </script>

@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Repair &amp; BER</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Repair &amp; BER</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · BER DECISION SUPPORT &amp; CONDEMNATION</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Repair &amp; Beyond Economic Repair</h1>
@@ -89,10 +89,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <sc-if value="{{canRepair}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{approveRepair}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Approve repair → UNDER_REPAIR</button></sc-if>
         <sc-if value="{{mustCondemn}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{askCondemn}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B71C1C; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Block maintenance &amp; condemn</button></sc-if>
       </div>
+      <sc-if value="{{returnVisible}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid #EFEAE9">
+          <span style="font-size: 13px; line-height: 1.5; color: #6B6466">{{returnHint}}</span>
+          <sc-if value="{{canReturn}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{returnToService}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Mark repaired · return to service</button></sc-if>
+          <sc-if value="{{returnLocked}}" hint-placeholder-val="{{false}}"><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #DDD6D5; color: #6B6466; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Mark repaired · return to service</button></sc-if>
+        </div>
+      </sc-if>
     </section>
     </sc-if>
     <sc-if value="{{condemned}}" hint-placeholder-val="{{false}}">
-      <section style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #C62828; color: #1F1A1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 14px">{{sel.id}} is CONDEMNED / BER and RETIRED</strong><span style="font-size: 13px">It can never be issued again. The pre-filled Condemnation and Disposal form is ready for the Property Office.</span><button type="button" onClick="{{openForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 40px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"></path></svg> View condemnation form</button></span></section>
+      <section style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #C62828; color: #1F1A1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 14px">{{sel.id}} is CONDEMNED / BER and RETIRED</strong><span style="font-size: 13px">It can never be issued again. The pre-filled Condemnation and Disposal form is ready for the Property Office.</span><button type="button" onClick="{{openForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"></path></svg> View condemnation form</button></span></section>
     </sc-if>
   </div>
 </div>
@@ -127,7 +134,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -153,11 +160,11 @@ function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, t
 class Component extends DCLogic {
   constructor(p) {
     super(p);
-    this.state = { sel: '3dp', quote: '5000', repairable: true, tried: false, confirm: false, form: false, toast: null,
+    this.state = { sel: '3dp', quotes: { '3dp': '5000', prn1: '', prn2: '' }, repairable: true, tried: false, confirm: false, form: false, toast: null,
       assets: [
-        { key: '3dp', id: 'WIL-3DP-002', name: 'Creality Ender-3 V3 Plus', loc: 'WIL Lab 1', value: 28000, health: 'UNDER_REPAIR', repairs: [['Month 4', 'Replaced extruder assembly', 4500], ['Month 9', 'Replaced mainboard and motor', 6000]] },
-        { key: 'prn2', id: 'WIL-PRN-02', name: 'HP LaserJet Pro', loc: 'WIL Lab 2', value: 32000, health: 'NEEDS_MAINTENANCE', repairs: [['Jun 2026', 'Fuser replacement', 3800]] },
-        { key: 'prn1', id: 'WIL-PRN-01', name: 'HP LaserJet MFP', loc: 'WIL Lab 3', value: 45000, health: 'OPERATIONAL', repairs: [['Feb 2026', 'Pickup roller kit', 1500]] }
+        { key: '3dp', id: 'WIL-3DP-002', name: 'Creality Ender-3 V3 Plus', loc: 'WIL Lab 1', value: 28000, serial: 'CR3V3P-88120', health: 'UNDER_REPAIR', repairs: [['Month 4', 'Replaced extruder assembly', 4500], ['Month 9', 'Replaced mainboard and motor', 6000]] },
+        { key: 'prn2', id: 'WIL-PRN-02', name: 'HP LaserJet Pro', loc: 'WIL Lab 2', value: 32000, serial: 'HPX-552944', health: 'NEEDS_MAINTENANCE', repairs: [['Jun 2026', 'Fuser replacement', 3800]] },
+        { key: 'prn1', id: 'WIL-PRN-01', name: 'HP LaserJet MFP', loc: 'WIL Lab 3', value: 45000, serial: 'HPX-552901', health: 'OPERATIONAL', repairs: [['Feb 2026', 'Pickup roller kit', 1500]] }
       ] };
   }
   renderVals() {
@@ -168,11 +175,12 @@ class Component extends DCLogic {
     const cumOf = a => a.repairs.reduce((t, r) => t + r[2], 0);
     const assets = s.assets.map(a => { const c = cumOf(a), p = c / a.value * 100; return { ...a, cum: peso(c), pct: pct(p), on: s.sel === a.key ? 'true' : 'false', badgeStyle: eaBadge(tone[a.health]),
       bar: 'display: block; height: 100%; width: ' + Math.min(100, p * 2) + '%; background: ' + (p >= 50 ? '#B71C1C' : p >= 35 ? '#E0A800' : '#2E7D32'),
-      pick: () => this.setState({ sel: a.key, quote: '', tried: false, repairable: true }),
+      pick: () => this.setState({ sel: a.key, tried: false, repairable: true }),
       style: 'display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%; padding: 14px; border-radius: 12px; cursor: pointer; font-family: Inter, sans-serif; color: #1F1A1A; text-align: left; ' + (s.sel === a.key ? 'background: #FBF4F4; border: 2px solid #7B1113' : 'background: #FFFFFF; border: 1px solid #DDD6D5') }; });
     const a = s.assets.find(x => x.key === s.sel); const cum = cumOf(a);
     let run = 0; const repairs = a.repairs.map(r => { run += r[2]; return { when: r[0], what: r[1], cost: peso(r[2]), ber: pct(run / a.value * 100) }; });
-    const q = Number(s.quote); const qValid = s.quote !== '' && isFinite(q) && q > 0;
+    const quote = s.quotes[s.sel] || '';
+    const q = Number(quote); const qValid = quote !== '' && isFinite(q) && q > 0;
     const quoteErr = s.tried && !qValid ? 'Enter the technician quote as an amount above ₱0.' : '';
     const ber = qValid ? (cum + q) / a.value * 100 : cum / a.value * 100;
     const condemned = a.health === 'CONDEMNED / BER';
@@ -183,7 +191,7 @@ class Component extends DCLogic {
     return {
       ...eaToast(this), assets, active: !condemned, condemned,
       sel: { ...a, value: peso(a.value), cum: peso(cum), limit: peso(a.value / 2), badgeStyle: eaBadge(tone[a.health]), repairs },
-      quote: s.quote, onQuote: e => this.setState({ quote: e.target.value }), quoteErr,
+      quote, onQuote: e => this.setState({ quotes: { ...s.quotes, [s.sel]: e.target.value }, tried: false }), quoteErr,
       quoteStyle: 'min-height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; border: 1px solid ' + (quoteErr ? '#C62828' : '#DDD6D5'),
       rep, berText: qValid ? pct(ber) : pct(cum / a.value * 100),
       resultColor: !qValid ? '#4F494A' : blocked ? '#B71C1C' : '#1E6B24',
@@ -191,15 +199,24 @@ class Component extends DCLogic {
       resultText: !qValid ? 'Cumulative repairs so far: ' + peso(cum) + ' of ' + peso(a.value) + '.' : (peso(cum) + ' + ' + peso(q) + ' = ' + peso(cum + q) + ' of ' + peso(a.value) + ' replacement value.'),
       resultStyle: 'display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 12px; ' + (!qValid ? 'background: #F6F3F2; border: 1px solid #EFEAE9' : blocked ? 'background: #FDECEC; border: 1px solid #C62828' : 'background: #E6F4EA; border: 1px solid #2E7D32'),
       canRepair: ok, mustCondemn: blocked,
+      returnVisible: a.health === 'UNDER_REPAIR' && s.repairable,
+      canReturn: a.health === 'UNDER_REPAIR' && s.repairable && !blocked,
+      returnLocked: a.health === 'UNDER_REPAIR' && s.repairable && blocked,
+      returnHint: blocked ? 'The pending quote is at or above the 50% BER limit. Clear or reduce it before returning the asset to service.' : 'Repair completed? Return this asset to service with the same asset ID, QR code and history.',
+      returnToService: () => {
+        if (blocked) { eaShow(this, 'error', 'Cannot return to service', 'The pending quote still puts this asset at or above the 50% BER limit. Clear or reduce the quote first.'); return; }
+        this.setState({ assets: s.assets.map(x => x.key === s.sel ? { ...x, health: 'OPERATIONAL' } : x), quotes: { ...s.quotes, [s.sel]: '' } });
+        eaShow(this, 'success', 'Returned to service', a.id + ' is OPERATIONAL with the same asset ID, QR code and repair history.');
+      },
       approveRepair: () => { if (!qValid) { this.setState({ tried: true }); return; }
-        this.setState({ assets: s.assets.map(x => x.key === s.sel ? { ...x, health: 'UNDER_REPAIR', repairs: [...x.repairs, ['Now', 'Approved repair (quote)', q]] } : x), quote: '' });
+        this.setState({ assets: s.assets.map(x => x.key === s.sel ? { ...x, health: 'UNDER_REPAIR', repairs: [...x.repairs, ['Now', 'Approved repair (quote)', q]] } : x), quotes: { ...s.quotes, [s.sel]: '' } });
         eaShow(this, 'success', 'Repair approved', a.id + ' moved to UNDER_REPAIR; it returns to service with the same asset ID and history.'); },
       askCondemn: () => { if (!qValid) { this.setState({ tried: true }); return; } this.setState({ confirm: true }); },
       confirm: s.confirm, cancel: () => this.setState({ confirm: false }),
       doCondemn: () => { this.setState({ assets: s.assets.map(x => x.key === s.sel ? { ...x, health: 'CONDEMNED / BER' } : x), confirm: false, form: true, berFinal: ber });
         eaShow(this, 'success', a.id + ' condemned', 'Repair invoice blocked; form CD-2026-0019 pre-filled.'); },
       form: s.form, openForm: () => this.setState({ form: true }), closeForm: () => this.setState({ form: false }),
-      formFields: [{ k: 'Property tag / asset ID', v: a.id }, { k: 'Description', v: a.name }, { k: 'Serial number', v: a.key === '3dp' ? 'CR3V3P-88120' : '—' }, { k: 'Location / custodian', v: a.loc + ' · WIL Lab Manager' }, { k: 'Replacement value', v: peso(a.value) }, { k: 'Calculated BER', v: pct(s.berFinal || ber) }],
+      formFields: [{ k: 'Property tag / asset ID', v: a.id }, { k: 'Description', v: a.name }, { k: 'Serial number', v: a.serial || '—' }, { k: 'Location / custodian', v: a.loc + ' · WIL Lab Manager' }, { k: 'Replacement value', v: peso(a.value) }, { k: 'Calculated BER', v: pct(s.berFinal || ber) }],
       download: () => { this.setState({ form: false }); eaShow(this, 'info', 'Download prepared', 'Prototype: PDF generation connects to the backend in the build.'); }
     };
   }

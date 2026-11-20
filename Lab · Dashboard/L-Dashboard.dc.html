@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Dashboard</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Dashboard</span></nav>
 <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
   <div style="display: flex; flex-direction: column; gap: 6px">
     <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">WILDCAT INNOVATION LABS · LAB 3</p>
@@ -47,7 +47,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
-  <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Machines &amp; active consumables</h2><a href="L-LabInventory.dc.html" style="font-size: 13px; font-weight: 600">Lab inventory</a></div>
+  <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Machines &amp; active consumables</h2><a href="../Lab%20%C2%B7%20Lab%20Inventory%20%28M2%20M3%29/L-LabInventory.dc.html" style="font-size: 13px; font-weight: 600">Lab inventory</a></div>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px">
     <sc-for list="{{machines}}" as="m" hint-placeholder-count="3">
       <div style="border: 1px solid #DDD6D5; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px">
@@ -62,7 +62,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 20px">
   <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
-    <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">My requisitions</h2><a href="L-Requisition.dc.html" style="font-size: 13px; font-weight: 600">New request</a></div>
+    <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">My requisitions</h2><a href="../Lab%20%C2%B7%20Supply%20Requisition%20%28M1%29/L-Requisition.dc.html" style="font-size: 13px; font-weight: 600">New request</a></div>
     <ul style="margin: 0; padding: 0; list-style: none">
       <sc-for list="{{reqs}}" as="r" hint-placeholder-count="3">
         <li style="display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 12px 0; border-top: 1px solid #EFEAE9">
@@ -73,7 +73,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul>
   </section>
   <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
-    <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Open work orders</h2><a href="L-WorkOrders.dc.html" style="font-size: 13px; font-weight: 600">All work orders</a></div>
+    <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Open work orders</h2><a href="../Lab%20%C2%B7%20Work%20Orders%20%28M3%29/L-WorkOrders.dc.html" style="font-size: 13px; font-weight: 600">All work orders</a></div>
     <ul style="margin: 0; padding: 0; list-style: none">
       <sc-for list="{{wos}}" as="w" hint-placeholder-count="2">
         <li style="display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 12px 0; border-top: 1px solid #EFEAE9">
@@ -108,9 +108,9 @@ class Component extends DCLogic {
   renderVals() {
     return {
       actions: [
-        { title: 'Request supplies', sub: 'Toner, paper, filament', href: 'L-Requisition.dc.html', d: 'M9 2h6v4H9zM16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 12h6M9 16h6' },
-        { title: 'Turnover scan', sub: 'Return a spent cartridge or spool', href: 'L-TurnoverScan.dc.html', d: 'M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3' },
-        { title: 'Report an incident', sub: 'Defect, jam or broken item', href: 'L-ReportIncident.dc.html', d: 'M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01' }
+        { title: 'Request supplies', sub: 'Toner, paper, filament', href: '../Lab%20%C2%B7%20Supply%20Requisition%20%28M1%29/L-Requisition.dc.html', d: 'M9 2h6v4H9zM16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 12h6M9 16h6' },
+        { title: 'Turnover scan', sub: 'Return a spent cartridge or spool', href: '../Lab%20%C2%B7%20Turnover%20Scan%20%28M2%29/L-TurnoverScan.dc.html', d: 'M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3' },
+        { title: 'Report an incident', sub: 'Defect, jam or broken item', href: '../Lab%20%C2%B7%20Report%20Incident%20%28M3%29/L-ReportIncident.dc.html', d: 'M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01' }
       ],
       machines: [
         { id: 'WIL-PRN-01', name: 'HP LaserJet MFP · Lab 3', health: 'OPERATIONAL', badgeStyle: eaBadge('success'), unit: 'TNR-WIL-2026-001', note: 'Spent unit returned · TNR-WIL-2026-002 awaiting custodian approval' },

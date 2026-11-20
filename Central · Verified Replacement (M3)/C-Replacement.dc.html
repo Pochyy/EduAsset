@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Replacements</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Replacements</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · VERIFIED REPLACEMENT</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Replacement RR-0043</h1>
@@ -44,6 +44,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">OLD UNIT</span><span style="{{oldBadge}}">{{oldStatus}}</span></div>
     <strong style="font-size: 24px; color: #7B1113; font-family: ui-monospace, Menlo, monospace">KB-0007</strong>
     <span style="font-size: 13px; color: #4F494A">Keyboard (USB) · WIL workstation 5 · Health: CONDEMNED / BER (not repairable)</span>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="ou" style="font-size: 12px; font-weight: 600; color: #6B6466">Scan or type the old unit’s asset ID</label>
+      <div style="display: flex; gap: 8px">
+        <input id="ou" value="{{oldScan}}" onInput="{{onOld}}" placeholder="e.g. KB-0007" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace">
+        <button type="button" onClick="{{verifyOld}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
+      </div>
+      <sc-if value="{{oldErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B71C1C">{{oldErr}}</span></sc-if>
+    </div>
     <button type="button" onClick="{{photoOld}}" style="{{photoOldStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg> {{photoOldLabel}}</button>
   </section>
   <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
@@ -78,9 +86,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <sc-if value="{{blockers}}" hint-placeholder-val="{{true}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FFF4D1; border: 1px solid #E0A800; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">{{blockers}}</span></div></sc-if>
     <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #C62828; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg><span style="font-size: 13px; line-height: 1.5">This unit cannot be used as a replacement. Submitting logs a rejected attempt and adds a flag to the Audit Queue.</span></div></sc-if>
     <sc-if value="{{pending}}" hint-placeholder-val="{{false}}">
-      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v4M12 16h.01"></path></svg><span style="display: flex; flex-direction: column; gap: 8px"><strong style="font-size: 14px">Waiting for {{approver}} to confirm</strong><span style="font-size: 13px">Shown here so you can try the approver’s step in this prototype.</span><button type="button" onClick="{{confirmAs}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 40px">Confirm as {{approver}}</button></span></div>
+      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v4M12 16h.01"></path></svg><span style="display: flex; flex-direction: column; gap: 8px"><strong style="font-size: 14px">Waiting for {{approver}} to confirm</strong><span style="font-size: 13px">Shown here so you can try the approver’s step in this prototype.</span><button type="button" onClick="{{confirmAs}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px">Confirm as {{approver}}</button></span></div>
     </sc-if>
-    <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #E6F4EA; border: 1px solid #2E7D32; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span style="font-size: 13px; line-height: 1.5"><strong>Replacement complete.</strong> KB-0007 is RETIRED, {{newId}} is IN_USE at WIL workstation 5. The old → new link, verifier and time are saved in the audit log.</span></div></sc-if>
+    <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #E6F4EA; border: 1px solid #2E7D32; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span style="font-size: 13px; line-height: 1.5"><strong>Replacement complete.</strong> KB-0007 is RETIRED, {{newId}} is ISSUED / IN_USE at WIL workstation 5. The old → new link, verifier and time are saved in the audit log.</span></div></sc-if>
     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
       <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reject}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B71C1C; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Log rejected attempt</button></sc-if>
       <sc-if value="{{canSubmit}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{submit}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Submit for second approval</button></sc-if>
@@ -88,11 +96,24 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </section>
 </div>
+<sc-if value="{{hasRejections}}" hint-placeholder-val="{{false}}">
+  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Rejected attempts (logged)</h2>
+    <sc-for list="{{rejections}}" as="r" hint-placeholder-count="1">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; border: 1px solid #EFEAE9; border-radius: 10px; font-size: 13px">
+        <strong style="font-family: ui-monospace, Menlo, monospace">{{r.id}}</strong>
+        <span style="color: #6B6466">{{r.when}}</span>
+        <span style="color: #B71C1C">{{r.reason}}</span>
+      </div>
+    </sc-for>
+    <span style="font-size: 12px; color: #6B6466">Each rejection is recorded in the audit history and routed to the Audit Queue.</span>
+  </section>
+</sc-if>
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -116,7 +137,7 @@ function eaToast(self) {
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
 
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { newId: '', pOld: false, pNew: false, approver: '', phase: 'edit', toast: null }; }
+  constructor(p) { super(p); this.state = { newId: '', oldScan: 'KB-0007', oldOk: true, oldErr: '', rejections: [], pOld: false, pNew: false, approver: '', phase: 'edit', toast: null }; }
   renderVals() {
     const s = this.state;
     const ledger = {
@@ -136,7 +157,7 @@ class Component extends DCLogic {
       dot: 'flex: 0 0 auto; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + (!has && text.indexOf('Old') !== 0 ? 'background: #EFEAE9; color: #6B6466' : ok ? 'background: #2E7D32; color: #FFFFFF' : 'background: #B71C1C; color: #FFFFFF'),
       noteColor: ok || !has ? '#6B6466' : '#B71C1C' });
     const rules = [
-      mk(r1, 'Old unit set to RETIRED (or sent to repair)', 'KB-0007 inspected: not repairable → RETIRED'),
+      mk(r1 && s.oldOk, 'Old unit set to RETIRED (or sent to repair)', s.oldOk ? 'KB-0007 inspected: not repairable → RETIRED' : 'Scan KB-0007 to verify the old unit'),
       mk(r2, 'New unit is IN_STOCK with no issue or usage history', !has ? 'Scan or pick a unit' : !u ? id + ' is not in the ledger' : u.issued ? id + ' was previously issued (' + u.status + ')' : 'Never issued'),
       mk(r3, 'Delivery record dated after the request (Nov 17)', !has || !u ? '—' : u.dr + ' received ' + u.drDate + (u.after ? '' : ' (before the request)')),
       mk(r4, 'New asset ID differs from the old ID', !has ? '—' : r4 ? id + ' ≠ KB-0007' : 'Same unit as the old one')
@@ -144,27 +165,35 @@ class Component extends DCLogic {
     const cands = ['KB-0150', 'KB-0151', 'KB-0152', 'KB-0101'].map(c => ({ id: c, dr: ledger[c].dr + ' · ' + ledger[c].drDate, pick: () => this.setState({ newId: c, phase: 'edit' }),
       style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 44px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font: 600 13px ui-monospace, Menlo, monospace; color: #1F1A1A; ' + (id === c ? 'background: #FBF4F4; border: 2px solid #7B1113' : 'background: #FFFFFF; border: 1px solid #DDD6D5') }));
     const missing = [];
-    if (!has) missing.push('choose the new unit'); if (!s.pOld) missing.push('attach the old unit photo'); if (!s.pNew) missing.push('attach the new unit photo'); if (!s.approver) missing.push('select the second approver');
+    if (!has) missing.push('choose the new unit'); if (!s.oldOk) missing.push('verify the old-unit scan'); if (!s.pOld) missing.push('attach the old unit photo'); if (!s.pNew) missing.push('attach the new unit photo'); if (!s.approver) missing.push('select the second approver');
     const failed = has && !allOk && s.phase === 'edit';
-    const ready = allOk && s.pOld && s.pNew && !!s.approver && s.phase === 'edit';
+    const ready = allOk && s.oldOk && s.pOld && s.pNew && !!s.approver && s.phase === 'edit';
     const ph = (on) => 'display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer; font: 600 13px Inter, sans-serif; align-self: flex-start; ' + (on ? 'background: #E6F4EA; color: #1E6B24; border: 1px solid #2E7D32' : 'background: #FFFFFF; color: #7B1113; border: 1.5px dashed #7B1113');
-    const stepState = [true, has, s.phase !== 'edit', s.phase === 'done'];
+    const stepState = [true, allOk, s.phase !== 'edit', s.phase === 'done'];
     const steps = ['Request raised', 'New unit verified', 'Submitted', 'Second person confirmed'].map((label, i) => ({ label, n: i + 1,
       style: 'display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (stepState[i] ? 'background: #E6F4EA; color: #1E6B24' : 'background: #FFFFFF; color: #6B6466; border: 1px solid #DDD6D5'),
       dot: 'width: 24px; height: 24px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; ' + (stepState[i] ? 'background: #2E7D32; color: #FFFFFF' : 'background: #EFEAE9; color: #4F494A') }));
     return {
       ...eaToast(this), steps, rules, cands, newId: s.newId, approver: s.approver,
       onNew: e => this.setState({ newId: e.target.value, phase: 'edit' }), onAp: e => this.setState({ approver: e.target.value }),
+      oldScan: s.oldScan, oldErr: s.oldErr,
+      onOld: e => this.setState({ oldScan: e.target.value, oldOk: false, oldErr: '' }),
+      verifyOld: () => { const v = s.oldScan.trim().toUpperCase(); const ok = v === 'KB-0007'; this.setState({ oldOk: ok, oldErr: ok ? '' : 'That is not the unit being replaced. Scan KB-0007.' }); if (ok) eaShow(this, 'success', 'Old unit verified', 'KB-0007 matches this replacement request.'); },
       scanHint: () => eaShow(this, 'info', 'Camera scanner', 'Opens the phone camera or webcam QR reader in the build. Type or pick an ID here.'),
       newInfo: !has ? 'The QR code only identifies the unit; the ledger decides whether it is valid.' : u ? id + ' · ' + u.status + ' · ' + u.dr + ' (' + u.drDate + ')' : 'No unit with this ID exists in the ledger.',
-      oldStatus: s.phase === 'done' ? 'RETIRED' : 'RETIRING', oldBadge: eaBadge('danger'),
-      newStatus: s.phase === 'done' ? 'IN_USE' : !has ? 'NOT SELECTED' : allOk ? 'VALID' : 'INVALID', newBadge: eaBadge(s.phase === 'done' ? 'success' : !has ? 'neutral' : allOk ? 'success' : 'danger'),
+      oldStatus: s.phase === 'done' ? 'RETIRED' : 'PENDING RETIREMENT', oldBadge: eaBadge(s.phase === 'done' ? 'danger' : 'warning'),
+      newStatus: s.phase === 'done' ? 'ISSUED / IN_USE' : !has ? 'NOT SELECTED' : allOk ? 'VALID' : 'INVALID', newBadge: eaBadge(s.phase === 'done' ? 'success' : !has ? 'neutral' : allOk ? 'success' : 'danger'),
       photoOld: () => this.setState({ pOld: !s.pOld }), photoNew: () => this.setState({ pNew: !s.pNew }),
       photoOldStyle: ph(s.pOld), photoNewStyle: ph(s.pNew), photoOldLabel: s.pOld ? 'Condition photo attached' : 'Attach condition photo (required)', photoNewLabel: s.pNew ? 'New unit photo attached' : 'Attach new unit photo (required)',
       blockers: s.phase === 'edit' && !failed && missing.length ? 'To submit: ' + missing.join(', ') + '.' : '',
       failed, canSubmit: ready, waitSubmit: s.phase === 'edit' && !ready && !failed,
       pending: s.phase === 'pending', done: s.phase === 'done',
-      reject: () => { this.setState({ newId: '' }); eaShow(this, 'error', 'Rejected attempt logged', id + ' cannot replace KB-0007. A flag was added to the Audit Queue.'); },
+      hasRejections: s.rejections.length > 0, rejections: s.rejections,
+      reject: () => {
+        const entry = { id: id || 'Unknown', when: 'Just now · Property Custodian', reason: u && u.issued ? 'Previously issued unit' : 'Not a valid replacement candidate' };
+        this.setState({ newId: '', rejections: [entry, ...s.rejections] });
+        eaShow(this, 'error', 'Rejected attempt logged', id + ' cannot replace KB-0007. The attempt is logged and appears in the Audit Queue prototype.');
+      },
       submit: () => { this.setState({ phase: 'pending' }); eaShow(this, 'info', 'Submitted for confirmation', s.approver + ' must confirm before the replacement completes.'); },
       confirmAs: () => { this.setState({ phase: 'done' }); eaShow(this, 'success', 'Replacement complete', 'KB-0007 → ' + id + ' linked and saved in the audit log.'); }
     };

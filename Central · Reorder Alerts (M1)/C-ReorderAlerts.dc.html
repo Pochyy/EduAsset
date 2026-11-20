@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 1 · Demand</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Reorder Alerts</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 1 · Demand</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Reorder Alerts</span></nav>
 <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
   <div style="display: flex; flex-direction: column; gap: 6px">
     <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 1 · PREDICTIVE CONSUMABLE DEMAND</p>
@@ -142,7 +142,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -170,11 +170,11 @@ class Component extends DCLogic {
     super(p);
     this.state = { tab: 'all', loading: false, pr: null, edit: null, fL: '', fS: '', tried: false, toast: null,
       items: [
-        { id: 'tnr', name: 'HP LaserJet Toner', code: 'W9004MC', stock: 2, consumed: 3, L: 21, S: 7 },
-        { id: 'a4', name: 'Bond paper A4 (ream)', code: 'BP-A4', stock: 40, consumed: 22, L: 21, S: 7 },
-        { id: 'ctn', name: 'Color toner (cyan)', code: 'W9001MC', stock: 4, consumed: 2, L: 21, S: 7 },
-        { id: 'pla', name: 'PLA filament spool 1 kg', code: 'FIL-PLA', stock: 12, consumed: 4, L: 14, S: 7 },
-        { id: 'drm', name: 'Imaging drum unit', code: 'W1104A', stock: 3, consumed: 1, L: 21, S: 7 }
+        { id: 'tnr', name: 'HP LaserJet Toner', code: 'W9004MC', stock: 2, consumed: 3, L: 21, S: 7, pr: '0412' },
+        { id: 'a4', name: 'Bond paper A4 (ream)', code: 'BP-A4', stock: 40, consumed: 22, L: 21, S: 7, pr: '0413' },
+        { id: 'ctn', name: 'Color toner (cyan)', code: 'W9001MC', stock: 4, consumed: 2, L: 21, S: 7, pr: '0414' },
+        { id: 'pla', name: 'PLA filament spool 1 kg', code: 'FIL-PLA', stock: 12, consumed: 4, L: 14, S: 7, pr: '0415' },
+        { id: 'drm', name: 'Imaging drum unit', code: 'W1104A', stock: 3, consumed: 1, L: 21, S: 7, pr: '0416' }
       ] };
   }
   calc(it) {
@@ -194,7 +194,7 @@ class Component extends DCLogic {
     }));
     const tabDef = [['all', 'All', all.length], ['alert', 'At / below trigger', alerts.length], ['ok', 'OK', all.length - alerts.length]];
     const tabs = tabDef.map(([id, label, count]) => ({ label, count, sel: s.tab === id ? 'true' : 'false', pick: () => this.setState({ tab: id }),
-      style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5'),
+      style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5'),
       countStyle: 'padding: 1px 8px; border-radius: 999px; font-size: 11px; ' + (s.tab === id ? 'background: #F2B705; color: #5A0F14' : 'background: #F0ECEB; color: #4F494A') }));
     const prItem = s.items.find(x => x.id === s.pr); const prc = prItem ? this.calc(prItem) : null;
     const ed = s.items.find(x => x.id === s.edit); const edc = ed ? this.calc(ed) : null;
@@ -207,7 +207,7 @@ class Component extends DCLogic {
       alertCount: alerts.length, total: all.length,
       recalc: () => { this.setState({ loading: true }); setTimeout(() => { this.setState({ loading: false }); eaShow(this, 'info', 'Forecast recalculated', 'Burn rates use issuance scans from the last 14 days.'); }, 1400); },
       pr: !!prItem, closePR: () => this.setState({ pr: null }),
-      prNo: prItem ? 'PR-2026-' + (prItem.id === 'tnr' ? '0412' : prItem.id === 'a4' ? '0413' : '0414') : '',
+      prNo: prItem ? 'PR-2026-' + prItem.pr : '',
       prFields: prItem ? [
         { k: 'Item', v: prItem.name + ' (' + prItem.code + ')' }, { k: 'Requesting unit', v: 'WildCat Innovation Labs' },
         { k: 'Current stock', v: String(prItem.stock) }, { k: 'Burn rate (14-day SMA)', v: prc.br.toFixed(2) + ' / day' },

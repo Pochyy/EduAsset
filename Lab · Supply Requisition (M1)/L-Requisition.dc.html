@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px"><a href="L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supply Requisition</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="../Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supply Requisition</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
   <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 1 · DIGITAL SUPPLY REQUISITION</p>
   <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Request supplies</h1>
@@ -70,7 +70,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
     <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 32px; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
   </div>
 </sc-if>
 
@@ -94,7 +94,7 @@ function eaToast(self) {
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
 
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { item: 'tnr', qty: '', just: '', tried: false, toast: null, n: 1023,
+  constructor(p) { super(p); this.state = { item: 'tnr', qty: '4', just: '', tried: false, toast: null, n: 1023,
     history: [
       { id: 'RQ-1021', item: 'Bond paper A4 (ream)', qty: '10 reams', status: 'WAITING FOR CUSTODIAN', tone: 'warning', note: 'V +400% · auto-approval locked' },
       { id: 'RQ-1019', item: 'HP LaserJet Toner W9004MC', qty: '2 cartridges', status: 'PROCESSED', tone: 'success', note: 'Justified: Special Capstone Defense Week' }
@@ -126,7 +126,7 @@ class Component extends DCLogic {
       bandStyle: 'padding: 14px 16px; border-radius: 12px; background: ' + B[0] + '; border: 1px solid ' + B[1], bandTitle: B[2], bandText: B[3],
       needJust: band === 'elevated', just: s.just, justErr, justStyle: fld(justErr), qtyErr, qtyStyle: fld(qtyErr),
       submitLabel: band === 'abnormal' ? 'Submit for custodian review' : 'Submit requisition',
-      onItem: e => this.setState({ item: e.target.value, tried: false }), onQty: e => this.setState({ qty: e.target.value }), onJust: e => this.setState({ just: e.target.value }),
+      onItem: e => this.setState({ item: e.target.value, tried: false, just: '' }), onQty: e => this.setState({ qty: e.target.value }), onJust: e => this.setState({ just: e.target.value }),
       history: s.history.map(h => ({ ...h, badgeStyle: eaBadge(h.tone) })),
       submit: (e) => { e.preventDefault();
         if (!qValid || (band === 'elevated' && s.just.trim().length < 5)) { this.setState({ tried: true }); return; }
