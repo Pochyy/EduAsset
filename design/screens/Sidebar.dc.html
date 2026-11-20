@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EduAsset · Sidebar</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<nav aria-label="Main menu" class="ea-side" style="font-family: Inter, system-ui, sans-serif; color: #FFF4D1; background: #7B1113; box-sizing: border-box; padding: 20px 16px 28px; display: flex; flex-direction: column; gap: 2px; height: 100%; min-height: 100%">
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+    <div class="ea-sec" style="padding: 16px 12px 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #F8D46A">{{g.label}}</div>
+    <div class="ea-group" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+        <a href="{{it.href}}" aria-current="{{it.current}}" style="{{it.style}}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{it.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.d}}"></path></svg>
+          <span style="flex: 1 1 auto">{{it.label}}</span>
+          <sc-if value="{{it.count}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #F2B705; color: #5A0F14; font-size: 11px; font-weight: 700; text-align: center">{{it.count}}</span></sc-if>
+        </a>
+      </sc-for>
+    </div>
+  </sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"portal":{"editor":"enum","options":["central","lab"],"default":"central"},"active":{"editor":"text","default":"C-Dashboard"},"$preview":{"width":264,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      dashboard: 'M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z',
+      bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0',
+      clipboard: 'M9 2h6v4H9zM16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 12h6M9 16h6',
+      repeat: 'M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3',
+      ledger: 'M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8 8h8M8 12h8M8 16h5',
+      wrench: 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z',
+      swap: 'M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4',
+      scan: 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10',
+      shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v4M12 16h.01',
+      pkg: 'M16 16h6M19 13v6M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14M3.3 7L12 12l8.7-5M12 22V12',
+      alert: 'M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01',
+      boxes: 'M3 3h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4',
+      checks: 'M3 17l2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8'
+    };
+    const lab = (this.props.portal ?? 'central') === 'lab';
+    const active = this.props.active ?? (lab ? 'L-Dashboard' : 'C-Dashboard');
+    const central = [
+      { label: 'OVERVIEW', items: [['C-Dashboard', 'Dashboard', 'dashboard']] },
+      { label: 'MODULE 1 · DEMAND', items: [['C-ReorderAlerts', 'Reorder Alerts', 'bell', 3], ['C-RequisitionReview', 'Requisition Review', 'clipboard', 2]] },
+      { label: 'MODULE 2 · TURNOVER', items: [['C-TurnoverApproval', 'Turnover Approval', 'repeat', 1]] },
+      { label: 'MODULE 3 · UNITS & ASSETS', items: [['C-MasterLedger', 'Master Ledger', 'ledger'], ['C-RepairBER', 'Repair & BER', 'wrench'], ['C-Replacement', 'Replacements', 'swap'], ['C-Reconciliation', 'Reconciliation', 'scan'], ['C-AuditQueue', 'Audit Queue', 'shield', 8]] },
+      { label: 'MODULE 4 · INTAKE', items: [['C-ReceiveItems', 'Receive New Items', 'pkg']] }
+    ];
+    const labNav = [
+      { label: 'OVERVIEW', items: [['L-Dashboard', 'Dashboard', 'dashboard']] },
+      { label: 'SUPPLIES', items: [['L-Requisition', 'Supply Requisition', 'clipboard'], ['L-TurnoverScan', 'Turnover Scan', 'repeat']] },
+      { label: 'EQUIPMENT', items: [['L-ReportIncident', 'Report Incident', 'alert'], ['L-LabInventory', 'Lab Inventory', 'boxes'], ['L-WorkOrders', 'Work Orders', 'checks', 2]] }
+    ];
+    const fileOf = {
+      'C-Dashboard': 'central-dashboard.dc.html',
+      'C-ReorderAlerts': 'central-reorder-alerts.dc.html',
+      'C-RequisitionReview': 'central-requisition-review.dc.html',
+      'C-TurnoverApproval': 'central-turnover-approval.dc.html',
+      'C-MasterLedger': 'central-master-ledger.dc.html',
+      'C-RepairBER': 'central-repair-ber.dc.html',
+      'C-Replacement': 'central-verified-replacement.dc.html',
+      'C-Reconciliation': 'central-reconciliation.dc.html',
+      'C-AuditQueue': 'central-audit-queue.dc.html',
+      'C-ReceiveItems': 'central-receive-items.dc.html',
+      'L-Dashboard': 'lab-dashboard.dc.html',
+      'L-Requisition': 'lab-supply-requisition.dc.html',
+      'L-TurnoverScan': 'lab-turnover-scan.dc.html',
+      'L-ReportIncident': 'lab-report-incident.dc.html',
+      'L-LabInventory': 'lab-inventory.dc.html',
+      'L-WorkOrders': 'lab-work-orders.dc.html'
+    };
+    const groups = (lab ? labNav : central).map(g => ({
+      label: g.label,
+      items: g.items.map(([id, label, icon, count]) => {
+        const on = id === active;
+        return {
+          href: fileOf[id], label, d: I[icon], count: count || '', current: on ? 'page' : 'false',
+          iconColor: on ? '#F2B705' : '#F8D46A',
+          style: 'position: relative; display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; text-decoration: none; font-size: 14px; ' + (on ? 'background: #5A0F14; color: #FFFFFF; font-weight: 600; box-shadow: inset 4px 0 0 #F2B705' : 'color: #FFF4D1; font-weight: 500')
+        };
+      })
+    }));
+    return { groups };
+  }
+}
+</script>
+</body>
+</html>

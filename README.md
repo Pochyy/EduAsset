@@ -4,12 +4,75 @@
 Labs (WIL) and the CIT Property Office.
 
 This repository contains the **17 high-fidelity desktop screens** specified in the EduAsset SRS
-(Figures 3.3–3.37), exported as a self-contained, clickable prototype.
+(Figures 3.3–3.37), packaged as a self-contained, clickable prototype plus the backend handoff
+documents.
 
 > **This is a design reference, not production code.**
 > There is no backend, no database, no authentication and no persistence. Data is sample data held in
 > memory. A production build still needs React components wired to the Spring Boot API and MySQL, as
 > required by the SRS.
+
+---
+
+## Repository layout
+
+```text
+.
+├── index.html                  # redirects to design/index.html
+├── design/
+│   ├── index.html              # prototype launcher (Login / Central / Lab)
+│   └── screens/                # 17 screens + ONE shared runtime
+│       ├── login.dc.html
+│       ├── central-*.dc.html   # 10 Central screens
+│       ├── lab-*.dc.html       # 6 Lab screens
+│       ├── Sidebar.dc.html
+│       ├── TopBar.dc.html
+│       ├── support.js
+│       └── vendor/
+├── docs/
+│   ├── API-CONTRACT.md         # endpoints, payloads, enums, role rules
+│   ├── SEED-DATA.json          # 28 units, 10 flags, items, reqs, turnovers, WOs
+│   └── SCREEN-MAP.md           # screen → SRS figure → requirements → actions
+└── README.md
+```
+
+The screens are no longer one-folder-each with duplicated assets. All 17 share **one** `Sidebar`,
+`TopBar`, `support.js` and `vendor/`, and use simple slug filenames.
+
+---
+
+## Run locally
+
+Serve the **repository root** — not `design/screens/`, and not `file://`. The shared chrome is loaded
+with relative paths.
+
+```powershell
+cd path\to\EduAsset
+python -m http.server 8000
+```
+
+or with Node:
+
+```bash
+npx serve .
+```
+
+Then open:
+
+- **Launcher** — <http://localhost:8000/> (redirects to `design/`)
+- **Login** — <http://localhost:8000/design/screens/login.dc.html>
+- **Central dashboard** — <http://localhost:8000/design/screens/central-dashboard.dc.html>
+- **Lab dashboard** — <http://localhost:8000/design/screens/lab-dashboard.dc.html>
+
+Stop the server with `Ctrl+C`.
+
+### Demo sign-in
+
+1. Choose **Central Property** or **WIL Lab**.
+2. Enter any valid-format email and any password with 8+ characters.
+3. Click **Sign in**, then **Open … Portal**.
+
+No credentials are checked.
 
 ---
 
@@ -47,50 +110,26 @@ This repository contains the **17 high-fidelity desktop screens** specified in t
 | Lab Inventory | 3.14 |
 | Work Orders | 3.20 |
 
-Each screen lives in its own folder next to a shared `Sidebar.dc.html` and `TopBar.dc.html`.
-
 ---
 
-## Run locally
+## Backend handoff
 
-Serve the **repository root** — not an individual folder, and not `file://`. Navigation uses
-`../<folder>/<screen>` paths, so the root is what makes every link work.
+Start with **[`docs/API-CONTRACT.md`](docs/API-CONTRACT.md)**. It defines:
 
-```powershell
-cd path\to\EduAsset
-python -m http.server 8000
-```
+- Base URL, auth, roles, error format and audit rules.
+- All enums (`IN_STOCK`, `ISSUED_IN_USE`, `RETURNED_EMPTY`, `RETIRED`, health states, requisition /
+  turnover / repair / replacement / audit states).
+- Endpoints per module: alerts, requisitions, turnover, ledger, incidents, work orders, repairs,
+  replacements, reconciliation, audit queue and intake.
+- Validation rules: BER 50% threshold, note length, quantity ranges, lead time 14–21, safety buffer.
+- The AI contract (name + category only, key server-side, 10 s fallback).
+- Suggested tables and append-only audit constraints.
 
-or with Node:
+**[`docs/SEED-DATA.json`](docs/SEED-DATA.json)** is import-ready sample data: 28 units, 14 items,
+10 audit flags, 5 requisitions, 3 turnovers and 3 work orders, matching the screens.
 
-```bash
-npx serve .
-```
-
-Then open one of the entry points:
-
-- **Login** — <http://localhost:8000/Login/Main.dc.html>
-- **Central Dashboard** — <http://localhost:8000/Central%20%C2%B7%20Dashboard/C-Dashboard.dc.html>
-- **Lab Dashboard** — <http://localhost:8000/Lab%20%C2%B7%20Dashboard/L-Dashboard.dc.html>
-
-Stop the server with `Ctrl+C`.
-
-### Demo sign-in
-
-1. Choose **Central Property** or **WIL Lab**.
-2. Enter any valid-format email and any password with 8+ characters.
-3. Click **Sign in**, then **Open … Portal**.
-
-No credentials are checked.
-
----
-
-## Navigation
-
-- Sidebar: every Central/Lab screen, grouped by module.
-- Top bar: home, alerts and sign-out.
-- Breadcrumbs and in-page actions (`View PR`, `Open RR-0043`, `Track work orders`, etc.).
-- Login hands off to the selected portal.
+**[`docs/SCREEN-MAP.md`](docs/SCREEN-MAP.md)** is the screen → SRS figure → requirement → action
+index.
 
 ---
 
@@ -130,7 +169,8 @@ web. If the panel requires the phone deliverable, it remains the one open SRS it
 
 ## Data
 
-Sample data only, held in memory. Refreshing a page resets it.
+Sample data only, held in memory. Refreshing a page resets it. The canonical copy for backend seeding
+is `docs/SEED-DATA.json`.
 
 - 28 ledger units, including every asset referenced across the screens.
 - 10 audit flags: 8 reviewable + 2 variance anomalies routed to Requisition Review.
@@ -154,6 +194,16 @@ Sample data only, held in memory. Refreshing a page resets it.
 - HTML pages using the exported design-component runtime (`support.js` + `vendor/react*.js`).
 - No package manager, no build step, no backend.
 - Inter typeface (Google Fonts), CIT-U maroon/gold palette.
+
+---
+
+## GitHub Pages
+
+The repo root has an `index.html` that redirects to `design/index.html`, so the Pages root works:
+
+1. Settings → Pages → Deploy from branch.
+2. Branch `main`, folder `/ (root)`.
+3. Open `https://<username>.github.io/<repo>/`.
 
 ---
 
