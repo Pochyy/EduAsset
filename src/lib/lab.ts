@@ -42,6 +42,32 @@ export const turnoverMachines = [
   },
 ] as const
 
+export const turnoverDetails: Record<
+  string,
+  { machineId: string; itemId: string; oldUnitId: string; newUnitId: string }
+> = {
+  'TO-001': {
+    machineId: 'WIL-PRN-01',
+    itemId: 'TNR',
+    oldUnitId: 'TNR-WIL-2026-001',
+    newUnitId: 'TNR-WIL-2026-002',
+  },
+  'TO-002': {
+    machineId: 'WIL-3DP-001',
+    itemId: 'PLA',
+    oldUnitId: 'FIL-WIL-2026-014',
+    newUnitId: 'FIL-WIL-2026-015',
+  },
+  'TO-003': {
+    machineId: 'WIL-PRN-02',
+    itemId: 'DRM',
+    oldUnitId: 'DRM-WIL-2026-003',
+    newUnitId: 'DRM-WIL-2026-004',
+  },
+}
+
+export const labLabel = (labId: string) => labId.replace('WIL-LAB-', 'WIL Lab ')
+
 const CLOSED_WORK_ORDERS = new Set(['CLOSED_REPAIRED', 'CLOSED_CONDEMNED'])
 
 export interface StatusDisplay {

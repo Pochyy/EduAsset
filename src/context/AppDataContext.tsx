@@ -27,7 +27,15 @@ export interface AppData {
 export type AppDataAction =
   | { type: 'requisition/add'; requisition: SeedRequisition }
   | { type: 'requisition/status'; id: string; status: string }
+  | {
+      type: 'requisition/decide'
+      id: string
+      decision: 'approve' | 'reject'
+      note: string
+      reviewer: string
+    }
   | { type: 'turnover/status'; id: string; status: string }
+  | { type: 'turnover/release'; turnoverId: string; oldUnitId: string; newUnit: SeedUnit }
   | { type: 'work-order/add'; workOrder: SeedWorkOrder }
   | { type: 'work-order/status'; id: string; status: string; patch?: Partial<SeedWorkOrder> }
   | { type: 'audit/review'; id: string; note: string; reviewer: string }
@@ -63,6 +71,21 @@ function reducer(state: AppData, action: AppDataAction): AppData {
             : requisition,
         ),
       }
+    case 'requisition/decide':
+      return {
+        ...state,
+        requisitions: state.requisitions.map((requisition) =>
+          requisition.requisitionId === action.id
+            ? {
+                ...requisition,
+                status: action.decision === 'approve' ? 'APPROVED' : 'REJECTED',
+                reviewNote: action.note || null,
+                reviewedBy: action.reviewer,
+                reviewedAt: new Date().toISOString(),
+              }
+            : requisition,
+        ),
+      }
     case 'turnover/status':
       return {
         ...state,
@@ -70,6 +93,28 @@ function reducer(state: AppData, action: AppDataAction): AppData {
           turnover.turnoverId === action.id ? { ...turnover, status: action.status } : turnover,
         ),
       }
+    case 'turnover/release': {
+      let units = state.units.map((unit) =>
+        unit.assetId === action.oldUnitId
+          ? { ...unit, inventoryStatus: 'RETURNED_EMPTY' }
+          : unit,
+      )
+      units = units.some((unit) => unit.assetId === action.newUnit.assetId)
+        ? units.map((unit) =>
+            unit.assetId === action.newUnit.assetId ? { ...unit, ...action.newUnit } : unit,
+          )
+        : [action.newUnit, ...units]
+
+      return {
+        ...state,
+        turnovers: state.turnovers.map((turnover) =>
+          turnover.turnoverId === action.turnoverId
+            ? { ...turnover, status: 'RELEASED' }
+            : turnover,
+        ),
+        units,
+      }
+    }
     case 'work-order/add':
       return {
         ...state,

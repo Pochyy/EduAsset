@@ -3,10 +3,11 @@
 Where each prototype screen lives, which SRS figures it implements, and what it exercises. Use this
 with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 
-**React implementation (merged to `main` at `e70eee4`):** screens 1–3 (Sign in, Central Dashboard,
-Reorder Alerts) and the complete Lab portal, screens 12–17, are ported. The remaining eight Central
-screens (4–11) are available in the static reference and appear as routed placeholders in the React
-app until they are ported. Porting order and per-screen notes are in `docs/HANDOFF.md`.
+**React implementation (merged to `main` at `e70eee4`):** screens 1–5 (Sign in, Central Dashboard,
+Reorder Alerts, Requisition Review, Turnover Approval) and the complete Lab portal, screens 12–17,
+are ported. The remaining six Central screens (6–11) are available in the static reference and
+appear as routed placeholders in the React app until they are ported. Porting order and per-screen
+notes are in `docs/HANDOFF.md`.
 
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|

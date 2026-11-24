@@ -15,6 +15,8 @@ import { LabWorkOrders } from './screens/LabWorkOrders'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
 import { ReorderAlerts } from './screens/ReorderAlerts'
+import { RequisitionReview } from './screens/RequisitionReview'
+import { TurnoverApproval } from './screens/TurnoverApproval'
 
 interface Placeholder {
   path: string
@@ -26,32 +28,6 @@ interface Placeholder {
 }
 
 const centralPlaceholders: Placeholder[] = [
-  {
-    path: 'requisitions',
-    title: 'Requisition review',
-    srs: '3.7–3.8',
-    summary:
-      'Compare a request with its baseline, surface live variance, and lock abnormal quantities for justification.',
-    items: [
-      'Live variance against the historical baseline',
-      'Approve, reject or lock with a note',
-      'Audit entry for every decision',
-    ],
-    reference: 'central-requisition-review.dc.html',
-  },
-  {
-    path: 'turnover',
-    title: 'Turnover approval & disbursement',
-    srs: '3.13',
-    summary:
-      'Verify the returned consumable and release its replacement under the 1-to-1 turnover rule.',
-    items: [
-      'Four replacement rules and photo evidence',
-      'Second approver confirmation',
-      'Disbursement only after a verified turnover',
-    ],
-    reference: 'central-turnover-approval.dc.html',
-  },
   {
     path: 'ledger',
     title: 'Master property & supply ledger',
@@ -189,6 +165,8 @@ export default function App() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<CentralDashboard />} />
         <Route path="alerts" element={<ReorderAlerts />} />
+        <Route path="requisitions" element={<RequisitionReview />} />
+        <Route path="turnover" element={<TurnoverApproval />} />
         {centralPlaceholders.map((placeholder) =>
           placeholderRoute('central', placeholder, 'Central', '/central/dashboard'),
         )}

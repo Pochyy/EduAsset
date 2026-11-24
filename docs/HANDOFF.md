@@ -2,8 +2,8 @@
 
 **Date:** 24 November 2026
 **React code:** `e70eee4` — fast-forward from `f595110`
-**Main:** React slice `e70eee4` plus the visual precision pass, the complete Lab portal and handoff docs
-**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`
+**Main:** React slice `e70eee4` plus the visual pass, complete Lab portal, Central demand/turnover and handoff docs
+**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`; `feat/central-review`
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
@@ -14,16 +14,16 @@
 
 | Item | State |
 |---|---|
-| React + Tailwind app | `main` plus the complete Lab portal; app shell working |
-| React screens implemented | **9 of 17** — Login, Central Dashboard, Reorder Alerts and all six Lab screens |
-| React placeholder routes | **8 of 17** — all remaining Central screens, with real shell, breadcrumbs and SRS notes |
+| React + Tailwind app | `main` plus the complete Lab portal and Central demand/turnover; app shell working |
+| React screens implemented | **11 of 17** — Login, Central Dashboard, Reorder Alerts, Requisition Review, Turnover Approval and all six Lab screens |
+| React placeholder routes | **6 of 17** — Central asset/intake screens, with real shell, breadcrumbs and SRS notes |
 | Static design reference | **17 of 17** approved screens under `design/` |
 | Backend / API wiring | Not started |
 | Auth | Mock only, persisted in `localStorage` |
 | Production build | Passing; `dist/design/` gets the static reference |
 
 > **Important:** the static reference is still the only complete 17-screen SRS artifact. The React
-> app is a deliberate incremental port. Do not describe the React app as SRS-complete until the 8
+> app is a deliberate incremental port. Do not describe the React app as SRS-complete until the 6
 > remaining Central routes are ported.
 
 ---
@@ -43,8 +43,9 @@
 - `src/types.ts` — auth, seed and domain types.
 - `src/data/seed.ts` — imports `docs/SEED-DATA.json`.
 - `src/context/AppDataContext.tsx` — shared in-memory store for units, items, requisitions,
-  turnovers, work orders and audit flags. Actions now cover add/status changes for requisitions,
-  work orders and turnovers, audit reviews and unit patches.
+  turnovers, work orders and audit flags. Actions cover add/status changes, requisition decisions,
+  turnover release (old unit returned, new unit issued), work-order creation, audit reviews and unit
+  patches.
 - `src/data/counts.ts` — queue counts derived from the store; the sidebar consumes them.
 - `src/data/dashboard.ts` — KPIs, tasks, health, outlook, activity.
 - `src/data/reorder.ts` — forecast rows and burn-rate/day-to-depletion helpers.
@@ -116,9 +117,20 @@ Tabs, MetricStrip, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds
 - Match/mismatch banners, result details, scan audit trail, unit status update and turnover readiness
   for Central approval.
 
-**8 placeholders** — Requisition Review, Turnover Approval, Master Ledger, Repair & BER, Verified
-Replacement, Reconciliation, Audit Queue and Receive New Items. Each uses `ComingSoon`, real
-breadcrumbs/shell, a short scope list and its static reference filename.
+**Requisition Review** (`/central/requisitions`)
+- Locked / Justified / Auto-processed / Decided queues with live counts.
+- Review dialog with baseline/current/variance, approve/reject decision, required rejection reason
+  (≥ 10 characters) and audit note. Decisions move the row and update sidebar/dashboard counts.
+
+**Turnover Approval** (`/central/turnover`)
+- Ready / Awaiting scan / Released states, three-step verification timeline and a disabled release
+  path until the spent unit is scanned.
+- Release confirmation updates the old unit to RETURNED_EMPTY, adds/updates the new unit as
+  ISSUED / IN_USE, links it to the machine and logs the decision.
+
+**6 placeholders** — Master Ledger, Repair & BER, Verified Replacement, Reconciliation, Audit Queue
+and Receive New Items. Each uses `ComingSoon`, real breadcrumbs/shell, a short scope list and its
+static reference filename.
 
 ### Visual precision pass
 
@@ -149,7 +161,7 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
 
 ## Verification record
 
-- `npm run build` passes on the Lab actions branch and on `main` after merge.
+- `npm run build` passes on the Central review branch and on `main` after merge.
 - Production preview serves the app, relative JS/CSS, and `/design/` with no console errors.
 - Re-verified after the visual precision pass: login, forecast recalculation, settings validation and
   save, route guards and mobile drawer still behave exactly as before.
@@ -159,7 +171,13 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
   an abnormal +450% request produced RQ-1024 (`WAITING FOR CUSTODIAN`). Reporting a broken item
   produced WO-0032 and incremented the open work-order count; a correct turnover scan set
   FIL-WIL-2026-014 to `RETURNED_EMPTY` and prepared the turnover for Central approval.
-- Lighthouse on all six Lab screens and the three original screens:
+- Central decisions: rejecting RQ-1022 without a reason showed the ≥10-character error; with a reason
+  it moved to Decided and reduced the locked queue/nav count. Approving RQ-1021 emptied the locked
+  queue. Requisition and turnover KPI counts on the dashboard updated to 0.
+- Turnover approval: releasing TNR-WIL-2026-002 moved the card to RELEASED, made the new unit
+  ISSUED / IN_USE on WIL-PRN-01 and removed the queue badge. The awaiting-scan card kept its release
+  button disabled. Dashboard actions dropped from 5 to 3 open items after both decisions.
+- Lighthouse on Requisition Review, Turnover Approval, Central Dashboard and all Lab/Login screens:
   **Accessibility 100 · Best Practices 100 · SEO 100**.
 - 18-route sweep across all Central/Lab routes and index redirects: every route renders one `h1`,
   no `Page not found`, no runtime exceptions, no page-level horizontal overflow.
@@ -196,32 +214,26 @@ Do not reintroduce these:
 
 ### Recommended order
 
-**Batch 1 — Central demand and turnover (2 screens)**
-1. Requisition Review (`central-requisition-review.dc.html`, SRS 3.7–3.8): queue tabs, live variance,
-   approve/reject/lock, rejection reason ≥ 10 characters. Consumes the lab requisitions already in
-   the store.
-2. Turnover Approval (`central-turnover-approval.dc.html`, SRS 3.13): `RETURNED_EMPTY` gate, steps,
-   release confirmation. Consumes the turnover state written by Turnover Scan.
-
-**Batch 2 — ledger, audit, reconciliation (3 screens)**
-3. Master Ledger (`central-master-ledger.dc.html`, SRS 3.17–3.18): filters, unit record dialog,
+**Batch 1 — ledger, audit, reconciliation (3 screens)**
+1. Master Ledger (`central-master-ledger.dc.html`, SRS 3.17–3.18): filters, unit record dialog,
    serial edit, 1-to-1 flag, QR reprint, history.
-4. Reconciliation (`central-reconciliation.dc.html`, SRS 3.26).
-5. Audit Queue (`central-audit-queue.dc.html`, SRS 3.27): tabs, review note, reviewer/time.
+2. Reconciliation (`central-reconciliation.dc.html`, SRS 3.26).
+3. Audit Queue (`central-audit-queue.dc.html`, SRS 3.27): tabs, review note, reviewer/time. The
+   `audit/review` store action is already implemented.
 
-**Batch 3 — asset decisions (2 screens)**
-6. Repair & BER (`central-repair-ber.dc.html`, SRS 3.21–3.23): quote, live BER, repair / return /
+**Batch 2 — asset decisions (2 screens)**
+4. Repair & BER (`central-repair-ber.dc.html`, SRS 3.21–3.23): quote, live BER, repair / return /
    condemn, pre-filled form.
-7. Verified Replacement (`central-verified-replacement.dc.html`, SRS 3.24–3.25): old/new scan, four
+5. Verified Replacement (`central-verified-replacement.dc.html`, SRS 3.24–3.25): old/new scan, four
    rules, photos, second approver, rejection log.
 
-**Batch 4 — intake (1 screen)**
-8. Receive New Items (`central-receive-items.dc.html`, SRS 3.30–3.34): DR/PO, photo + AI fallback,
+**Batch 3 — intake (1 screen)**
+6. Receive New Items (`central-receive-items.dc.html`, SRS 3.30–3.34): DR/PO, photo + AI fallback,
    staff quantity, QR sheet.
 
 `docs/SCREEN-MAP.md` has the full figure → requirement → action mapping. Keep the same visual and
-interaction patterns as the nine ported screens; only introduce new components when a flow genuinely
-needs them. Use `AppDataContext` dispatch for state changes so queue counts stay consistent.
+interaction patterns as the eleven ported screens; only introduce new components when a flow
+genuinely needs them. Use `AppDataContext` dispatch for state changes so queue counts stay consistent.
 
 ### Definition of done for each ported screen
 
@@ -272,9 +284,9 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Known gaps and open decisions
 
-- 8 Central screens are placeholders (the main remaining work).
-- `AppDataContext` actions are now used by requisitions, incidents and turnover scans; the Central
-  review screens still need to consume them.
+- 6 Central screens are placeholders (the main remaining work).
+- `AppDataContext` actions are now used end-to-end for requisitions, incidents, turnover scans and
+  Central requisition/turnover decisions.
 - Dialog has Escape/overlay close and initial focus, but no full focus trap or focus restore.
 - No unit/component tests, ESLint or Prettier yet.
 - No service layer or API wiring; `docs/API-CONTRACT.md` is the contract.
@@ -287,12 +299,13 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Repo state at handoff
 
-- `main` = React slice `e70eee4` plus the visual precision pass, the complete Lab portal and handoff
-  docs; use `git log -1` for the current tip.
+- `main` = React slice `e70eee4` plus the visual precision pass, complete Lab portal, Central
+  demand/turnover and handoff docs; use `git log -1` for the current tip.
 - `feat/react-tailwind` = `e70eee4` (retained for reference).
 - `design/precision-pass` = visual precision pass (retained for comparison).
 - `feat/lab-readonly` = Lab Dashboard, Lab Inventory, Work Orders batch (retained).
 - `feat/lab-actions` = Supply Requisition, Report Incident, Turnover Scan batch (retained).
+- `feat/central-review` = Requisition Review, Turnover Approval batch (retained).
 - `design/wildcat-theme` = `f595110` (approved Wildcat design branch).
 - `design/` is unchanged and still contains all 17 approved screens plus the launcher.
 - Working tree is clean; `dist/`, `node_modules/` and `.opencode/` are gitignored.

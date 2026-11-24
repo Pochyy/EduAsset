@@ -1,6 +1,7 @@
 import { ArrowRight, ScanLine, Plus, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { actions, activity, health, healthTotal, kpis, outlook } from '../data/dashboard'
+import { useQueueCounts } from '../data/counts'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
 import { Badge } from '../components/ui/Badge'
@@ -19,6 +20,57 @@ const healthBar = {
 
 export function CentralDashboard() {
   usePageTitle('Central · Dashboard')
+  const counts = useQueueCounts()
+
+  const dashboardActions = actions.flatMap((task) => {
+    if (task.id === 'a1') {
+      if (counts.requisitions === 0) return []
+      return [
+        {
+          ...task,
+          title: `${counts.requisitions} requisition${counts.requisitions === 1 ? '' : 's'} locked (V ≥ +50%)`,
+        },
+      ]
+    }
+    if (task.id === 'a2') {
+      if (counts.alerts === 0) return []
+      return [
+        {
+          ...task,
+          title: `${counts.alerts} Purchase Requisition Form${counts.alerts === 1 ? '' : 's'} drafted`,
+        },
+      ]
+    }
+    if (task.id === 'a3') {
+      if (counts.turnover === 0) return []
+      return [
+        {
+          ...task,
+          title: `${counts.turnover} turnover${counts.turnover === 1 ? '' : 's'} awaiting disbursement`,
+        },
+      ]
+    }
+    if (task.id === 'a5') {
+      if (counts.audit === 0) return []
+      return [{ ...task, title: `${counts.audit} audit-queue flags` }]
+    }
+    return [task]
+  })
+
+  const dashboardKpis = kpis.map((kpi) => {
+    switch (kpi.cta) {
+      case 'Reorder alerts':
+        return { ...kpi, value: counts.alerts }
+      case 'Requisition review':
+        return { ...kpi, value: counts.requisitions }
+      case 'Turnover approval':
+        return { ...kpi, value: counts.turnover }
+      case 'Audit queue':
+        return { ...kpi, value: counts.audit }
+      default:
+        return kpi
+    }
+  })
 
   const healthAria = health.map((entry) => `${entry.value} ${entry.label}`).join(', ')
   const attentionCount = health
@@ -50,7 +102,7 @@ export function CentralDashboard() {
 
       <MetricStrip
         ariaLabel="Key figures"
-        items={kpis.map((kpi) => ({
+        items={dashboardKpis.map((kpi) => ({
           label: kpi.label,
           value: kpi.value,
           href: kpi.href,
@@ -62,10 +114,10 @@ export function CentralDashboard() {
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Needs your action</h2>
-            <Badge tone="warning">{actions.length} open</Badge>
+            <Badge tone="warning">{dashboardActions.length} open</Badge>
           </div>
           <ul className="m-0 flex list-none flex-col p-0">
-            {actions.map((task) => (
+            {dashboardActions.map((task) => (
               <li
                 key={task.id}
                 className="flex items-center gap-3 border-t border-line-soft py-3 first:border-t-0 first:pt-0"

@@ -61,6 +61,9 @@ export interface SeedRequisition {
   status: string
   requestedAt: string
   justification: string | null
+  reviewNote?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: string | null
 }
 
 export interface SeedTurnover {
