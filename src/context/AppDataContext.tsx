@@ -41,7 +41,9 @@ export type AppDataAction =
   | { type: 'audit/add'; flag: SeedAuditFlag }
   | { type: 'audit/review'; id: string; note: string; reviewer: string }
   | { type: 'unit/patch'; id: string; patch: Partial<SeedUnit> }
+  | { type: 'units/add'; units: SeedUnit[] }
   | { type: 'item/patch'; id: string; patch: Partial<SeedItem> }
+  | { type: 'item/add'; item: SeedItem }
 
 interface AppDataContextValue {
   data: AppData
@@ -158,12 +160,24 @@ function reducer(state: AppData, action: AppDataAction): AppData {
           unit.assetId === action.id ? { ...unit, ...action.patch } : unit,
         ),
       }
+    case 'units/add':
+      return {
+        ...state,
+        units: [...action.units, ...state.units],
+      }
     case 'item/patch':
       return {
         ...state,
         items: state.items.map((item) =>
           item.itemId === action.id ? { ...item, ...action.patch } : item,
         ),
+      }
+    case 'item/add':
+      return {
+        ...state,
+        items: state.items.some((item) => item.itemId === action.item.itemId)
+          ? state.items
+          : [action.item, ...state.items],
       }
     default:
       return state

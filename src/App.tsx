@@ -5,7 +5,6 @@ import { portalHome } from './lib/utils'
 import type { Portal } from './types'
 import { AppShell } from './components/layout/AppShell'
 import { CentralDashboard } from './screens/CentralDashboard'
-import { ComingSoon } from './screens/ComingSoon'
 import { LabDashboard } from './screens/LabDashboard'
 import { LabInventory } from './screens/LabInventory'
 import { LabReportIncident } from './screens/LabReportIncident'
@@ -20,56 +19,9 @@ import { TurnoverApproval } from './screens/TurnoverApproval'
 import { MasterLedger } from './screens/MasterLedger'
 import { Reconciliation } from './screens/Reconciliation'
 import { AuditQueue } from './screens/AuditQueue'
-
-interface Placeholder {
-  path: string
-  title: string
-  srs: string
-  summary: string
-  items: string[]
-  reference: string
-}
-
-const centralPlaceholders: Placeholder[] = [
-  {
-    path: 'repairs',
-    title: 'Repair & Beyond Economic Repair',
-    srs: '3.21–3.23',
-    summary:
-      'Log repairs, compute BER from replacement value, and decide repair, return to service or condemn.',
-    items: [
-      'Repair history and quote entry',
-      'BER calculation with a clear threshold',
-      'Condemnation form and approval',
-    ],
-    reference: 'central-repair-ber.dc.html',
-  },
-  {
-    path: 'replacements',
-    title: 'Verified replacement',
-    srs: '3.24–3.25',
-    summary: 'Record a replacement against the four rules, with photos and a second approver.',
-    items: [
-      'Four-rule verification',
-      'Photo evidence on the record',
-      'Second-approver confirmation',
-    ],
-    reference: 'central-verified-replacement.dc.html',
-  },
-  {
-    path: 'receive',
-    title: 'Receive new items',
-    srs: '3.30–3.34',
-    summary:
-      'Receive from a delivery record or PO with optional AI name and category, then a staff-typed quantity.',
-    items: [
-      'Delivery record lookup',
-      'AI-assisted name and category',
-      'Staff-typed quantity and QR generation',
-    ],
-    reference: 'central-receive-items.dc.html',
-  },
-]
+import { RepairBer } from './screens/RepairBer'
+import { VerifiedReplacement } from './screens/VerifiedReplacement'
+import { ReceiveItems } from './screens/ReceiveItems'
 
 function RequireAuth({ portal, children }: { portal: Portal; children: ReactNode }) {
   const { user } = useAuth()
@@ -83,35 +35,6 @@ function RequireAuth({ portal, children }: { portal: Portal; children: ReactNode
 function Landing() {
   const { user } = useAuth()
   return <Navigate to={user ? portalHome(user.portal) : '/login'} replace />
-}
-
-function placeholderRoute(
-  portal: Portal,
-  placeholder: Placeholder,
-  portalLabel: string,
-  portalPath: string,
-) {
-  return (
-    <Route
-      key={placeholder.path}
-      path={placeholder.path}
-      element={
-        <ComingSoon
-          breadcrumbs={[
-            { label: portalLabel, href: portalPath },
-            { label: placeholder.title },
-          ]}
-          title={placeholder.title}
-          summary={placeholder.summary}
-          srs={placeholder.srs}
-          items={placeholder.items}
-          reference={placeholder.reference}
-          backTo={portalPath}
-          backLabel={portal === 'central' ? 'Back to Central dashboard' : 'Back to Lab dashboard'}
-        />
-      }
-    />
-  )
 }
 
 export default function App() {
@@ -136,9 +59,9 @@ export default function App() {
         <Route path="ledger" element={<MasterLedger />} />
         <Route path="reconciliation" element={<Reconciliation />} />
         <Route path="audit" element={<AuditQueue />} />
-        {centralPlaceholders.map((placeholder) =>
-          placeholderRoute('central', placeholder, 'Central', '/central/dashboard'),
-        )}
+        <Route path="repairs" element={<RepairBer />} />
+        <Route path="replacements" element={<VerifiedReplacement />} />
+        <Route path="receive" element={<ReceiveItems />} />
       </Route>
 
       <Route

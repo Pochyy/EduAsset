@@ -3,12 +3,10 @@
 Where each prototype screen lives, which SRS figures it implements, and what it exercises. Use this
 with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 
-**React implementation (merged to `main` at `e70eee4`):** screens 1–6 (Sign in, Central Dashboard,
-Reorder Alerts, Requisition Review, Turnover Approval, Master Ledger), screens 9–10 (Reconciliation,
-Audit Queue) and the complete Lab portal, screens 12–17, are ported. The remaining screens 7, 8 and
-11 (Repair & BER, Verified Replacement, Receive New Items) are available in the static reference and
-appear as routed placeholders in the React app until they are ported. Porting order and per-screen
-notes are in `docs/HANDOFF.md`.
+**React implementation:** all 17 screens are ported. The app shell, both dashboards, demand and
+turnover decisions, ledger/audit tools, repair/BER, verified replacement, intake and the complete Lab
+portal are live routes. The static reference remains under `design/` for visual comparison. Remaining
+work is backend/API wiring, tests and deployment; see `docs/HANDOFF.md`.
 
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|

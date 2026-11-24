@@ -2,8 +2,8 @@
 
 **Date:** 24 November 2026
 **React code:** `e70eee4` — fast-forward from `f595110`
-**Main:** React slice `e70eee4` plus the visual pass, complete Lab portal, Central decisions and asset/audit tools
-**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`; `feat/central-review`; `feat/central-assets`
+**Main:** React slice `e70eee4` plus the visual pass, all 17 screens and handoff docs
+**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`; `feat/central-review`; `feat/central-assets`; `feat/final-portal`
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
@@ -14,17 +14,17 @@
 
 | Item | State |
 |---|---|
-| React + Tailwind app | `main` plus Lab, Central demand/turnover and ledger/audit tools; app shell working |
-| React screens implemented | **14 of 17** — Login, Central Dashboard, Reorder Alerts, Requisition Review, Turnover Approval, Master Ledger, Reconciliation, Audit Queue and all six Lab screens |
-| React placeholder routes | **3 of 17** — Repair & BER, Verified Replacement, Receive New Items |
+| React + Tailwind app | `main` plus all 17 screens; app shell working |
+| React screens implemented | **17 of 17** — full Central and Lab portals |
+| React placeholder routes | **0** |
 | Static design reference | **17 of 17** approved screens under `design/` |
 | Backend / API wiring | Not started |
 | Auth | Mock only, persisted in `localStorage` |
 | Production build | Passing; `dist/design/` gets the static reference |
 
-> **Important:** the static reference is still the only complete 17-screen SRS artifact. The React
-> app is a deliberate incremental port. Do not describe the React app as SRS-complete until the 3
-> remaining routes are ported.
+> **Important:** all 17 screens are ported to React, but the app is still a front-end prototype. No
+> backend, database, real auth or API wiring exists yet. Do not describe the system as
+> production-complete until the API contract is implemented and tested.
 
 ---
 
@@ -45,7 +45,7 @@
 - `src/context/AppDataContext.tsx` — shared in-memory store for units, items, requisitions,
   turnovers, work orders and audit flags. Actions cover add/status changes, requisition decisions,
   turnover release (old unit returned, new unit issued), work-order creation, audit add/review,
-  unit patches and item-level 1-to-1 settings.
+  unit/item patches, bulk unit intake and item creation.
 - `src/data/counts.ts` — queue counts derived from the store; the sidebar consumes them.
 - `src/data/dashboard.ts` — KPIs, tasks, health, outlook, activity.
 - `src/data/reorder.ts` — forecast rows and burn-rate/day-to-depletion helpers.
@@ -145,8 +145,25 @@ Tabs, MetricStrip, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds
 - Review flow with a required ≥10-character note; reviewed flags move to Reviewed and decrease the
   sidebar/dashboard count. Variance anomalies route to Requisition Review instead.
 
-**3 placeholders** — Repair & BER, Verified Replacement and Receive New Items. Each uses
-`ComingSoon`, real breadcrumbs/shell, a short scope list and its static reference filename.
+**Repair & BER** (`/central/repairs`)
+- Durable asset selector with cumulative repair/BER meters, repair ledger, quote entry and
+  repairable/not-repairable decision.
+- Below 50% approves repair and moves the unit to UNDER_REPAIR; 50%+ blocks maintenance and offers
+  condemnation. Condemnation generates the pre-filled CD-2026-0019 form and retires the unit.
+
+**Verified Replacement** (`/central/replacements`)
+- RR-0043 flow with old-unit scan, new-unit candidates, four validation rules, photo evidence and a
+  required second approver.
+- Valid submissions move to a pending second-person step, then complete: old unit RETIRED, new unit
+  ISSUED / IN_USE. Invalid attempts can be logged and become a real audit flag.
+
+**Receive New Items** (`/central/receive`)
+- Four-step intake: delivery record → photo/AI suggestion or manual → confirm name/category/quantity
+  and 1-to-1 flag → printable QR sheet.
+- Saves new item and unit records to the shared store; generated units appear in the Master Ledger.
+  Simulated AI failure has a manual fallback.
+
+No placeholder routes remain.
 
 ### Visual precision pass
 
@@ -177,7 +194,7 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
 
 ## Verification record
 
-- `npm run build` passes on the Central assets branch and on `main` after merge.
+- `npm run build` passes on the final-portal branch and on `main` after merge.
 - Production preview serves the app, relative JS/CSS, and `/design/` with no console errors.
 - Re-verified after the visual precision pass: login, forecast recalculation, settings validation and
   save, route guards and mobile drawer still behave exactly as before.
@@ -200,8 +217,13 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
   review action.
 - Audit Queue: the review note required ≥10 characters; saving moved the flag to Reviewed and reduced
   the queue count to 8. The dashboard audit summary now derives its breakdown from live flags.
-- Lighthouse on Master Ledger, Reconciliation, Audit Queue, Central Dashboard and all Lab/Login
-  screens: **Accessibility 100 · Best Practices 100 · SEO 100**.
+- Repair & BER: selecting WIL-3DP-002 with a ₱5,000 quote produced 55.3% BER and blocked
+  maintenance; condemnation retired the unit and generated CD-2026-0019.
+- Receive New Items: DR-118 → photo → AI keyboard suggestion → quantity 2 → saved KB-0155 and
+  KB-0156; both appeared in Master Ledger search. QR labels rendered.
+- Verified Replacement: KB-0152 passed all four rules, went through second-approver confirmation,
+  completed as KB-0007 → KB-0152, and the progress steps stayed green after the store updated.
+- Lighthouse on all 17 screens: **Accessibility 100 · Best Practices 100 · SEO 100**.
 - 18-route sweep across all Central/Lab routes and index redirects: every route renders one `h1`,
   no `Page not found`, no runtime exceptions, no page-level horizontal overflow.
 - Checked at 1440 and 390 px. At 390 the page does not overflow; dense tables scroll inside their own
@@ -235,31 +257,41 @@ Do not reintroduce these:
 
 ## Next work
 
-### Recommended order
+Screen parity is complete. The remaining work is production hardening, not porting.
 
-**Batch 1 — asset decisions (2 screens)**
-1. Repair & BER (`central-repair-ber.dc.html`, SRS 3.21–3.23): quote, live BER, repair / return /
-   condemn, pre-filled form. Use the ledger `unit/patch` action for health-state changes.
-2. Verified Replacement (`central-verified-replacement.dc.html`, SRS 3.24–3.25): old/new scan, four
-   rules, photos, second approver, rejection log.
+### 1. Backend/API
+- Implement `docs/API-CONTRACT.md` in Spring Boot + MySQL.
+- Replace the `AppDataContext` mock store with query/mutation hooks; keep the same screen-facing
+  actions so the UI does not need a redesign.
+- Wire real auth and server-side role enforcement. The current portal guards are client-side only.
+- Move AI intake to the backend; the API key must never reach the client.
+- Persist audit events and enforce the append-only rules in the contract.
 
-**Batch 2 — intake (1 screen)**
-3. Receive New Items (`central-receive-items.dc.html`, SRS 3.30–3.34): DR/PO, photo + AI fallback,
-   staff quantity, QR sheet. Add units and items through the store.
+### 2. Automated tests
+- Add Vitest + React Testing Library.
+- Unit-test the store reducer (requisition decisions, turnover release, unit patches, intake).
+- Flow-test login, intake, replacement, audit review and repair condemnation.
+- Keep the 1440/390 + Lighthouse checks in the definition of done.
 
-`docs/SCREEN-MAP.md` has the full figure → requirement → action mapping. Keep the same visual and
-interaction patterns as the fourteen ported screens; only introduce new components when a flow
-genuinely needs them. Use `AppDataContext` dispatch for state changes so queue counts stay consistent.
+### 3. Deployment
+- Build and publish `dist/`, which includes the static reference at `dist/design/`.
+- Configure GitHub Pages (or another static host) and verify hash deep links.
 
-### Definition of done for each ported screen
+### Optional UX work
+- Add a full focus trap/focus restore to dialogs/drawers.
+- Add a true camera/QR reader when the backend/media layer exists.
+- Phone screens (Figure 3.38) remain out of scope by owner decision.
 
-- Route replaces its `ComingSoon` entry in `src/App.tsx`.
+### Regression checklist for future changes
+
+- All 17 routes are implemented; do not reintroduce a placeholder route.
 - Data uses `docs/SEED-DATA.json` or a screen-specific module; no invented contradictory numbers.
 - SRS behaviours, validation and dialogs are preserved from the static reference.
 - 44px targets, visible labels, keyboard operation, AA contrast, status not conveyed by color alone.
 - `npm run build` passes; screen checked at 1440 and 390; no page-level overflow or console errors.
 - README status table and `docs/SCREEN-MAP.md` updated.
 - Sidebar counts updated only when the underlying data changes.
+- Use `AppDataContext` dispatch for state changes so queue counts stay consistent.
 
 ### Do not
 
@@ -269,7 +301,7 @@ genuinely needs them. Use `AppDataContext` dispatch for state changes so queue c
 - Do not reintroduce four cloned KPI cards where a `MetricStrip` belongs.
 - Do not put a bordered table inside a bordered card; the card is the only frame.
 - Do not add a backend or client-side AI key; AI runs server-side per the SRS/API contract.
-- Do not mark the React app complete while placeholders remain.
+- Do not describe the system as production-complete while the API, persistence and auth are mocked.
 
 ---
 
@@ -300,9 +332,10 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Known gaps and open decisions
 
-- 3 screens are placeholders: Repair & BER, Verified Replacement and Receive New Items.
-- `AppDataContext` actions are now used end-to-end for requisitions, incidents, turnover scans,
-  Central decisions, ledger edits, 1-to-1 settings, reconciliation flags and audit reviews.
+- All 17 screens are ported; there are no UI placeholders left.
+- `AppDataContext` actions are used end-to-end for requisitions, incidents, turnover scans,
+  Central decisions, ledger edits, 1-to-1 settings, reconciliation flags, audit reviews, repair/BER,
+  replacement and intake.
 - Dialog has Escape/overlay close and initial focus, but no full focus trap or focus restore.
 - No unit/component tests, ESLint or Prettier yet.
 - No service layer or API wiring; `docs/API-CONTRACT.md` is the contract.
@@ -315,14 +348,15 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Repo state at handoff
 
-- `main` = React slice `e70eee4` plus visual pass, complete Lab portal, Central decisions,
-  ledger/audit tools and handoff docs; use `git log -1` for the current tip.
+- `main` = React slice `e70eee4` plus all 17 screens and handoff docs; use `git log -1` for the
+  current tip.
 - `feat/react-tailwind` = `e70eee4` (retained for reference).
 - `design/precision-pass` = visual precision pass (retained for comparison).
 - `feat/lab-readonly` = Lab Dashboard, Lab Inventory, Work Orders batch (retained).
 - `feat/lab-actions` = Supply Requisition, Report Incident, Turnover Scan batch (retained).
 - `feat/central-review` = Requisition Review, Turnover Approval batch (retained).
 - `feat/central-assets` = Master Ledger, Reconciliation, Audit Queue batch (retained).
+- `feat/final-portal` = Repair & BER, Verified Replacement, Receive New Items batch (retained).
 - `design/wildcat-theme` = `f595110` (approved Wildcat design branch).
 - `design/` is unchanged and still contains all 17 approved screens plus the launcher.
 - Working tree is clean; `dist/`, `node_modules/` and `.opencode/` are gitignored.
