@@ -7,9 +7,9 @@ The repository holds two front ends:
 
 - **React + Tailwind application** at the repository root. This is the in-progress replacement for
   the static prototype. The app shell, design tokens, Login, Central Dashboard, Reorder Alerts,
-  Requisition Review, Turnover Approval and the complete Lab portal (Dashboard, Supply Requisition,
-  Turnover Scan, Report Incident, Lab Inventory, Work Orders) are implemented; the six remaining
-  Central asset/intake routes are marked placeholders.
+  Requisition Review, Turnover Approval, Master Ledger, Reconciliation, Audit Queue and the complete
+  Lab portal (Dashboard, Supply Requisition, Turnover Scan, Report Incident, Lab Inventory, Work
+  Orders) are implemented; the three remaining asset-decision/intake routes are marked placeholders.
 - **Static design reference** under `design/`. All 17 approved desktop screens remain available
   there and are the visual source of truth while the React screens are ported.
 
@@ -28,11 +28,11 @@ The repository holds two front ends:
 | Reorder Alerts, PR preview, forecast settings | **Implemented** | 3.3–3.5 |
 | Requisition Review | **Implemented** | 3.7–3.8 |
 | Turnover Approval & Disbursement | **Implemented** | 3.13 |
-| Master Ledger | Placeholder | 3.17–3.18 |
+| Master Ledger | **Implemented** | 3.17–3.18 |
 | Repair & BER | Placeholder | 3.21–3.23 |
 | Verified Replacement | Placeholder | 3.24–3.25 |
-| Reconciliation | Placeholder | 3.26 |
-| Audit Queue | Placeholder | 3.27 |
+| Reconciliation | **Implemented** | 3.26 |
+| Audit Queue | **Implemented** | 3.27 |
 | Receive New Items | Placeholder | 3.30–3.34 |
 | Lab Dashboard | **Implemented** | 3.37 |
 | Lab Supply Requisition | **Implemented** | 3.6 |
@@ -41,15 +41,15 @@ The repository holds two front ends:
 | Lab Inventory | **Implemented** | 3.14 |
 | Work Orders | **Implemented** | 3.20 |
 
-The 6 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
+The 3 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
 each states what will be ported from its approved static screen.
 
 **Current state:** the React vertical slice is merged (`e70eee4`, 24 November 2026), followed by the
-visual precision pass, the complete Lab portal, and Central requisition/turnover decisions. Eleven
-screens are implemented; the six Central asset/intake screens remain placeholders. The static
-reference is still the complete 17-screen artifact. Start the next session with
-**[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state, verification record and recommended porting
-order.
+visual precision pass, the complete Lab portal, Central requisition/turnover decisions, and the
+ledger/reconciliation/audit tools. Fourteen screens are implemented; three Central asset-decision and
+intake screens remain. The static reference is still the complete 17-screen artifact. Start the next
+session with **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state, verification record and
+recommended porting order.
 
 ---
 
@@ -171,11 +171,11 @@ components under `src/components/ui/`. `DESIGN.md` remains the design specificat
 | Reorder Alerts (forecast, PR preview, settings) | 3.3, 3.4, 3.5 | Implemented |
 | Requisition Review + review dialog | 3.7, 3.8 | Implemented |
 | Turnover Approval & Disbursement | 3.13 | Implemented |
-| Master Ledger + unit record | 3.17, 3.18 | Placeholder |
+| Master Ledger + unit record | 3.17, 3.18 | Implemented |
 | Repair & BER + condemnation form | 3.21, 3.22, 3.23 | Placeholder |
 | Verified Replacement | 3.24, 3.25 | Placeholder |
-| Periodic Reconciliation | 3.26 | Placeholder |
-| Audit Queue | 3.27 | Placeholder |
+| Periodic Reconciliation | 3.26 | Implemented |
+| Audit Queue | 3.27 | Implemented |
 | Receive New Items (four-step flow) | 3.30–3.34 | Placeholder |
 
 ### WIL Lab Custodian Portal
@@ -269,8 +269,8 @@ is written back to a database; a page refresh resets in-memory state.
 
 ## Known limitations
 
-- Eleven of the 17 screens are ported to React; the six remaining Central routes are placeholders.
-  See [`docs/HANDOFF.md`](docs/HANDOFF.md) for the remaining queue.
+- Fourteen of the 17 screens are ported to React; the three remaining asset-decision and intake
+  routes are placeholders. See [`docs/HANDOFF.md`](docs/HANDOFF.md) for the remaining queue.
 - Mock auth only; no real account check, backend session or role enforcement. Portal guards are
   client-side.
 - No API wiring, database or persistence.

@@ -2,6 +2,8 @@ import { ArrowRight, ScanLine, Plus, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { actions, activity, health, healthTotal, kpis, outlook } from '../data/dashboard'
 import { useQueueCounts } from '../data/counts'
+import { useAppData } from '../context/AppDataContext'
+import { formatVariance, itemNameOf, labLabel } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
 import { Badge } from '../components/ui/Badge'
@@ -21,6 +23,23 @@ const healthBar = {
 export function CentralDashboard() {
   usePageTitle('Central · Dashboard')
   const counts = useQueueCounts()
+  const { data } = useAppData()
+
+  const lockedRequisitions = data.requisitions.filter(
+    (requisition) => requisition.status === 'LOCKED_REVIEW',
+  )
+  const unreviewedFlags = data.auditFlags.filter((flag) => !flag.reviewed)
+  const countFlagTypes = (types: string[]) =>
+    unreviewedFlags.filter((flag) => types.includes(flag.type)).length
+  const suspiciousCount = countFlagTypes([
+    'DUPLICATE_REPLACEMENT',
+    'RETIRED_RESCAN',
+    'UNIT_AGE',
+    'LOCATION_RATE',
+  ])
+  const rejectedCount = countFlagTypes(['REJECTED_REPLACEMENT'])
+  const dormantCount = countFlagTypes(['DORMANT'])
+  const reconCount = countFlagTypes(['RECONCILIATION'])
 
   const dashboardActions = actions.flatMap((task) => {
     if (task.id === 'a1') {
@@ -29,6 +48,12 @@ export function CentralDashboard() {
         {
           ...task,
           title: `${counts.requisitions} requisition${counts.requisitions === 1 ? '' : 's'} locked (V ≥ +50%)`,
+          detail: lockedRequisitions
+            .map(
+              (requisition) =>
+                `${labLabel(requisition.labId)} ${itemNameOf(data.items, requisition.itemId)} ${formatVariance(requisition.variancePercent)}`,
+            )
+            .join(', '),
         },
       ]
     }
@@ -52,7 +77,19 @@ export function CentralDashboard() {
     }
     if (task.id === 'a5') {
       if (counts.audit === 0) return []
-      return [{ ...task, title: `${counts.audit} audit-queue flags` }]
+      const details = [
+        `${suspiciousCount} suspicious pattern${suspiciousCount === 1 ? '' : 's'}`,
+        `${rejectedCount} rejected attempt${rejectedCount === 1 ? '' : 's'}`,
+        `${dormantCount} dormant asset${dormantCount === 1 ? '' : 's'}`,
+        `${reconCount} reconciliation discrepanc${reconCount === 1 ? 'y' : 'ies'}`,
+      ]
+      return [
+        {
+          ...task,
+          title: `${counts.audit} audit-queue flags`,
+          detail: details.join(', '),
+        },
+      ]
     }
     return [task]
   })

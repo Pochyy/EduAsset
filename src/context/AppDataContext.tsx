@@ -38,8 +38,10 @@ export type AppDataAction =
   | { type: 'turnover/release'; turnoverId: string; oldUnitId: string; newUnit: SeedUnit }
   | { type: 'work-order/add'; workOrder: SeedWorkOrder }
   | { type: 'work-order/status'; id: string; status: string; patch?: Partial<SeedWorkOrder> }
+  | { type: 'audit/add'; flag: SeedAuditFlag }
   | { type: 'audit/review'; id: string; note: string; reviewer: string }
   | { type: 'unit/patch'; id: string; patch: Partial<SeedUnit> }
+  | { type: 'item/patch'; id: string; patch: Partial<SeedItem> }
 
 interface AppDataContextValue {
   data: AppData
@@ -129,6 +131,11 @@ function reducer(state: AppData, action: AppDataAction): AppData {
             : workOrder,
         ),
       }
+    case 'audit/add':
+      return {
+        ...state,
+        auditFlags: [action.flag, ...state.auditFlags],
+      }
     case 'audit/review':
       return {
         ...state,
@@ -149,6 +156,13 @@ function reducer(state: AppData, action: AppDataAction): AppData {
         ...state,
         units: state.units.map((unit) =>
           unit.assetId === action.id ? { ...unit, ...action.patch } : unit,
+        ),
+      }
+    case 'item/patch':
+      return {
+        ...state,
+        items: state.items.map((item) =>
+          item.itemId === action.id ? { ...item, ...action.patch } : item,
         ),
       }
     default:

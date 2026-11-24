@@ -17,6 +17,9 @@ import { NotFound } from './screens/NotFound'
 import { ReorderAlerts } from './screens/ReorderAlerts'
 import { RequisitionReview } from './screens/RequisitionReview'
 import { TurnoverApproval } from './screens/TurnoverApproval'
+import { MasterLedger } from './screens/MasterLedger'
+import { Reconciliation } from './screens/Reconciliation'
+import { AuditQueue } from './screens/AuditQueue'
 
 interface Placeholder {
   path: string
@@ -28,18 +31,6 @@ interface Placeholder {
 }
 
 const centralPlaceholders: Placeholder[] = [
-  {
-    path: 'ledger',
-    title: 'Master property & supply ledger',
-    srs: '3.17–3.18',
-    summary: 'One record per unit: ID, QR, location, inventory status and health state.',
-    items: [
-      'Filter by category, location and status',
-      'Separate inventory status from health state',
-      'Open a unit record and its full history',
-    ],
-    reference: 'central-master-ledger.dc.html',
-  },
   {
     path: 'repairs',
     title: 'Repair & Beyond Economic Repair',
@@ -64,31 +55,6 @@ const centralPlaceholders: Placeholder[] = [
       'Second-approver confirmation',
     ],
     reference: 'central-verified-replacement.dc.html',
-  },
-  {
-    path: 'reconciliation',
-    title: 'Reconciliation',
-    srs: '3.26',
-    summary: 'Reconcile a room on schedule and review every discrepancy with a note.',
-    items: [
-      'Scheduled room reconciliation',
-      'Discrepancy list with variance',
-      'Notes and a complete audit trail',
-    ],
-    reference: 'central-reconciliation.dc.html',
-  },
-  {
-    path: 'audit',
-    title: 'Audit queue',
-    srs: '3.27',
-    summary:
-      'Review flagged patterns, rejected attempts, dormant assets and reconciliation discrepancies.',
-    items: [
-      'Severity and pattern grouping',
-      'Review each flag with a note',
-      'Queue counts stay visible in the sidebar',
-    ],
-    reference: 'central-audit-queue.dc.html',
   },
   {
     path: 'receive',
@@ -167,6 +133,9 @@ export default function App() {
         <Route path="alerts" element={<ReorderAlerts />} />
         <Route path="requisitions" element={<RequisitionReview />} />
         <Route path="turnover" element={<TurnoverApproval />} />
+        <Route path="ledger" element={<MasterLedger />} />
+        <Route path="reconciliation" element={<Reconciliation />} />
+        <Route path="audit" element={<AuditQueue />} />
         {centralPlaceholders.map((placeholder) =>
           placeholderRoute('central', placeholder, 'Central', '/central/dashboard'),
         )}

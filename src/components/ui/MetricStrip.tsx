@@ -23,7 +23,12 @@ export function MetricStrip({ ariaLabel, items, className }: MetricStripProps) {
       aria-label={ariaLabel}
       className={cn('overflow-hidden rounded-card border border-line bg-line', className)}
     >
-      <div className="grid gap-px sm:grid-cols-2 xl:grid-cols-4">
+      <div
+        className={cn(
+          'grid gap-px',
+          items.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-4',
+        )}
+      >
         {items.map((item) => {
           const body = (
             <>

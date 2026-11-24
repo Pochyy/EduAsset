@@ -114,8 +114,9 @@ The React + Tailwind app implements this system in code:
   rewrite. Role guards redirect a signed-in user to their own portal.
 - **Reference:** `design/screens/` remains the approved visual source for screens not yet ported.
 - **Current port state:** the shell, Login, Central Dashboard, Reorder Alerts, Requisition Review,
-  Turnover Approval and the complete Lab portal are on `main`; the six Central asset/intake routes
-  are placeholders. See `docs/HANDOFF.md` for the next batch and verification record.
+  Turnover Approval, Master Ledger, Reconciliation, Audit Queue and the complete Lab portal are on
+  `main`; the three remaining asset-decision/intake routes are placeholders. See `docs/HANDOFF.md`
+  for the next batch and verification record.
 
 ## Accessibility
 
