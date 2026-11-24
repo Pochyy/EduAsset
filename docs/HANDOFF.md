@@ -2,8 +2,8 @@
 
 **Date:** 24 November 2026
 **React code:** `e70eee4` — fast-forward from `f595110`
-**Main:** React slice `e70eee4` plus the handoff docs commits after it
-**Branch preserved:** `feat/react-tailwind` at `e70eee4`
+**Main:** React slice `e70eee4` plus the visual precision pass and handoff docs after it
+**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass` for the visual pass
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
@@ -52,14 +52,14 @@
 ### UI system
 
 `src/components/ui/`: Button, Card, Badge, Field/Input/Select/Textarea, Dialog, Table primitives,
-Tabs, StatCard, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds the approved SVG mark.
+Tabs, MetricStrip, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds the approved SVG mark.
 
 ### Shell
 
 - `AppShell` with sticky 72px top bar, 264px butter sidebar, 1200px content column, skip link,
   mobile drawer with overlay/Escape/body lock.
-- `Sidebar` with module groups, rust labels, amber count pills, white active surface and 3px amber
-  leading bar.
+- `Sidebar` with stage groups (Demand, Turnover, Units & assets, Intake), rust labels, amber count
+  pills, white active surface and 3px amber leading bar.
 - `TopBar` with portal label, prototype pill, alert count, user pill, sign out.
 - Nav/alert counts centralised in `src/components/layout/nav.ts`.
 
@@ -70,8 +70,8 @@ Tabs, StatCard, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds th
   `main` landmark, automatic portal hand-off.
 
 **Central Dashboard** (`/central/dashboard`)
-- 4 KPI cards, action list, 4-state equipment health bar/cards, depletion outlook table, audit-log
-  activity. Cards stack until `xl` so tables never squeeze at 1024.
+- Four-metric signal strip, action list, 4-state equipment health (stacked bar + percentage legend),
+  depletion outlook table, audit-log activity. Cards stack until `xl` so tables never squeeze at 1024.
 - Status shown as `ALERT` + `PR drafted` or `OK` (no color-only meaning).
 
 **Reorder Alerts** (`/central/alerts`)
@@ -87,6 +87,22 @@ Replacement, Reconciliation, Audit Queue, Receive New Items, Lab Dashboard, Supp
 Turnover Scan, Report Incident, Lab Inventory, Work Orders. Each uses `ComingSoon`, real
 breadcrumbs/shell, a short scope list and its static reference filename.
 
+### Visual precision pass
+
+A visual-only pass refined the implemented surfaces without changing routes, data, copy or behaviour:
+
+- Replaced four cloned KPI cards on Dashboard and Reorder Alerts with a shared `MetricStrip`: one
+  bordered surface divided by hairlines, ink values and rust CTAs.
+- Flattened table framing (no bordered table inside a bordered card), tightened card-title type to
+  15px and H1 to 30px, and simplified sidebar group labels to stage names.
+- Reworked equipment health into a four-row percentage legend with a derived “units need
+  maintenance or repair” line.
+- Changed warning health marks from brand amber to the semantic ochre `--warning` token.
+- Quieted the Login demo note to a left-rule footnote and calmed placeholder pages to an inline icon,
+  checklist and footer line.
+- Added a 160ms dialog entrance with reduced-motion support.
+- Removed the unused `StatCard` component.
+
 ### Routing and guards
 
 - `HashRouter` for static hosting; `base: './'` so the build works under a project subpath.
@@ -100,12 +116,14 @@ breadcrumbs/shell, a short scope list and its static reference filename.
 
 ## Verification record
 
-- `npm run build` passes on `main` at `e70eee4`.
+- `npm run build` passes on the precision-pass branch and on `main` after merge.
 - Production preview serves the app, relative JS/CSS, and `/design/` with no console errors.
+- Re-verified after the visual precision pass: login, forecast recalculation, settings validation and
+  save, route guards and mobile drawer still behave exactly as before.
 - 18-route sweep across all Central/Lab routes and index redirects: every route renders one `h1`,
   no `Page not found`, no runtime exceptions, no page-level horizontal overflow.
 - Lighthouse on Login and Central Dashboard:
-  **Accessibility 100 · Best Practices 100 · SEO 100**.
+  **Accessibility 100 · Best Practices 100 · SEO 100**, re-confirmed after the precision pass.
 - Checked at 1440, 1024 and 390 px. At 390 the page does not overflow; dense tables scroll inside
   their own wrapper. Phone layout remains out of SRS scope.
 - Static reference still works standalone at `/design/` and is copied into the production build.
@@ -186,6 +204,8 @@ needs them.
 - Do not edit `design/` to make a React problem go away; it is the approved reference.
 - Do not change copy, seed data, routes or SRS logic without an SRS reason.
 - Do not add new colors, fonts, gradients, glass or decorative kickers.
+- Do not reintroduce four cloned KPI cards where a `MetricStrip` belongs.
+- Do not put a bordered table inside a bordered card; the card is the only frame.
 - Do not add a backend or client-side AI key; AI runs server-side per the SRS/API contract.
 - Do not mark the React app complete while placeholders remain.
 
@@ -231,9 +251,10 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Repo state at handoff
 
-- `main` = React slice `e70eee4` plus the handoff docs commits on top; use `git log -1` for the
-  current docs tip.
+- `main` = React slice `e70eee4` plus the visual precision pass and handoff docs; use `git log -1`
+  for the current tip.
 - `feat/react-tailwind` = `e70eee4` (retained for reference).
+- `design/precision-pass` = visual precision pass (retained for comparison).
 - `design/wildcat-theme` = `f595110` (approved Wildcat design branch).
 - `design/` is unchanged and still contains all 17 approved screens plus the launcher.
 - Working tree is clean; `dist/`, `node_modules/` and `.opencode/` are gitignored.

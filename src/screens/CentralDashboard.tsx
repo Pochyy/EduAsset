@@ -6,13 +6,13 @@ import { cn } from '../lib/utils'
 import { Badge } from '../components/ui/Badge'
 import { buttonStyles } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
+import { MetricStrip } from '../components/ui/MetricStrip'
 import { PageHeader } from '../components/ui/PageHeader'
-import { StatCard } from '../components/ui/StatCard'
 import { Table, TBody, TD, TH, THead, TR, TableWrap } from '../components/ui/Table'
 
 const healthBar = {
   success: 'bg-success',
-  warning: 'bg-amber',
+  warning: 'bg-warning',
   danger: 'bg-danger',
   neutral: 'bg-neutral-text',
 } as const
@@ -21,6 +21,9 @@ export function CentralDashboard() {
   usePageTitle('Central · Dashboard')
 
   const healthAria = health.map((entry) => `${entry.value} ${entry.label}`).join(', ')
+  const attentionCount = health
+    .filter((entry) => entry.tone === 'warning' || entry.tone === 'danger')
+    .reduce((total, entry) => total + entry.value, 0)
 
   return (
     <>
@@ -45,25 +48,20 @@ export function CentralDashboard() {
         }
       />
 
-      <section
-        aria-label="Key figures"
-        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
-      >
-        {kpis.map((kpi) => (
-          <StatCard
-            key={kpi.label}
-            label={kpi.label}
-            value={kpi.value}
-            href={kpi.href}
-            cta={kpi.cta}
-          />
-        ))}
-      </section>
+      <MetricStrip
+        ariaLabel="Key figures"
+        items={kpis.map((kpi) => ({
+          label: kpi.label,
+          value: kpi.value,
+          href: kpi.href,
+          cta: kpi.cta,
+        }))}
+      />
 
       <div className="grid gap-5 xl:grid-cols-2">
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-base font-bold tracking-[-0.01em] text-ink">Needs your action</h2>
+            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Needs your action</h2>
             <Badge tone="warning">{actions.length} open</Badge>
           </div>
           <ul className="m-0 flex list-none flex-col p-0">
@@ -97,7 +95,7 @@ export function CentralDashboard() {
         </Card>
 
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
-          <h2 className="text-base font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
             Durable equipment health
           </h2>
           <p className="text-[13px] leading-relaxed text-muted">
@@ -118,27 +116,34 @@ export function CentralDashboard() {
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col">
             {health.map((entry) => (
               <div
                 key={entry.label}
-                className="flex items-center gap-2.5 rounded-control border border-line-soft p-3"
+                className="flex items-center gap-2.5 border-t border-line-soft py-2.5 first:border-t-0 first:pt-0 last:pb-0"
               >
                 <span
                   aria-hidden="true"
-                  className={cn('h-3 w-3 shrink-0 rounded-full', healthBar[entry.tone])}
+                  className={cn('h-2.5 w-2.5 shrink-0 rounded-full', healthBar[entry.tone])}
                 />
-                <span className="flex flex-col leading-tight">
-                  <span className="text-xl font-bold text-ink">{entry.value}</span>
-                  <span className="text-xs text-muted">{entry.label}</span>
+                <span className="flex-1 text-[13px] text-ink">{entry.label}</span>
+                <span className="text-[11px] tabular-nums text-muted">
+                  {Math.round((entry.value / healthTotal) * 100)}%
+                </span>
+                <span className="w-6 text-right text-[15px] font-bold tabular-nums text-ink">
+                  {entry.value}
                 </span>
               </div>
             ))}
           </div>
 
+          <p className="text-xs leading-relaxed text-muted">
+            {attentionCount} units need maintenance or repair.
+          </p>
+
           <Link
             to="/central/repairs"
-            className="inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+            className="mt-auto inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
           >
             Open Repair &amp; BER
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -149,7 +154,7 @@ export function CentralDashboard() {
       <div className="grid gap-5 xl:grid-cols-2">
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-base font-bold tracking-[-0.01em] text-ink">Depletion outlook</h2>
+            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Depletion outlook</h2>
             <Link
               to="/central/alerts"
               className="inline-flex min-h-11 items-center text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
@@ -192,7 +197,7 @@ export function CentralDashboard() {
         </Card>
 
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
-          <h2 className="text-base font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
             Recent activity (audit log)
           </h2>
           <ol className="m-0 flex list-none flex-col p-0">

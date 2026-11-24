@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Info, Layers } from 'lucide-react'
+import { ArrowLeft, Check, Layers } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from '../lib/usePageTitle'
 import { buttonStyles } from '../components/ui/Button'
@@ -43,12 +43,10 @@ export function ComingSoon({
       />
 
       <Card className="max-w-3xl p-6">
-        <div className="flex items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-butter text-rust">
-            <Layers className="h-6 w-6" aria-hidden="true" />
-          </span>
+        <div className="flex items-start gap-3">
+          <Layers className="mt-0.5 h-5 w-5 shrink-0 text-rust" aria-hidden="true" />
           <div className="min-w-0">
-            <h2 className="text-base font-bold tracking-[-0.01em] text-ink">
+            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
               This screen arrives in the next batch
             </h2>
             <p className="mt-1 text-[13px] leading-relaxed text-muted">
@@ -67,11 +65,9 @@ export function ComingSoon({
           ))}
         </ul>
 
-        <div className="mt-5 flex items-start gap-2.5 rounded-control border border-butter-line bg-butter-soft px-4 py-3">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-rust" aria-hidden="true" />
-          <span className="text-xs leading-relaxed text-[#5A4A20]">
-            Static reference: <code className="font-mono">{reference}</code> · SRS {srs}
-          </span>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4 text-xs text-muted">
+          <span>SRS {srs}</span>
+          <code className="font-mono text-[11px]">{reference}</code>
         </div>
       </Card>
     </>

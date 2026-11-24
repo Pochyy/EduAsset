@@ -17,6 +17,7 @@ import { Card } from '../components/ui/Card'
 import { Dialog } from '../components/ui/Dialog'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Field, Input } from '../components/ui/Field'
+import { MetricStrip } from '../components/ui/MetricStrip'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TBody, TD, TH, THead, TR, TableWrap } from '../components/ui/Table'
 import { Tabs } from '../components/ui/Tabs'
@@ -24,39 +25,9 @@ import { useToast } from '../context/ToastContext'
 
 type TabKey = 'all' | 'alert' | 'ok'
 
-const daysLabel = (row: ForecastRow) => {
-  const days = daysLeft(row)
-  return Number.isFinite(days) ? days.toFixed(1) : '—'
-}
-
 const alertTone = (row: ForecastRow): 'success' | 'warning' | 'danger' => {
   if (!isAlert(row)) return 'success'
   return daysLeft(row) < 14 ? 'danger' : 'warning'
-}
-
-function SummaryCard({
-  label,
-  value,
-  text = false,
-}: {
-  label: string
-  value: string | number
-  text?: boolean
-}) {
-  return (
-    <Card className="flex flex-col gap-1.5 p-5">
-      <span aria-hidden="true" className="h-1 w-8 rounded-full bg-amber" />
-      <span className="text-[13px] text-muted">{label}</span>
-      <span
-        className={cn(
-          'font-bold leading-[1.1] text-ink',
-          text ? 'text-[15px] leading-snug' : 'text-[30px]',
-        )}
-      >
-        {value}
-      </span>
-    </Card>
-  )
 }
 
 export function ReorderAlerts() {
@@ -218,12 +189,15 @@ export function ReorderAlerts() {
         }
       />
 
-      <section aria-label="Summary" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <SummaryCard label="Items at / below trigger" value={alerts.length} />
-        <SummaryCard label="Purchase Requisition Forms drafted" value={alerts.length} />
-        <SummaryCard label="Consumables tracked" value={items.length} />
-        <SummaryCard label="Data source" value="Verified QR issuance scans" text />
-      </section>
+      <MetricStrip
+        ariaLabel="Summary"
+        items={[
+          { label: 'Items at / below trigger', value: alerts.length },
+          { label: 'Purchase Requisition Forms drafted', value: alerts.length },
+          { label: 'Consumables tracked', value: items.length },
+          { label: 'Data source', value: 'Verified QR issuance scans', text: true },
+        ]}
+      />
 
       <Card className="flex flex-col gap-4 p-5">
         <Tabs

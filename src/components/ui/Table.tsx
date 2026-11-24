@@ -8,10 +8,7 @@ import { cn } from '../../lib/utils'
 export function TableWrap({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'relative overflow-x-auto rounded-card border border-line bg-surface',
-        className,
-      )}
+      className={cn('relative overflow-x-auto rounded-card bg-surface', className)}
       {...props}
     />
   )

@@ -49,7 +49,7 @@ export function Dialog({ open, onClose, title, eyebrow, children, footer, classN
         aria-labelledby={titleId}
         tabIndex={-1}
         className={cn(
-          'max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-[14px] bg-surface p-6 shadow-[0_24px_48px_rgba(23,23,23,0.18)] focus:outline-none',
+          'ea-dialog-in max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-[14px] bg-surface p-6 shadow-[0_24px_48px_rgba(23,23,23,0.18)] focus:outline-none',
           className,
         )}
       >

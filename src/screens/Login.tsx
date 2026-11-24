@@ -170,9 +170,9 @@ export function Login() {
             Sign in
           </Button>
 
-          <p className="rounded-field border border-butter-line bg-butter-soft px-3 py-2 text-xs leading-relaxed text-[#5A4A20]">
-            Demo access: any valid email and a password of at least 8 characters is accepted. No
-            account is checked.
+          <p className="border-l-2 border-amber pl-3 text-xs leading-relaxed text-muted">
+            <span className="font-semibold text-ink">Demo access.</span> Any valid email and a
+            password of at least 8 characters is accepted. No account is checked.
           </p>
 
           <p className="text-xs leading-relaxed text-muted">

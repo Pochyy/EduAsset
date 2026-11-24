@@ -34,18 +34,18 @@ export const centralNav: NavGroup[] = [
     items: [{ label: 'Dashboard', to: '/central/dashboard', icon: LayoutDashboard }],
   },
   {
-    label: 'Module 1 · Demand',
+    label: 'Demand',
     items: [
       { label: 'Reorder Alerts', to: '/central/alerts', icon: Bell, count: 3 },
       { label: 'Requisition Review', to: '/central/requisitions', icon: ClipboardList, count: 2 },
     ],
   },
   {
-    label: 'Module 2 · Turnover',
+    label: 'Turnover',
     items: [{ label: 'Turnover Approval', to: '/central/turnover', icon: Repeat, count: 1 }],
   },
   {
-    label: 'Module 3 · Units & Assets',
+    label: 'Units & assets',
     items: [
       { label: 'Master Ledger', to: '/central/ledger', icon: BookOpen },
       { label: 'Repair & BER', to: '/central/repairs', icon: Wrench },
@@ -55,7 +55,7 @@ export const centralNav: NavGroup[] = [
     ],
   },
   {
-    label: 'Module 4 · Intake',
+    label: 'Intake',
     items: [{ label: 'Receive New Items', to: '/central/receive', icon: PackagePlus }],
   },
 ]
