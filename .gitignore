@@ -9,6 +9,9 @@ desktop.ini
 .idea/
 node_modules/
 
+# Build output
+dist/
+
 # Local preview artifacts
 *.log
 

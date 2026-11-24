@@ -8,9 +8,12 @@ consumables as individual units, enforces 1-to-1 turnover, computes burn-rate/de
 supports BER-based repair-or-retire decisions, verified replacements, reconciliation and an audit
 queue, and provides AI-assisted item intake.
 
-This repository is the **front-end prototype**: 17 desktop screens plus a launcher and sign-in,
-exported as static HTML using the design-component runtime. It is a design reference for the
-production React + Spring Boot + MySQL build, not the production application.
+The repository holds two front ends. The **static design reference** under `design/` is the
+approved 17-screen prototype, exported as HTML using the design-component runtime. The **React +
+Tailwind application** at the repository root is the in-progress replacement for it: the shell,
+Login, Central Dashboard and Reorder Alerts are implemented, and the remaining screens are routed
+placeholders. Production still targets React + Spring Boot + MySQL; neither front end is the
+production application.
 
 ## Who it is for
 

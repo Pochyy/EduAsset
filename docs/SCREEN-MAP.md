@@ -3,6 +3,10 @@
 Where each prototype screen lives, which SRS figures it implements, and what it exercises. Use this
 with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 
+**React implementation:** screens 1–3 (Sign in, Central Dashboard, Reorder Alerts) are ported at
+`#/login`, `#/central/dashboard` and `#/central/alerts`. The remaining screens are available in the
+static reference and appear as routed placeholders in the React app until they are ported.
+
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|
 | 1 | Sign in | `design/screens/login.dc.html` | 3.35 | NFR-S1, NFR-S2, NFR-U3 | Portal choice, inline validation, portal hand-off |

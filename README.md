@@ -3,14 +3,99 @@
 **Institutional Property Custodianship & Predictive Inventory System** for the WildCat Innovation
 Labs (WIL) and the CIT Property Office.
 
-This repository contains the **17 high-fidelity desktop screens** specified in the EduAsset SRS
-(Figures 3.3–3.37), packaged as a self-contained, clickable prototype plus the backend handoff
-documents.
+The repository holds two front ends:
 
-> **This is a design reference, not production code.**
-> There is no backend, no database, no authentication and no persistence. Data is sample data held in
-> memory. A production build still needs React components wired to the Spring Boot API and MySQL, as
-> required by the SRS.
+- **React + Tailwind application** at the repository root. This is the in-progress replacement for
+  the static prototype. The app shell, design tokens, Login, Central Dashboard and Reorder Alerts are
+  implemented; all other routes are wired as marked placeholders.
+- **Static design reference** under `design/`. All 17 approved desktop screens remain available
+  there and are the visual source of truth while the React screens are ported.
+
+> **Prototype only.** No backend, database, real authentication or persistence. React auth is a
+> local mock kept in `localStorage`; all data is sample data. Production still targets React +
+> Spring Boot + MySQL as required by the SRS.
+
+---
+
+## Status
+
+| Surface | React app | SRS figure |
+|---|---|---|
+| Sign in, portal selection, validation | **Implemented** | 3.35 |
+| Central Dashboard | **Implemented** | 3.36 |
+| Reorder Alerts, PR preview, forecast settings | **Implemented** | 3.3–3.5 |
+| Requisition Review | Placeholder | 3.7–3.8 |
+| Turnover Approval & Disbursement | Placeholder | 3.13 |
+| Master Ledger | Placeholder | 3.17–3.18 |
+| Repair & BER | Placeholder | 3.21–3.23 |
+| Verified Replacement | Placeholder | 3.24–3.25 |
+| Reconciliation | Placeholder | 3.26 |
+| Audit Queue | Placeholder | 3.27 |
+| Receive New Items | Placeholder | 3.30–3.34 |
+| Lab Dashboard | Placeholder | 3.37 |
+| Lab Supply Requisition | Placeholder | 3.6 |
+| Turnover Scan | Placeholder | 3.11–3.12 |
+| Report Incident | Placeholder | 3.19 |
+| Lab Inventory | Placeholder | 3.14 |
+| Work Orders | Placeholder | 3.20 |
+
+The 14 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
+each states what will be ported from its approved static screen.
+
+---
+
+## Run the React app
+
+```powershell
+cd "Project Folder"
+npm install
+npm run dev
+```
+
+Open the URL Vite prints, normally <http://localhost:5173/>. The app uses hash routing, so:
+<http://localhost:5173/#/login>.
+
+### Demo sign-in
+
+1. Choose **Central Property** or **WIL Lab**.
+2. Enter any valid-format email and any password with 8+ characters.
+3. **Sign in** goes straight to that portal's dashboard.
+
+No credentials are checked. The session is stored in `localStorage` until you sign out.
+
+### Build and preview
+
+```powershell
+npm run build
+npm run preview
+```
+
+`npm run build` runs the TypeScript check, builds the Vite app, and copies `design/` into
+`dist/design/`. `npm run preview` serves the result, normally at
+<http://localhost:4173/>. The static reference is also served during `npm run dev` at
+<http://localhost:5173/design/>.
+
+---
+
+## Run the static design reference
+
+Serve the **repository root**, not `design/screens/` and not `file://`, because the shared chrome
+uses relative paths.
+
+```powershell
+cd path\to\EduAsset
+python -m http.server 8000
+```
+
+Then open:
+
+- **Launcher** — <http://localhost:8000/design/>
+- **Login** — <http://localhost:8000/design/screens/login.dc.html>
+- **Central dashboard** — <http://localhost:8000/design/screens/central-dashboard.dc.html>
+- **Lab dashboard** — <http://localhost:8000/design/screens/lab-dashboard.dc.html>
+
+The static prototype's sign-in asks for the same demo credentials, then shows an **Open … Portal**
+hand-off.
 
 ---
 
@@ -18,10 +103,27 @@ documents.
 
 ```text
 .
-├── index.html                  # redirects to design/index.html
+├── src/                        # React application
+│   ├── components/
+│   │   ├── brand/              # SVG logo
+│   │   ├── layout/             # AppShell, TopBar, Sidebar, nav config
+│   │   └── ui/                 # Button, Card, Table, Badge, Dialog, Tabs, …
+│   ├── context/                # mock auth + toasts
+│   ├── data/                   # seed access, dashboard and forecast data
+│   ├── lib/                    # helpers and page titles
+│   ├── screens/                # Login, CentralDashboard, ReorderAlerts, placeholders
+│   ├── App.tsx                 # routes and role guards
+│   ├── index.css               # Tailwind 4 theme tokens and base styles
+│   ├── main.tsx                # providers and HashRouter
+│   └── types.ts
+├── scripts/copy-design.mjs     # adds design/ to the production build
+├── index.html                  # Vite entry
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
 ├── design/
-│   ├── index.html              # prototype launcher (Login / Central / Lab)
-│   └── screens/                # 17 screens + ONE shared runtime
+│   ├── index.html              # static prototype launcher
+│   └── screens/                # 17 approved screens + ONE shared runtime
 │       ├── login.dc.html
 │       ├── central-*.dc.html   # 10 Central screens
 │       ├── lab-*.dc.html       # 6 Lab screens
@@ -38,43 +140,8 @@ documents.
 └── README.md
 ```
 
-The screens are no longer one-folder-each with duplicated assets. All 17 share **one** `Sidebar`,
-`TopBar`, `support.js` and `vendor/`, and use simple slug filenames.
-
----
-
-## Run locally
-
-Serve the **repository root** — not `design/screens/`, and not `file://`. The shared chrome is loaded
-with relative paths.
-
-```powershell
-cd path\to\EduAsset
-python -m http.server 8000
-```
-
-or with Node:
-
-```bash
-npx serve .
-```
-
-Then open:
-
-- **Launcher** — <http://localhost:8000/> (redirects to `design/`)
-- **Login** — <http://localhost:8000/design/screens/login.dc.html>
-- **Central dashboard** — <http://localhost:8000/design/screens/central-dashboard.dc.html>
-- **Lab dashboard** — <http://localhost:8000/design/screens/lab-dashboard.dc.html>
-
-Stop the server with `Ctrl+C`.
-
-### Demo sign-in
-
-1. Choose **Central Property** or **WIL Lab**.
-2. Enter any valid-format email and any password with 8+ characters.
-3. Click **Sign in**, then **Open … Portal**.
-
-No credentials are checked.
+The React design system lives in `src/index.css` as Tailwind 4 `@theme` tokens and in the shared
+components under `src/components/ui/`. `DESIGN.md` remains the design specification.
 
 ---
 
@@ -82,35 +149,35 @@ No credentials are checked.
 
 ### Login
 
-| Screen | SRS figure |
-|---|---|
-| Sign in + portal selection + inline validation | 3.35 |
+| Screen | SRS figure | React |
+|---|---|---|
+| Sign in + portal selection + inline validation | 3.35 | Implemented |
 
 ### Central Property Custodian Portal
 
-| Screen | SRS figure |
-|---|---|
-| Dashboard | 3.36 |
-| Reorder Alerts (`PR` preview, forecast settings) | 3.3, 3.4, 3.5 |
-| Requisition Review + review dialog | 3.7, 3.8 |
-| Turnover Approval & Disbursement | 3.13 |
-| Master Ledger + unit record | 3.17, 3.18 |
-| Repair & BER + condemnation form | 3.21, 3.22, 3.23 |
-| Verified Replacement | 3.24, 3.25 |
-| Periodic Reconciliation | 3.26 |
-| Audit Queue | 3.27 |
-| Receive New Items (four-step flow) | 3.30–3.34 |
+| Screen | SRS figure | React |
+|---|---|---|
+| Dashboard | 3.36 | Implemented |
+| Reorder Alerts (forecast, PR preview, settings) | 3.3, 3.4, 3.5 | Implemented |
+| Requisition Review + review dialog | 3.7, 3.8 | Placeholder |
+| Turnover Approval & Disbursement | 3.13 | Placeholder |
+| Master Ledger + unit record | 3.17, 3.18 | Placeholder |
+| Repair & BER + condemnation form | 3.21, 3.22, 3.23 | Placeholder |
+| Verified Replacement | 3.24, 3.25 | Placeholder |
+| Periodic Reconciliation | 3.26 | Placeholder |
+| Audit Queue | 3.27 | Placeholder |
+| Receive New Items (four-step flow) | 3.30–3.34 | Placeholder |
 
 ### WIL Lab Custodian Portal
 
-| Screen | SRS figure |
-|---|---|
-| Dashboard | 3.37 |
-| Supply Requisition | 3.6 |
-| Turnover Scan (match + mismatch) | 3.11, 3.12 |
-| Report Incident | 3.19 |
-| Lab Inventory | 3.14 |
-| Work Orders | 3.20 |
+| Screen | SRS figure | React |
+|---|---|---|
+| Dashboard | 3.37 | Placeholder |
+| Supply Requisition | 3.6 | Placeholder |
+| Turnover Scan (match + mismatch) | 3.11, 3.12 | Placeholder |
+| Report Incident | 3.19 | Placeholder |
+| Lab Inventory | 3.14 | Placeholder |
+| Work Orders | 3.20 | Placeholder |
 
 ---
 
@@ -137,8 +204,8 @@ index.
 
 ## SRS alignment
 
-The screens were audited against `Draf SRS.pdf` and updated to satisfy the blocking/major
-requirements. Key implemented behaviour:
+The static screens were audited against `Draf SRS.pdf` and updated to satisfy the blocking/major
+requirements. The implemented React screens preserve that behaviour. Key implemented behaviour:
 
 - **FR-3.02** — optional manufacturer serial is editable in the ledger unit record and logged.
 - **FR-3.15** — repaired assets can be returned to `OPERATIONAL` with the same asset ID, QR and history.
@@ -163,8 +230,9 @@ change functional requirements, data or behaviour.
 
 ### Scope note
 
-**Figure 3.38 phone screens and phone-width layout are not included.** This build targets desktop
-web. If the panel requires the phone deliverable, it remains the one open SRS item.
+**Figure 3.38 phone screens and phone-width layout are not included.** Both front ends target
+desktop web. The React shell is usable at narrow widths (the sidebar becomes a drawer), but the
+SRS phone deliverable remains out of scope.
 
 ### SRS-internal conflicts resolved in this prototype
 
@@ -178,8 +246,9 @@ web. If the panel requires the phone deliverable, it remains the one open SRS it
 
 ## Data
 
-Sample data only, held in memory. Refreshing a page resets it. The canonical copy for backend seeding
-is `docs/SEED-DATA.json`.
+Sample data only. The React app reads the canonical mock data in `docs/SEED-DATA.json` for users and
+queue counts, and reproduces the approved screen data for the dashboard and Reorder Alerts. Nothing
+is written back to a database; a page refresh resets in-memory state.
 
 - 28 ledger units, including every asset referenced across the screens.
 - 10 audit flags: 8 reviewable + 2 variance anomalies routed to Requisition Review.
@@ -190,29 +259,46 @@ is `docs/SEED-DATA.json`.
 
 ## Known limitations
 
-- No real QR camera; scan buttons simulate the result.
-- Print/download actions show prototype toasts.
-- No persistence, authentication or role enforcement.
-- The QR SVG paths log a harmless pre-render placeholder warning on three screens.
+- Only three of the 17 screens are ported to React; the other 14 routes are placeholders.
+- Mock auth only; no real account check, backend session or role enforcement. Portal guards are
+  client-side.
+- No API wiring, database or persistence.
+- QR scanning and print/download actions are simulated. Reorder Alerts uses a prototype toast for
+  PDF export.
 - Phone screens and phone-width layout are out of scope.
+- The static reference still logs harmless QR placeholder warnings on three screens.
 
 ---
 
 ## Tech
 
+**React app**
+
+- React 19, TypeScript, Vite 8.
+- React Router 7 with `HashRouter` (safe refresh on static hosting).
+- Tailwind CSS 4 (`@tailwindcss/vite`) with Wildcat tokens in `src/index.css`.
+- lucide-react icons.
+- Inter via Google Fonts.
+
+**Static reference**
+
 - HTML pages using the exported design-component runtime (`support.js` + `vendor/react*.js`).
-- No package manager, no build step, no backend.
-- Inter typeface (Google Fonts), Wildcat butter/amber/ink palette.
+- No package manager, no build step; served as static files.
+- Inter, Wildcat butter/amber/ink palette.
 
 ---
 
-## GitHub Pages
+## Deploy
 
-The repo root has an `index.html` that redirects to `design/index.html`, so the Pages root works:
+`npm run build` produces `dist/` for the React app and copies the static reference to `dist/design/`.
 
-1. Settings → Pages → Deploy from branch.
-2. Branch `main`, folder `/ (root)`.
-3. Open `https://<username>.github.io/<repo>/`.
+For GitHub Pages or any static host:
+
+1. Set the repository's Pages source to the built output, or publish `dist/` to a `gh-pages` branch.
+2. Open the site root; the app routes through `#/…`, so deep links refresh safely.
+3. The approved static screens remain available at `/design/`.
+4. `vite.config.ts` uses `base: './'`, so the build works from a project subpath without further
+   configuration.
 
 ---
 

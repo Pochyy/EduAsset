@@ -92,6 +92,23 @@ decoration. Reduced motion leaves everything visible.
 `::selection` amber/ink; `caret-color` rust; thin warm scrollbars; focus-visible ring on every
 control; `text-underline-offset: 3px`; tabular numerals in tables.
 
+## Implementation
+
+The React + Tailwind app implements this system in code:
+
+- **Tokens:** `src/index.css` declares the palette, radii and Inter stack as Tailwind 4 `@theme`
+  variables. Use utilities such as `bg-butter`, `text-rust`, `bg-amber`, `rounded-card` and
+  `rounded-control`; do not hard-code hex values in screens.
+- **Components:** shared primitives live in `src/components/ui/` (`Button`, `Card`, `Badge`,
+  `Field`, `Dialog`, `Table`, `Tabs`, `StatCard`, `EmptyState`, `PageHeader`). Extend those rather
+  than recreating patterns per screen.
+- **Shell:** `src/components/layout/` holds the top bar, butter sidebar, nav counts and responsive
+  drawer. Active nav is a white surface with an amber inset bar; counts are amber pills with ink
+  numerals.
+- **Routing:** React Router with `HashRouter`, so static hosting refreshes work without a server
+  rewrite. Role guards redirect a signed-in user to their own portal.
+- **Reference:** `design/screens/` remains the approved visual source for screens not yet ported.
+
 ## Accessibility
 
 - All text ≥ 4.5:1; large text ≥ 3:1. Amber surfaces use ink text; never white on amber.
