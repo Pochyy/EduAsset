@@ -42,9 +42,9 @@ The repository holds two front ends:
 The 14 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
 each states what will be ported from its approved static screen.
 
-**Current `main`:** `85b11b1` (24 November 2026). The React vertical slice merged in `e70eee4`; the
-handoff notes are the latest commit. Three screens are implemented; fourteen remain placeholders. The
-static reference is still the complete 17-screen artifact. Start the next session with
+**Current state:** the React vertical slice is merged (`e70eee4`, 24 November 2026), with handoff
+notes committed after it. Three screens are implemented; fourteen remain placeholders. The static
+reference is still the complete 17-screen artifact. Start the next session with
 **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state, verification record and recommended porting
 order.
 

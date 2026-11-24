@@ -1,8 +1,8 @@
 # Session Handoff — React Vertical Slice
 
 **Date:** 24 November 2026
-**Main:** `85b11b1` — handoff docs on top of the React slice
 **React code:** `e70eee4` — fast-forward from `f595110`
+**Main:** React slice `e70eee4` plus the handoff docs commits after it
 **Branch preserved:** `feat/react-tailwind` at `e70eee4`
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
@@ -231,7 +231,8 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Repo state at handoff
 
-- `main` = `85b11b1` (handoff docs); the React code slice is `e70eee4`.
+- `main` = React slice `e70eee4` plus the handoff docs commits on top; use `git log -1` for the
+  current docs tip.
 - `feat/react-tailwind` = `e70eee4` (retained for reference).
 - `design/wildcat-theme` = `f595110` (approved Wildcat design branch).
 - `design/` is unchanged and still contains all 17 approved screens plus the launcher.
