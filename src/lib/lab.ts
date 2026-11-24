@@ -1,5 +1,5 @@
 import type { BadgeTone } from '../components/ui/Badge'
-import type { SeedItem, SeedUnit, SeedWorkOrder } from '../types'
+import type { SeedItem, SeedRequisition, SeedUnit, SeedWorkOrder } from '../types'
 
 export const dashboardMachineIds = ['WIL-PRN-01', 'WIL-PRN-02', 'WIL-3DP-002'] as const
 export const inventoryMachineIds = [
@@ -17,6 +17,30 @@ export const inventoryConsumableIds = [
 ] as const
 export const inventoryPeripheralIds = ['KB-0031', 'KB-0032', 'MS-0031', 'MON-0031'] as const
 export const dashboardRequisitionIds = ['RQ-1021', 'RQ-1019', 'RQ-1016'] as const
+
+export const labRequisitionCatalog = [
+  { itemId: 'TNR', baseline: 6, used: 4, unit: 'cartridges' },
+  { itemId: 'A4', baseline: 2, used: 10, unit: 'reams' },
+  { itemId: 'PLA', baseline: 10, used: 3, unit: 'spools' },
+  { itemId: 'CTN', baseline: 10, used: 1, unit: 'cartridges' },
+] as const
+
+export const turnoverMachines = [
+  {
+    key: 'prn',
+    machineId: 'WIL-PRN-01',
+    activeUnitId: 'TNR-WIL-2026-001',
+    newUnitId: 'TNR-WIL-2026-002',
+    wrongUnitId: 'TNR-WIL-2026-003',
+  },
+  {
+    key: '3dp',
+    machineId: 'WIL-3DP-001',
+    activeUnitId: 'FIL-WIL-2026-014',
+    newUnitId: 'FIL-WIL-2026-015',
+    wrongUnitId: 'FIL-WIL-2026-009',
+  },
+] as const
 
 const CLOSED_WORK_ORDERS = new Set(['CLOSED_REPAIRED', 'CLOSED_CONDEMNED'])
 
@@ -90,6 +114,24 @@ export const shortLocation = (location: string) => location.replace(/^WIL /, '')
 
 export const itemNameOf = (items: SeedItem[], itemId: string) =>
   items.find((item) => item.itemId === itemId)?.name ?? itemId
+
+export const formatVariance = (variance: number) =>
+  `${variance >= 0 ? '+' : ''}${Math.round(variance * 10) / 10}%`
+
+export const requisitionNote = (requisition: SeedRequisition) => {
+  const variance = formatVariance(requisition.variancePercent)
+  if (requisition.status === 'LOCKED_REVIEW') return `V ${variance} · auto-approval locked`
+  if (requisition.justification) return `Justified: ${requisition.justification}`
+  return `V ${variance} · within quota`
+}
+
+export const assetSummary = (unit: SeedUnit, items: SeedItem[]) => {
+  const status =
+    unit.healthState === 'NOT_APPLICABLE'
+      ? inventoryStatus(unit.inventoryStatus)
+      : healthStatus(unit.healthState)
+  return `${itemNameOf(items, unit.itemId)} · ${unit.location} · ${status.label}`
+}
 
 export const machineTitle = (unit: SeedUnit, items: SeedItem[]) =>
   `${itemNameOf(items, unit.itemId)} · ${shortLocation(unit.location)}`

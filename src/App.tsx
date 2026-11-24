@@ -8,6 +8,9 @@ import { CentralDashboard } from './screens/CentralDashboard'
 import { ComingSoon } from './screens/ComingSoon'
 import { LabDashboard } from './screens/LabDashboard'
 import { LabInventory } from './screens/LabInventory'
+import { LabReportIncident } from './screens/LabReportIncident'
+import { LabRequisition } from './screens/LabRequisition'
+import { LabTurnoverScan } from './screens/LabTurnoverScan'
 import { LabWorkOrders } from './screens/LabWorkOrders'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
@@ -126,45 +129,6 @@ const centralPlaceholders: Placeholder[] = [
   },
 ]
 
-const labPlaceholders: Placeholder[] = [
-  {
-    path: 'requisition',
-    title: 'Supply requisition',
-    srs: '3.6',
-    summary: 'Request supplies with live variance against the lab baseline before submission.',
-    items: [
-      'Baseline and current-term volume',
-      'Variance warning at +50%',
-      'Justification when the request is abnormal',
-    ],
-    reference: 'lab-supply-requisition.dc.html',
-  },
-  {
-    path: 'turnover',
-    title: 'Turnover scan',
-    srs: '3.11–3.12',
-    summary: 'Scan the spent consumable, attach the return, and release its replacement 1-to-1.',
-    items: [
-      'QR scan of the old unit',
-      'Return status before release',
-      '1-to-1 replacement pairing',
-    ],
-    reference: 'lab-turnover-scan.dc.html',
-  },
-  {
-    path: 'incidents',
-    title: 'Report incident',
-    srs: '3.19',
-    summary: 'Report a defect or incident against a specific unit and route it to a work order.',
-    items: [
-      'Pick the affected unit',
-      'Describe the defect and severity',
-      'Create a work order for the technician',
-    ],
-    reference: 'lab-report-incident.dc.html',
-  },
-]
-
 function RequireAuth({ portal, children }: { portal: Portal; children: ReactNode }) {
   const { user } = useAuth()
 
@@ -240,11 +204,11 @@ export default function App() {
       >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<LabDashboard />} />
+        <Route path="requisition" element={<LabRequisition />} />
+        <Route path="turnover" element={<LabTurnoverScan />} />
+        <Route path="incidents" element={<LabReportIncident />} />
         <Route path="inventory" element={<LabInventory />} />
         <Route path="work-orders" element={<LabWorkOrders />} />
-        {labPlaceholders.map((placeholder) =>
-          placeholderRoute('lab', placeholder, 'WIL Lab', '/lab/dashboard'),
-        )}
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -18,6 +18,15 @@ export const roleLabel: Record<Role, string> = {
   TECHNICIAN: 'Campus Technician',
 }
 
+export function nextNumericId(prefix: string, ids: string[]) {
+  const highest = ids.reduce((max, id) => {
+    const value = Number(id.replace(/\D/g, ''))
+    return Number.isFinite(value) ? Math.max(max, value) : max
+  }, 0)
+
+  return `${prefix}-${String(highest + 1).padStart(4, '0')}`
+}
+
 export function initialsOf(name: string) {
   const initials = name
     .trim()

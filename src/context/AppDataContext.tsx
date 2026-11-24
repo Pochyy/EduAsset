@@ -25,8 +25,10 @@ export interface AppData {
 }
 
 export type AppDataAction =
+  | { type: 'requisition/add'; requisition: SeedRequisition }
   | { type: 'requisition/status'; id: string; status: string }
   | { type: 'turnover/status'; id: string; status: string }
+  | { type: 'work-order/add'; workOrder: SeedWorkOrder }
   | { type: 'work-order/status'; id: string; status: string; patch?: Partial<SeedWorkOrder> }
   | { type: 'audit/review'; id: string; note: string; reviewer: string }
   | { type: 'unit/patch'; id: string; patch: Partial<SeedUnit> }
@@ -47,6 +49,11 @@ const initialData: AppData = {
 
 function reducer(state: AppData, action: AppDataAction): AppData {
   switch (action.type) {
+    case 'requisition/add':
+      return {
+        ...state,
+        requisitions: [action.requisition, ...state.requisitions],
+      }
     case 'requisition/status':
       return {
         ...state,
@@ -62,6 +69,11 @@ function reducer(state: AppData, action: AppDataAction): AppData {
         turnovers: state.turnovers.map((turnover) =>
           turnover.turnoverId === action.id ? { ...turnover, status: action.status } : turnover,
         ),
+      }
+    case 'work-order/add':
+      return {
+        ...state,
+        workOrders: [action.workOrder, ...state.workOrders],
       }
     case 'work-order/status':
       return {

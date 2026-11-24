@@ -113,9 +113,9 @@ The React + Tailwind app implements this system in code:
 - **Routing:** React Router with `HashRouter`, so static hosting refreshes work without a server
   rewrite. Role guards redirect a signed-in user to their own portal.
 - **Reference:** `design/screens/` remains the approved visual source for screens not yet ported.
-- **Current port state:** the shell, Login, Central Dashboard, Reorder Alerts, Lab Dashboard, Lab
-  Inventory and Work Orders are on `main`; 11 routes are placeholders. See `docs/HANDOFF.md` for the
-  next batch and verification record.
+- **Current port state:** the shell, Login, Central Dashboard, Reorder Alerts and the complete Lab
+  portal are on `main`; the eight Central routes are placeholders. See `docs/HANDOFF.md` for the next
+  batch and verification record.
 
 ## Accessibility
 

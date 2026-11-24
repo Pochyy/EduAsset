@@ -2,8 +2,8 @@
 
 **Date:** 24 November 2026
 **React code:** `e70eee4` — fast-forward from `f595110`
-**Main:** React slice `e70eee4` plus the visual precision pass, read-only Lab batch and handoff docs
-**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`
+**Main:** React slice `e70eee4` plus the visual precision pass, the complete Lab portal and handoff docs
+**Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
@@ -14,17 +14,17 @@
 
 | Item | State |
 |---|---|
-| React + Tailwind app | `main` plus the read-only Lab portal batch; app shell working |
-| React screens implemented | **6 of 17** — Login, Central Dashboard, Reorder Alerts, Lab Dashboard, Lab Inventory, Work Orders |
-| React placeholder routes | **11 of 17** — real shell, breadcrumbs and SRS notes |
+| React + Tailwind app | `main` plus the complete Lab portal; app shell working |
+| React screens implemented | **9 of 17** — Login, Central Dashboard, Reorder Alerts and all six Lab screens |
+| React placeholder routes | **8 of 17** — all remaining Central screens, with real shell, breadcrumbs and SRS notes |
 | Static design reference | **17 of 17** approved screens under `design/` |
 | Backend / API wiring | Not started |
 | Auth | Mock only, persisted in `localStorage` |
 | Production build | Passing; `dist/design/` gets the static reference |
 
 > **Important:** the static reference is still the only complete 17-screen SRS artifact. The React
-> app is a deliberate incremental port. Do not describe the React app as SRS-complete until the 11
-> placeholder routes are ported.
+> app is a deliberate incremental port. Do not describe the React app as SRS-complete until the 8
+> remaining Central routes are ported.
 
 ---
 
@@ -43,8 +43,8 @@
 - `src/types.ts` — auth, seed and domain types.
 - `src/data/seed.ts` — imports `docs/SEED-DATA.json`.
 - `src/context/AppDataContext.tsx` — shared in-memory store for units, items, requisitions,
-  turnovers, work orders and audit flags. Reducer actions already cover status changes, audit
-  reviews and unit patches for the next batches.
+  turnovers, work orders and audit flags. Actions now cover add/status changes for requisitions,
+  work orders and turnovers, audit reviews and unit patches.
 - `src/data/counts.ts` — queue counts derived from the store; the sidebar consumes them.
 - `src/data/dashboard.ts` — KPIs, tasks, health, outlook, activity.
 - `src/data/reorder.ts` — forecast rows and burn-rate/day-to-depletion helpers.
@@ -101,10 +101,24 @@ Tabs, MetricStrip, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds
 - Open/Closed tabs with counts, four-step progress per order, quote/BER notes and empty state.
   Reuses the seed work orders and status vocabulary.
 
-**11 placeholders** — Requisition Review, Turnover Approval, Master Ledger, Repair & BER, Verified
-Replacement, Reconciliation, Audit Queue, Receive New Items, Supply Requisition, Turnover Scan and
-Report Incident. Each uses `ComingSoon`, real breadcrumbs/shell, a short scope list and its static
-reference filename.
+**Supply Requisition** (`/lab/requisition`)
+- Item/quantity form with live variance against the lab baseline, three-band policy, required
+  justification in the elevated band and add-to-store submission. New requests appear in the history
+  panel and, when locked, in the Central queue count.
+
+**Report Incident** (`/lab/incidents`)
+- Asset scan/type, defect/jam/broken choice, recurring flag, description and simulated photo.
+- Confirmation dialog, validation, work-order creation and `NEEDS_MAINTENANCE` update for recurring
+  defects. New work orders appear on the dashboard and Work Orders list.
+
+**Turnover Scan** (`/lab/turnover`)
+- Machine/active/new-unit context, dark viewfinder, ID entry and demo scans.
+- Match/mismatch banners, result details, scan audit trail, unit status update and turnover readiness
+  for Central approval.
+
+**8 placeholders** — Requisition Review, Turnover Approval, Master Ledger, Repair & BER, Verified
+Replacement, Reconciliation, Audit Queue and Receive New Items. Each uses `ComingSoon`, real
+breadcrumbs/shell, a short scope list and its static reference filename.
 
 ### Visual precision pass
 
@@ -135,14 +149,18 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
 
 ## Verification record
 
-- `npm run build` passes on the read-only Lab branch and on `main` after merge.
+- `npm run build` passes on the Lab actions branch and on `main` after merge.
 - Production preview serves the app, relative JS/CSS, and `/design/` with no console errors.
 - Re-verified after the visual precision pass: login, forecast recalculation, settings validation and
   save, route guards and mobile drawer still behave exactly as before.
-- Lab batch: Dashboard, Inventory and Work Orders tested at 1440 and 390; inventory tabs and search,
-  work-order Open/Closed tabs and progress all work; sidebar counts come from the shared store.
-- Lighthouse on Lab Dashboard, Lab Inventory and Work Orders:
-  **Accessibility 100 · Best Practices 100 · SEO 100**. Login and Central Dashboard remain 100.
+- Read-only Lab batch: Dashboard, Inventory and Work Orders tested at 1440 and 390; inventory tabs
+  and search, work-order Open/Closed tabs and progress all work; sidebar counts come from the store.
+- Lab actions: submitting an elevated requisition produced RQ-1023 (`PROCESSED` with justification);
+  an abnormal +450% request produced RQ-1024 (`WAITING FOR CUSTODIAN`). Reporting a broken item
+  produced WO-0032 and incremented the open work-order count; a correct turnover scan set
+  FIL-WIL-2026-014 to `RETURNED_EMPTY` and prepared the turnover for Central approval.
+- Lighthouse on all six Lab screens and the three original screens:
+  **Accessibility 100 · Best Practices 100 · SEO 100**.
 - 18-route sweep across all Central/Lab routes and index redirects: every route renders one `h1`,
   no `Page not found`, no runtime exceptions, no page-level horizontal overflow.
 - Checked at 1440 and 390 px. At 390 the page does not overflow; dense tables scroll inside their own
@@ -178,38 +196,31 @@ Do not reintroduce these:
 
 ### Recommended order
 
-**Batch 1 — finish the Lab portal (3 screens)**
-1. Supply Requisition (`lab-supply-requisition.dc.html`, SRS 3.6): item/quantity, baseline variance,
-   justification in the elevated band.
-2. Report Incident (`lab-report-incident.dc.html`, SRS 3.19): unit picker, defect/severity, recurring
-   flag, required photo, work-order creation through the store.
-3. Turnover Scan (`lab-turnover-scan.dc.html`, SRS 3.11–3.12): spent-unit scan, 1-to-1 pairing,
-   match/mismatch states and audit trail.
+**Batch 1 — Central demand and turnover (2 screens)**
+1. Requisition Review (`central-requisition-review.dc.html`, SRS 3.7–3.8): queue tabs, live variance,
+   approve/reject/lock, rejection reason ≥ 10 characters. Consumes the lab requisitions already in
+   the store.
+2. Turnover Approval (`central-turnover-approval.dc.html`, SRS 3.13): `RETURNED_EMPTY` gate, steps,
+   release confirmation. Consumes the turnover state written by Turnover Scan.
 
-**Batch 2 — Central demand and turnover (2 screens)**
-4. Requisition Review (`central-requisition-review.dc.html`, SRS 3.7–3.8): queue tabs, live variance,
-   approve/reject/lock, rejection reason ≥ 10 characters.
-5. Turnover Approval (`central-turnover-approval.dc.html`, SRS 3.13): `RETURNED_EMPTY` gate, steps,
-   release confirmation.
-
-**Batch 3 — ledger, audit, reconciliation (3 screens)**
-6. Master Ledger (`central-master-ledger.dc.html`, SRS 3.17–3.18): filters, unit record dialog,
+**Batch 2 — ledger, audit, reconciliation (3 screens)**
+3. Master Ledger (`central-master-ledger.dc.html`, SRS 3.17–3.18): filters, unit record dialog,
    serial edit, 1-to-1 flag, QR reprint, history.
-7. Reconciliation (`central-reconciliation.dc.html`, SRS 3.26).
-8. Audit Queue (`central-audit-queue.dc.html`, SRS 3.27): tabs, review note, reviewer/time.
+4. Reconciliation (`central-reconciliation.dc.html`, SRS 3.26).
+5. Audit Queue (`central-audit-queue.dc.html`, SRS 3.27): tabs, review note, reviewer/time.
 
-**Batch 4 — asset decisions (2 screens)**
-9. Repair & BER (`central-repair-ber.dc.html`, SRS 3.21–3.23): quote, live BER, repair / return /
+**Batch 3 — asset decisions (2 screens)**
+6. Repair & BER (`central-repair-ber.dc.html`, SRS 3.21–3.23): quote, live BER, repair / return /
    condemn, pre-filled form.
-10. Verified Replacement (`central-verified-replacement.dc.html`, SRS 3.24–3.25): old/new scan, four
-    rules, photos, second approver, rejection log.
+7. Verified Replacement (`central-verified-replacement.dc.html`, SRS 3.24–3.25): old/new scan, four
+   rules, photos, second approver, rejection log.
 
-**Batch 5 — intake (1 screen)**
-11. Receive New Items (`central-receive-items.dc.html`, SRS 3.30–3.34): DR/PO, photo + AI fallback,
-    staff quantity, QR sheet.
+**Batch 4 — intake (1 screen)**
+8. Receive New Items (`central-receive-items.dc.html`, SRS 3.30–3.34): DR/PO, photo + AI fallback,
+   staff quantity, QR sheet.
 
 `docs/SCREEN-MAP.md` has the full figure → requirement → action mapping. Keep the same visual and
-interaction patterns as the six ported screens; only introduce new components when a flow genuinely
+interaction patterns as the nine ported screens; only introduce new components when a flow genuinely
 needs them. Use `AppDataContext` dispatch for state changes so queue counts stay consistent.
 
 ### Definition of done for each ported screen
@@ -261,9 +272,9 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Known gaps and open decisions
 
-- 11 screens are placeholders (the main remaining work).
-- `AppDataContext` has reducer actions for status changes, audit reviews and unit patches, but the
-  read-only Lab batch only uses read paths so far. Wire them in the next batches.
+- 8 Central screens are placeholders (the main remaining work).
+- `AppDataContext` actions are now used by requisitions, incidents and turnover scans; the Central
+  review screens still need to consume them.
 - Dialog has Escape/overlay close and initial focus, but no full focus trap or focus restore.
 - No unit/component tests, ESLint or Prettier yet.
 - No service layer or API wiring; `docs/API-CONTRACT.md` is the contract.
@@ -276,11 +287,12 @@ if it is enabled, publish `dist/`, not the repository root.
 
 ## Repo state at handoff
 
-- `main` = React slice `e70eee4` plus the visual precision pass, read-only Lab batch and handoff
+- `main` = React slice `e70eee4` plus the visual precision pass, the complete Lab portal and handoff
   docs; use `git log -1` for the current tip.
 - `feat/react-tailwind` = `e70eee4` (retained for reference).
 - `design/precision-pass` = visual precision pass (retained for comparison).
 - `feat/lab-readonly` = Lab Dashboard, Lab Inventory, Work Orders batch (retained).
+- `feat/lab-actions` = Supply Requisition, Report Incident, Turnover Scan batch (retained).
 - `design/wildcat-theme` = `f595110` (approved Wildcat design branch).
 - `design/` is unchanged and still contains all 17 approved screens plus the launcher.
 - Working tree is clean; `dist/`, `node_modules/` and `.opencode/` are gitignored.
