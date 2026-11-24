@@ -12,17 +12,40 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-<style>body{margin:0}</style>
+<style>body{margin:0}/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
+</style>
 </helmet>
-<nav aria-label="Main menu" class="ea-side" style="font-family: Inter, system-ui, sans-serif; color: #FFF4D1; background: #7B1113; box-sizing: border-box; padding: 20px 16px 28px; display: flex; flex-direction: column; gap: 2px; height: 100%; min-height: 100%">
+<style>.ea-side a{transition:background .15s ease,color .15s ease}.ea-side a:hover{background:#FFF9DD}</style>
+<nav aria-label="Main menu" class="ea-side" style="font-family: Inter, system-ui, sans-serif; color: #2A2418; background: #FFF3B0; box-sizing: border-box; padding: 20px 16px 28px; display: flex; flex-direction: column; gap: 2px; height: 100%; min-height: 100%">
   <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
-    <div class="ea-sec" style="padding: 16px 12px 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #F8D46A">{{g.label}}</div>
+    <div class="ea-sec" style="padding: 16px 12px 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #8A5A00">{{g.label}}</div>
     <div class="ea-group" style="display: flex; flex-direction: column; gap: 2px">
       <sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
         <a href="{{it.href}}" aria-current="{{it.current}}" style="{{it.style}}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{it.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.d}}"></path></svg>
           <span style="flex: 1 1 auto">{{it.label}}</span>
-          <sc-if value="{{it.count}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #F2B705; color: #5A0F14; font-size: 11px; font-weight: 700; text-align: center">{{it.count}}</span></sc-if>
+          <sc-if value="{{it.count}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #F5A623; color: #171717; font-size: 11px; font-weight: 700; text-align: center">{{it.count}}</span></sc-if>
         </a>
       </sc-for>
     </div>
@@ -85,8 +108,8 @@ class Component extends DCLogic {
         const on = id === active;
         return {
           href: fileOf[id], label, d: I[icon], count: count || '', current: on ? 'page' : 'false',
-          iconColor: on ? '#F2B705' : '#F8D46A',
-          style: 'position: relative; display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; text-decoration: none; font-size: 14px; ' + (on ? 'background: #5A0F14; color: #FFFFFF; font-weight: 600; box-shadow: inset 4px 0 0 #F2B705' : 'color: #FFF4D1; font-weight: 500')
+          iconColor: on ? '#D98A0B' : '#8A5A00',
+          style: 'position: relative; display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; text-decoration: none; font-size: 14px; ' + (on ? 'background: #FFFFFF; color: #171717; font-weight: 600; box-shadow: inset 4px 0 0 #F5A623' : 'color: #2A2418; font-weight: 500')
         };
       })
     }));

@@ -13,65 +13,87 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1F1A1A;background:#F6F3F2}
-a{color:#7B1113}a:hover{color:#5A0F14}
-input:focus,select:focus{outline:3px solid #F8D46A;outline-offset:1px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:#171717;background:#FAF9F6}
+a{color:#B45309}a:hover{color:#8A3E07}
+input:focus,select:focus{outline:3px solid #171717;outline-offset:1px}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #FFFFFF">
-  <section style="flex: 1 1 420px; background: #7B1113; color: #FFFFFF; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 64px clamp(24px, 6vw, 88px); box-sizing: border-box; min-height: 420px">
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #FAF9F6">
+  <section style="flex: 1 1 420px; background: #FFF3B0; color: #171717; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 64px clamp(24px, 6vw, 88px); box-sizing: border-box; min-height: 420px">
     <div style="display: flex; align-items: center; gap: 16px">
-      <svg width="72" height="72" viewBox="0 0 120 120" aria-hidden="true"><rect x="4" y="4" width="112" height="112" rx="28" fill="#F2B705"></rect><rect x="28" y="30" width="14" height="60" rx="3" fill="#5A0F14"></rect><rect x="28" y="30" width="44" height="13" rx="3" fill="#5A0F14"></rect><rect x="28" y="53.5" width="34" height="13" rx="3" fill="#5A0F14"></rect><rect x="28" y="77" width="44" height="13" rx="3" fill="#5A0F14"></rect><rect x="80.5" y="31.5" width="13" height="13" rx="2" fill="none" stroke="#5A0F14" stroke-width="3"></rect><rect x="84.5" y="35.5" width="5" height="5" rx="1" fill="#5A0F14"></rect><rect x="80" y="54" width="6" height="6" rx="1" fill="#5A0F14"></rect><rect x="88" y="62" width="6" height="6" rx="1" fill="#5A0F14"></rect><rect x="80" y="70" width="6" height="6" rx="1" fill="#5A0F14"></rect><rect x="88" y="78" width="6" height="6" rx="1" fill="#5A0F14"></rect><rect x="80" y="84" width="6" height="6" rx="1" fill="#5A0F14"></rect></svg>
+      <svg width="72" height="72" viewBox="0 0 120 120" aria-hidden="true"><rect x="2" y="2" width="116" height="116" rx="28" fill="#FFFFFF" stroke="#E7E2D6" stroke-width="2"></rect><rect x="28" y="30" width="14" height="60" rx="3" fill="#171717"></rect><rect x="28" y="30" width="44" height="13" rx="3" fill="#171717"></rect><rect x="28" y="53.5" width="34" height="13" rx="3" fill="#171717"></rect><rect x="28" y="77" width="44" height="13" rx="3" fill="#171717"></rect><rect x="80.5" y="31.5" width="13" height="13" rx="2" fill="none" stroke="#F5A623" stroke-width="3"></rect><rect x="84.5" y="35.5" width="5" height="5" rx="1" fill="#F5A623"></rect><rect x="80" y="54" width="6" height="6" rx="1" fill="#F5A623"></rect><rect x="88" y="62" width="6" height="6" rx="1" fill="#F5A623"></rect><rect x="80" y="70" width="6" height="6" rx="1" fill="#F5A623"></rect><rect x="88" y="78" width="6" height="6" rx="1" fill="#F5A623"></rect><rect x="80" y="84" width="6" height="6" rx="1" fill="#F5A623"></rect></svg>
       <div style="display: flex; flex-direction: column; gap: 4px">
-        <div style="font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1"><span style="color: #FFFFFF">Edu</span><span style="color: #F2B705">Asset</span></div>
-        <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #F8D46A">PROPERTY CUSTODIANSHIP · PREDICTIVE INVENTORY</div>
+        <div style="font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1"><span style="color: #B45309">Edu</span><span style="color: #B45309">Asset</span></div>
+        <div style="font-size: 12px; font-weight: 500; letter-spacing: 0.1em; color: #6B5B3E">PROPERTY CUSTODIANSHIP · PREDICTIVE INVENTORY</div>
       </div>
     </div>
-    <div style="width: 64px; height: 6px; border-radius: 3px; background: #F2B705"></div>
+    <div style="width: 64px; height: 6px; border-radius: 3px; background: #F5A623"></div>
     <h1 style="margin: 0; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.2; font-weight: 700">Every unit tracked.<br>Every replacement verified.</h1>
-    <p style="margin: 0; max-width: 520px; font-size: 16px; line-height: 1.6; color: #FFF4D1">Predictive inventory and property custodianship for the WildCat Innovation Labs and the CIT Property Office.</p>
-    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #FFF4D1">
-      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F2B705"></span>Restock alerts 14–28 days before stockout</li>
-      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F2B705"></span>1-to-1 turnover for toner, drums and filament</li>
-      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F2B705"></span>BER-based repair decisions and verified replacements</li>
+    <p style="margin: 0; max-width: 520px; font-size: 16px; line-height: 1.6; color: #3A342A">Predictive inventory and property custodianship for the WildCat Innovation Labs and the CIT Property Office.</p>
+    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #3A342A">
+      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F5A623"></span>Restock alerts 14–28 days before stockout</li>
+      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F5A623"></span>1-to-1 turnover for toner, drums and filament</li>
+      <li style="display: flex; gap: 10px; align-items: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: #F5A623"></span>BER-based repair decisions and verified replacements</li>
     </ul>
   </section>
   <section style="flex: 1 1 420px; display: flex; align-items: center; justify-content: center; padding: 48px 24px; box-sizing: border-box">
     <form onSubmit="{{submit}}" novalidate="" style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 18px">
       <div style="display: flex; flex-direction: column; gap: 6px">
         <h2 style="margin: 0; font-size: 30px; font-weight: 700">Sign in</h2>
-        <p style="margin: 0; font-size: 14px; color: #6B6466">Choose your portal and sign in with your EduAsset account.</p>
+        <p style="margin: 0; font-size: 14px; color: #5F5F5F">Choose your portal and sign in with your EduAsset account.</p>
       </div>
       <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
-        <legend style="font-size: 12px; font-weight: 600; color: #6B6466; margin-bottom: 8px">Portal</legend>
+        <legend style="font-size: 12px; font-weight: 600; color: #5F5F5F; margin-bottom: 8px">Portal</legend>
         <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
           <sc-for list="{{portals}}" as="p" hint-placeholder-count="2">
             <button type="button" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="{{p.style}}">
               <span style="font-size: 14px; font-weight: 600">{{p.title}}</span>
-              <span style="font-size: 12px; color: #6B6466">{{p.sub}}</span>
+              <span style="font-size: 12px; color: #5F5F5F">{{p.sub}}</span>
             </button>
           </sc-for>
         </div>
       </fieldset>
       <div style="display: flex; flex-direction: column; gap: 6px">
-        <label for="email" style="font-size: 12px; font-weight: 600; color: #6B6466">Email</label>
+        <label for="email" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Email</label>
         <input id="email" type="email" value="{{email}}" onInput="{{onEmail}}" placeholder="name@cit.edu" style="{{emailStyle}}">
-        <sc-if value="{{emailErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #C62828">{{emailErr}}</span></sc-if>
+        <sc-if value="{{emailErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B3261E">{{emailErr}}</span></sc-if>
       </div>
       <div style="display: flex; flex-direction: column; gap: 6px">
-        <label for="pw" style="font-size: 12px; font-weight: 600; color: #6B6466">Password</label>
+        <label for="pw" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Password</label>
         <input id="pw" type="password" value="{{pw}}" onInput="{{onPw}}" placeholder="Enter your password" style="{{pwStyle}}">
-        <sc-if value="{{pwErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #C62828">{{pwErr}}</span></sc-if>
+        <sc-if value="{{pwErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B3261E">{{pwErr}}</span></sc-if>
       </div>
-      <button type="submit" style="height: 46px; border: 0; border-radius: 10px; background: #7B1113; color: #FFFFFF; font: 600 15px Inter, sans-serif; cursor: pointer">Sign in</button>
+      <button type="submit" class="ea-primary" style="height: 46px; border: 1px solid #D98A0B; border-radius: 10px; background: #F5A623; color: #171717; font: 600 15px Inter, sans-serif; cursor: pointer">Sign in</button>
       <sc-if value="{{ready}}" hint-placeholder-val="{{false}}">
-        <div role="status" style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 12px; background: #E6F4EA; border: 1px solid #2E7D32">
-          <span style="font-size: 14px; font-weight: 600; color: #1F1A1A">Details look valid.</span>
-          <span style="font-size: 13px; color: #1F1A1A">Prototype only: no account is checked. Continue to the {{portalName}}.</span>
-          <a href="{{portalHref}}" style="align-self: flex-start; padding: 10px 16px; border-radius: 10px; background: #7B1113; color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none">Open {{portalName}}</a>
+        <div role="status" style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 12px; background: #E8F3EA; border: 1px solid #2F6B3A">
+          <span style="font-size: 14px; font-weight: 600; color: #171717">Details look valid.</span>
+          <span style="font-size: 13px; color: #171717">Prototype only: no account is checked. Continue to the {{portalName}}.</span>
+          <a href="{{portalHref}}" style="align-self: flex-start; padding: 10px 16px; border-radius: 10px; background: #FFF3B0; color: #171717; font-size: 14px; font-weight: 600; text-decoration: none">Open {{portalName}}</a>
         </div>
       </sc-if>
-      <p style="margin: 0; font-size: 12px; color: #6B6466; line-height: 1.5">Access is role-based. Lab users cannot approve disbursements, locked requisitions, replacements or condemnations.</p>
+      <p style="margin: 0; font-size: 12px; color: #5F5F5F; line-height: 1.5">Access is role-based. Lab users cannot approve disbursements, locked requisitions, replacements or condemnations.</p>
     </form>
   </section>
 </div>
@@ -83,12 +105,12 @@ class Component extends DCLogic {
     const s = this.state;
     const emailErr = s.tried && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email) ? 'Enter a valid email address.' : '';
     const pwErr = s.tried && s.pw.length < 8 ? 'Password must be at least 8 characters.' : '';
-    const field = (err) => 'height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; border: 1px solid ' + (err ? '#C62828' : '#DDD6D5');
+    const field = (err) => 'height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; border: 1px solid ' + (err ? '#B3261E' : '#E7E2D6');
     const portals = [
       { id: 'central', title: 'Central Property', sub: 'Property Custodian Office' },
       { id: 'lab', title: 'WIL Lab', sub: 'Lab Manager / Assistant' }
     ].map(p => ({ ...p, on: s.portal === p.id ? 'true' : 'false', pick: () => this.setState({ portal: p.id, ready: false }),
-      style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 14px; border-radius: 10px; cursor: pointer; text-align: left; font-family: Inter, sans-serif; color: #1F1A1A; ' + (s.portal === p.id ? 'background: #FBF4F4; border: 2px solid #7B1113' : 'background: #FFFFFF; border: 1px solid #DDD6D5') }));
+      style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 14px; border-radius: 10px; cursor: pointer; text-align: left; font-family: Inter, sans-serif; color: #171717; ' + (s.portal === p.id ? 'background: #FFF9DD; border: 2px solid #F5A623' : 'background: #FFFFFF; border: 1px solid #E7E2D6') }));
     return {
       portals, email: s.email, pw: s.pw, emailErr, pwErr, ready: s.ready,
       emailStyle: field(emailErr), pwStyle: field(pwErr),

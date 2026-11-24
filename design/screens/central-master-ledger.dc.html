@@ -13,61 +13,82 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="central" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="central" active="C-MasterLedger" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Master Ledger</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Master Ledger</span></nav>
 <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
   <div style="display: flex; flex-direction: column; gap: 6px">
-    <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · UNIT LIFECYCLE INTEGRITY</p>
-    <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Master property &amp; supply ledger</h1>
-    <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">One unit, one record, one QR code. Inventory status and health state are tracked separately.</p>
+    <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Master property &amp; supply ledger</h1>
+    <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">One unit, one record, one QR code. Inventory status and health state are tracked separately.</p>
   </div>
-  <a href="central-receive-items.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg> Receive new items</a>
+  <a href="central-receive-items.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg> Receive new items</a>
 </header>
 
-<section aria-label="Filters" style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; align-items: end">
+<section aria-label="Filters" style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; align-items: end">
   <div style="display: flex; flex-direction: column; gap: 6px">
-    <label for="q" style="font-size: 12px; font-weight: 600; color: #6B6466">Search asset ID or item</label>
-    <input id="q" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="e.g. KB-0152" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%">
+    <label for="q" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Search asset ID or item</label>
+    <input id="q" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="e.g. KB-0152" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%">
   </div>
   <div style="display: flex; flex-direction: column; gap: 6px">
-    <label for="cat" style="font-size: 12px; font-weight: 600; color: #6B6466">Category</label>
-    <select id="cat" value="{{cat}}" onChange="{{onCat}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="all">All categories</option><option value="Durable">Durable capital asset</option><option value="Consumable">High-turnover consumable</option></select>
+    <label for="cat" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Category</label>
+    <select id="cat" value="{{cat}}" onChange="{{onCat}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="all">All categories</option><option value="Durable">Durable capital asset</option><option value="Consumable">High-turnover consumable</option></select>
   </div>
   <div style="display: flex; flex-direction: column; gap: 6px">
-    <label for="inv" style="font-size: 12px; font-weight: 600; color: #6B6466">Inventory status</label>
-    <select id="inv" value="{{inv}}" onChange="{{onInv}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="all">All statuses</option><option>IN_STOCK</option><option>ISSUED / IN_USE</option><option>RETURNED_EMPTY</option><option>RETIRED</option></select>
+    <label for="inv" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Inventory status</label>
+    <select id="inv" value="{{inv}}" onChange="{{onInv}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="all">All statuses</option><option>IN_STOCK</option><option>ISSUED / IN_USE</option><option>RETURNED_EMPTY</option><option>RETIRED</option></select>
   </div>
-  <button type="button" onClick="{{clear}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; justify-self: start">Clear filters</button>
+  <button type="button" onClick="{{clear}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; justify-self: start">Clear filters</button>
 </section>
 
 <section style="display: flex; flex-direction: column; gap: 10px">
-  <p role="status" style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">{{countText}}</p>
+  <p role="status" style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">{{countText}}</p>
   <sc-if value="{{hasRows}}" hint-placeholder-val="{{true}}">
-    <div style="overflow-x: auto; border: 1px solid #DDD6D5; border-radius: 10px; background: #FFFFFF">
+    <div style="overflow-x: auto; border: 1px solid #E7E2D6; border-radius: 10px; background: #FFFFFF">
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; min-width: 920px">
-        <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Asset ID</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Item</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Category</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Location</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Inventory status</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Health</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap"><span style="position: absolute; left: -9999px">Actions</span></th></tr></thead>
+        <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Asset ID</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Item</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Category</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Location</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Inventory status</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Health</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap"><span style="position: absolute; left: -9999px">Actions</span></th></tr></thead>
         <tbody>
           <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
             <tr>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; font-weight: 700; font-family: ui-monospace, Menlo, monospace; font-size: 12px">{{r.id}}</td>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.item}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.cat}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.loc}}</td>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="{{r.invStyle}}">{{r.inv}}</span></td>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="{{r.healthStyle}}">{{r.health}}</span></td>
-              <td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; text-align: right"><button type="button" onClick="{{r.open}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">View <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717; font-weight: 700; font-family: ui-monospace, Menlo, monospace; font-size: 12px">{{r.id}}</td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.item}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.cat}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.loc}}</td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717"><span style="{{r.invStyle}}">{{r.inv}}</span></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717"><span style="{{r.healthStyle}}">{{r.health}}</span></td>
+              <td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717; text-align: right"><button type="button" onClick="{{r.open}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">View <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button></td>
             </tr>
           </sc-for>
         </tbody>
@@ -75,55 +96,55 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </sc-if>
   <sc-if value="{{noRows}}" hint-placeholder-val="{{false}}">
-    <div style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 40px 16px; text-align: center">
-      <span style="width: 56px; height: 56px; border-radius: 28px; background: #FBF4F4; color: #7B1113; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3"></path></svg></span>
+    <div style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 40px 16px; text-align: center">
+      <span style="width: 56px; height: 56px; border-radius: 28px; background: #FFF9DD; color: #B45309; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3"></path></svg></span>
       <strong style="font-size: 16px">No units match these filters</strong>
-      <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466; max-width: 360px">Check the asset ID, or clear the filters. Units only enter the ledger through a delivery-linked receiving record.</p>
-      <button type="button" onClick="{{clear}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Clear filters</button>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F; max-width: 360px">Check the asset ID, or clear the filters. Units only enter the ledger through a delivery-linked receiving record.</p>
+      <button type="button" onClick="{{clear}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Clear filters</button>
     </div>
   </sc-if>
 </section>
 
 <sc-if value="{{drawer}}" hint-placeholder-val="{{false}}">
-  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.45); z-index: 50; display: flex; justify-content: flex-end">
-    <aside role="dialog" aria-modal="true" aria-labelledby="dr-title" style="width: min(460px, 100%); height: 100%; overflow-y: auto; background: #FFFFFF; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 18px; box-shadow: -12px 0 32px rgba(31, 10, 10, 0.2)">
+  <div style="position: fixed; inset: 0; background: rgba(23, 23, 23, 0.45); z-index: 50; display: flex; justify-content: flex-end">
+    <aside role="dialog" aria-modal="true" aria-labelledby="dr-title" style="width: min(460px, 100%); height: 100%; overflow-y: auto; background: #FFFFFF; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 18px; box-shadow: -12px 0 32px rgba(23, 23, 23, 0.2)">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
-        <div style="display: flex; flex-direction: column; gap: 4px"><p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">UNIT RECORD</p><h2 id="dr-title" style="margin: 0; font-size: 22px; font-weight: 700; font-family: ui-monospace, Menlo, monospace">{{u.id}}</h2><span style="font-size: 14px; color: #4F494A">{{u.item}}</span></div>
-        <button type="button" onClick="{{closeDrawer}}" aria-label="Close unit record" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: #F6F3F2; cursor: pointer; font-size: 20px">×</button>
+        <div style="display: flex; flex-direction: column; gap: 4px"><p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #B45309">UNIT RECORD</p><h2 id="dr-title" style="margin: 0; font-size: 22px; font-weight: 700; font-family: ui-monospace, Menlo, monospace">{{u.id}}</h2><span style="font-size: 14px; color: #4A4540">{{u.item}}</span></div>
+        <button type="button" onClick="{{closeDrawer}}" aria-label="Close unit record" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: #FAF9F6; cursor: pointer; font-size: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
       </div>
-      <div style="display: flex; gap: 16px; align-items: center; padding: 16px; border: 1px solid #DDD6D5; border-radius: 12px">
-        <svg width="112" height="112" viewBox="0 0 25 25" role="img" aria-label="{{qrLabel}}" style="flex: 0 0 auto; background: #FFFFFF"><path d="{{qr}}" fill="#1F1A1A"></path></svg>
+      <div style="display: flex; gap: 16px; align-items: center; padding: 16px; border: 1px solid #E7E2D6; border-radius: 12px">
+        <svg width="112" height="112" viewBox="0 0 25 25" role="img" aria-label="{{qrLabel}}" style="flex: 0 0 auto; background: #FFFFFF"><path d="{{qr}}" fill="#171717"></path></svg>
         <div style="display: flex; flex-direction: column; gap: 8px">
-          <span style="font-size: 12px; color: #6B6466; line-height: 1.5">The QR code only encodes the asset ID. Status is always decided by the database.</span>
-          <button type="button" onClick="{{reprint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"></path></svg> Reprint QR label</button>
+          <span style="font-size: 12px; color: #5F5F5F; line-height: 1.5">The QR code only encodes the asset ID. Status is always decided by the database.</span>
+          <button type="button" onClick="{{reprint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"></path></svg> Reprint QR label</button>
         </div>
       </div>
       <dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px">
-        <sc-for list="{{fields}}" as="f" hint-placeholder-count="8"><div><dt style="font-size: 12px; font-weight: 600; color: #6B6466">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div></sc-for>
+        <sc-for list="{{fields}}" as="f" hint-placeholder-count="8"><div><dt style="font-size: 12px; font-weight: 600; color: #5F5F5F">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div></sc-for>
       </dl>
-      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #DDD6D5; border-radius: 12px">
-        <label for="ser" style="font-size: 12px; font-weight: 600; color: #6B6466">Edit manufacturer serial (optional)</label>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #E7E2D6; border-radius: 12px">
+        <label for="ser" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Edit manufacturer serial (optional)</label>
         <div style="display: flex; flex-wrap: wrap; gap: 8px">
-          <input id="ser" value="{{serialDraft}}" onInput="{{onSerial}}" placeholder="e.g. CR3V3P-88120" style="flex: 1 1 180px; min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; box-sizing: border-box">
-          <button type="button" onClick="{{saveSerial}}" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer">Save serial</button>
+          <input id="ser" value="{{serialDraft}}" onInput="{{onSerial}}" placeholder="e.g. CR3V3P-88120" style="flex: 1 1 180px; min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; box-sizing: border-box">
+          <button type="button" onClick="{{saveSerial}}" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer">Save serial</button>
         </div>
-        <span style="font-size: 12px; line-height: 1.5; color: #6B6466">Optional. Changing the serial does not change the asset ID or QR code.</span>
+        <span style="font-size: 12px; line-height: 1.5; color: #5F5F5F">Optional. Changing the serial does not change the asset ID or QR code.</span>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #DDD6D5; border-radius: 12px">
-        <label style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600"><input type="checkbox" checked="{{oneToOne}}" onChange="{{toggleOne}}" style="width: 20px; height: 20px; accent-color: #7B1113"><span>Require 1-to-1 Return</span><span style="{{oneBadge}}">{{oneLabel}}</span></label>
-        <span style="font-size: 12px; line-height: 1.5; color: #6B6466">A new unit is released only after the spent unit is scanned and marked RETURNED_EMPTY. This is an item setting and applies to all units of {{u.item}}.</span>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid #E7E2D6; border-radius: 12px">
+        <label style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600"><input type="checkbox" checked="{{oneToOne}}" onChange="{{toggleOne}}" style="width: 20px; height: 20px; accent-color: #B45309"><span>Require 1-to-1 Return</span><span style="{{oneBadge}}">{{oneLabel}}</span></label>
+        <span style="font-size: 12px; line-height: 1.5; color: #5F5F5F">A new unit is released only after the spent unit is scanned and marked RETURNED_EMPTY. This is an item setting and applies to all units of {{u.item}}.</span>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px">
-        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A; font-size: 15px">History (uneditable audit log)</h3>
-        <ol style="margin: 0; padding: 0 0 0 4px; list-style: none; display: flex; flex-direction: column; gap: 0; border-left: 2px solid #EFEAE9">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717; font-size: 15px">History (uneditable audit log)</h3>
+        <ol style="margin: 0; padding: 0 0 0 4px; list-style: none; display: flex; flex-direction: column; gap: 0; border-left: 2px solid #F0ECE3">
           <sc-for list="{{u.history}}" as="h" hint-placeholder-count="3">
-            <li style="position: relative; padding: 0 0 14px 18px"><span style="position: absolute; left: -7px; top: 3px; width: 12px; height: 12px; border-radius: 6px; background: #F2B705; border: 2px solid #FFFFFF"></span><span style="display: block; font-size: 13px; font-weight: 600">{{h.e}}</span><span style="font-size: 12px; color: #6B6466">{{h.m}}</span></li>
+            <li style="position: relative; padding: 0 0 14px 18px"><span style="position: absolute; left: -7px; top: 3px; width: 12px; height: 12px; border-radius: 6px; background: #F5A623; border: 2px solid #FFFFFF"></span><span style="display: block; font-size: 13px; font-weight: 600">{{h.e}}</span><span style="font-size: 12px; color: #5F5F5F">{{h.m}}</span></li>
           </sc-for>
         </ol>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
-        <sc-if value="{{u.durable}}" hint-placeholder-val="{{false}}"><a href="central-repair-ber.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Repair &amp; BER</a></sc-if>
-        <a href="central-verified-replacement.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Start replacement <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
+        <sc-if value="{{u.durable}}" hint-placeholder-val="{{false}}"><a href="central-repair-ber.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Repair &amp; BER</a></sc-if>
+        <a href="central-verified-replacement.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Start replacement <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
       </div>
     </aside>
   </div>
@@ -131,8 +152,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
-    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4A4540; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4A4540; font-size: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
   </div>
 </sc-if>
 
@@ -143,14 +164,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1100}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }

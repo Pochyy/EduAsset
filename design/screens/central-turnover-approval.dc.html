@@ -13,62 +13,83 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="central" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="central" active="C-TurnoverApproval" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 2 · Turnover</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Turnover Approval</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Module 2 · Turnover</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Turnover Approval</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
-  <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 2 · 1-TO-1 TURNOVER ACCOUNTABILITY</p>
-  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Turnover approval &amp; disbursement</h1>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">A new unit is released only when the previous unit on that machine is RETURNED_EMPTY.</p>
+  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Turnover approval &amp; disbursement</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">A new unit is released only when the previous unit on that machine is RETURNED_EMPTY.</p>
 </header>
 
-<div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">Lab assistants scan the spent unit in the WIL portal. You verify the turnover here and approve the release; the new unit becomes ISSUED / IN_USE on the linked machine.</span></div>
+<div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FFF9DD; border: 1px solid #E8D98A; color: #171717"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">Lab assistants scan the spent unit in the WIL portal. You verify the turnover here and approve the release; the new unit becomes ISSUED / IN_USE on the linked machine.</span></div>
 
 <section style="display: flex; flex-direction: column; gap: 14px">
   <sc-for list="{{reqs}}" as="r" hint-placeholder-count="3">
-    <article style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <article style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center">
-        <div style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 16px">{{r.machine}}</strong><span style="font-size: 13px; color: #6B6466">{{r.item}} · requested {{r.when}}</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 16px">{{r.machine}}</strong><span style="font-size: 13px; color: #5F5F5F">{{r.item}} · requested {{r.when}}</span></div>
         <span style="{{r.badgeStyle}}">{{r.status}}</span>
       </div>
       <ol aria-label="Turnover steps" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 10px">
         <sc-for list="{{r.steps}}" as="st" hint-placeholder-count="3">
           <li style="{{st.style}}">
             <span style="{{st.dot}}">{{st.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 600">{{st.title}}</span><span style="font-size: 12px; color: #4F494A">{{st.detail}}</span></span>
+            <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 600">{{st.title}}</span><span style="font-size: 12px; color: #4A4540">{{st.detail}}</span></span>
           </li>
         </sc-for>
       </ol>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
-        <sc-if value="{{r.canApprove}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.approve}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg> Approve disbursement</button></sc-if>
-        <sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #6B6466"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg> Locked until the spent unit is scanned as RETURNED_EMPTY</span><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #DDD6D5; color: #6B6466; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Approve disbursement</button></sc-if>
-        <sc-if value="{{r.done}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1E6B24"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg> Released · new unit is ISSUED / IN_USE on {{r.machine}}</span></sc-if>
+        <sc-if value="{{r.canApprove}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{r.approve}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg> Approve disbursement</button></sc-if>
+        <sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #5F5F5F"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg> Locked until the spent unit is scanned as RETURNED_EMPTY</span><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #E7E2D6; color: #5F5F5F; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Approve disbursement</button></sc-if>
+        <sc-if value="{{r.done}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #2F6B3A"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg> Released · new unit is ISSUED / IN_USE on {{r.machine}}</span></sc-if>
       </div>
     </article>
   </sc-for>
 </section>
 
 <sc-if value="{{confirm}}" hint-placeholder-val="{{false}}">
-  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
-    <div role="alertdialog" aria-modal="true" aria-labelledby="ct" aria-describedby="cd" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 16px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(31, 10, 10, 0.25)">
+  <div style="position: fixed; inset: 0; background: rgba(23, 23, 23, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
+    <div role="alertdialog" aria-modal="true" aria-labelledby="ct" aria-describedby="cd" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 14px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(23, 23, 23, 0.25)">
       <h2 id="ct" style="margin: 0; font-size: 20px; font-weight: 700">Release {{c.newUnit}}?</h2>
-      <p id="cd" style="margin: 0; font-size: 14px; line-height: 1.6; color: #4F494A">{{c.oldUnit}} was verified as RETURNED_EMPTY. {{c.newUnit}} will be set to ISSUED / IN_USE and linked to {{c.machine}}. This is recorded in the audit log.</p>
+      <p id="cd" style="margin: 0; font-size: 14px; line-height: 1.6; color: #4A4540">{{c.oldUnit}} was verified as RETURNED_EMPTY. {{c.newUnit}} will be set to ISSUED / IN_USE and linked to {{c.machine}}. This is recorded in the audit log.</p>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
-        <button type="button" onClick="{{cancel}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Cancel</button>
-        <button type="button" onClick="{{doApprove}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Release unit</button>
+        <button type="button" onClick="{{cancel}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Cancel</button>
+        <button type="button" onClick="{{doApprove}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Release unit</button>
       </div>
     </div>
   </div>
@@ -76,8 +97,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
-    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4A4540; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4A4540; font-size: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
   </div>
 </sc-if>
 
@@ -88,14 +109,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1000}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
@@ -112,8 +133,8 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const step = (n, title, detail, state) => ({ n, title, detail,
-      style: 'display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 10px; ' + (state === 'done' ? 'background: #E6F4EA; border: 1px solid #B9DFC1' : state === 'now' ? 'background: #FFF4D1; border: 1px solid #E0A800' : 'background: #F6F3F2; border: 1px solid #EFEAE9'),
-      dot: 'flex: 0 0 auto; width: 24px; height: 24px; border-radius: 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + (state === 'done' ? 'background: #2E7D32; color: #FFFFFF' : state === 'now' ? 'background: #F2B705; color: #5A0F14' : 'background: #DDD6D5; color: #4F494A') });
+      style: 'display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 10px; ' + (state === 'done' ? 'background: #E8F3EA; border: 1px solid #B7D7BE' : state === 'now' ? 'background: #FFF3C4; border: 1px solid #D98A0B' : 'background: #FAF9F6; border: 1px solid #F0ECE3'),
+      dot: 'flex: 0 0 auto; width: 24px; height: 24px; border-radius: 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + (state === 'done' ? 'background: #2F6B3A; color: #FFFFFF' : state === 'now' ? 'background: #F5A623; color: #171717' : 'background: #E7E2D6; color: #4A4540') });
     const reqs = s.reqs.map(r => {
       const st = r.done ? ['RELEASED', 'success'] : r.scanned ? ['READY TO APPROVE', 'warning'] : ['AWAITING SPENT-UNIT SCAN', 'neutral'];
       return { ...r, status: st[0], badgeStyle: eaBadge(st[1]), canApprove: r.scanned && !r.done, locked: !r.scanned, done: r.done,

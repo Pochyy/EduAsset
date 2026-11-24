@@ -13,26 +13,47 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="central" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="central" active="C-Replacement" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Replacements</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Replacements</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
-  <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · VERIFIED REPLACEMENT</p>
-  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Replacement RR-0043</h1>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Requested by WIL Lab Assistant on Nov 17 · Reason: broken keyboard at WIL workstation 5 (photo attached)</p>
+  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Replacement RR-0043</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">Requested by WIL Lab Assistant on Nov 17 · Reason: broken keyboard at WIL workstation 5 (photo attached)</p>
 </header>
 
 <ol aria-label="Progress" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
@@ -40,80 +61,80 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </ol>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 20px">
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">OLD UNIT</span><span style="{{oldBadge}}">{{oldStatus}}</span></div>
-    <strong style="font-size: 24px; color: #7B1113; font-family: ui-monospace, Menlo, monospace">KB-0007</strong>
-    <span style="font-size: 13px; color: #4F494A">Keyboard (USB) · WIL workstation 5 · Health: CONDEMNED / BER (not repairable)</span>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #B45309">OLD UNIT</span><span style="{{oldBadge}}">{{oldStatus}}</span></div>
+    <strong style="font-size: 24px; color: #B45309; font-family: ui-monospace, Menlo, monospace">KB-0007</strong>
+    <span style="font-size: 13px; color: #4A4540">Keyboard (USB) · WIL workstation 5 · Health: CONDEMNED / BER (not repairable)</span>
     <div style="display: flex; flex-direction: column; gap: 6px">
-      <label for="ou" style="font-size: 12px; font-weight: 600; color: #6B6466">Scan or type the old unit’s asset ID</label>
+      <label for="ou" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Scan or type the old unit’s asset ID</label>
       <div style="display: flex; gap: 8px">
-        <input id="ou" value="{{oldScan}}" onInput="{{onOld}}" placeholder="e.g. KB-0007" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace">
-        <button type="button" onClick="{{verifyOld}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
+        <input id="ou" value="{{oldScan}}" onInput="{{onOld}}" placeholder="e.g. KB-0007" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace">
+        <button type="button" onClick="{{verifyOld}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
       </div>
-      <sc-if value="{{oldErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B71C1C">{{oldErr}}</span></sc-if>
+      <sc-if value="{{oldErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B3261E">{{oldErr}}</span></sc-if>
     </div>
     <button type="button" onClick="{{photoOld}}" style="{{photoOldStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg> {{photoOldLabel}}</button>
   </section>
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">NEW UNIT</span><span style="{{newBadge}}">{{newStatus}}</span></div>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #B45309">NEW UNIT</span><span style="{{newBadge}}">{{newStatus}}</span></div>
     <div style="display: flex; flex-direction: column; gap: 6px">
-      <label for="nu" style="font-size: 12px; font-weight: 600; color: #6B6466">Scan or type the new unit’s asset ID</label>
-      <div style="display: flex; gap: 8px"><input id="nu" value="{{newId}}" onInput="{{onNew}}" placeholder="e.g. KB-0152" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace"><button type="button" aria-label="Scan QR with camera" onClick="{{scanHint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; padding: 0 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3z"></path></svg></button></div>
+      <label for="nu" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Scan or type the new unit’s asset ID</label>
+      <div style="display: flex; gap: 8px"><input id="nu" value="{{newId}}" onInput="{{onNew}}" placeholder="e.g. KB-0152" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace"><button type="button" aria-label="Scan QR with camera" onClick="{{scanHint}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; padding: 0 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3z"></path></svg></button></div>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Candidates · IN_STOCK, never issued</span>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{cands}}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{c.pick}}" style="{{c.style}}"><strong>{{c.id}}</strong><span style="font-size: 11px; color: #6B6466">{{c.dr}}</span></button></sc-for></div>
+    <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Candidates · IN_STOCK, never issued</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{cands}}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{c.pick}}" style="{{c.style}}"><strong>{{c.id}}</strong><span style="font-size: 11px; color: #5F5F5F">{{c.dr}}</span></button></sc-for></div>
     </div>
-    <span style="font-size: 13px; color: #4F494A">{{newInfo}}</span>
+    <span style="font-size: 13px; color: #4A4540">{{newInfo}}</span>
     <button type="button" onClick="{{photoNew}}" style="{{photoNewStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg> {{photoNewLabel}}</button>
   </section>
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 20px">
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Validation rules</h2>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Validation rules</h2>
     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
       <sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
         <li style="display: flex; gap: 10px; align-items: flex-start"><span style="{{r.dot}}">{{r.mark}}</span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{r.text}}</span><span style="font-size: 12px; color: {{r.noteColor}}">{{r.note}}</span></span></li>
       </sc-for>
     </ul>
   </section>
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Evidence &amp; two-person verification</h2>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Evidence &amp; two-person verification</h2>
     <div style="display: flex; flex-direction: column; gap: 6px">
-      <label for="ap" style="font-size: 12px; font-weight: 600; color: #6B6466">Second approver (required)</label>
-      <select id="ap" value="{{approver}}" onChange="{{onAp}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="">Select inventory staff…</option><option value="Inventory staff A">Inventory staff A</option><option value="Inventory staff B">Inventory staff B</option></select>
+      <label for="ap" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Second approver (required)</label>
+      <select id="ap" value="{{approver}}" onChange="{{onAp}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="">Select inventory staff…</option><option value="Inventory staff A">Inventory staff A</option><option value="Inventory staff B">Inventory staff B</option></select>
     </div>
-    <sc-if value="{{blockers}}" hint-placeholder-val="{{true}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FFF4D1; border: 1px solid #E0A800; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">{{blockers}}</span></div></sc-if>
-    <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #C62828; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg><span style="font-size: 13px; line-height: 1.5">This unit cannot be used as a replacement. Submitting logs a rejected attempt and adds a flag to the Audit Queue.</span></div></sc-if>
+    <sc-if value="{{blockers}}" hint-placeholder-val="{{true}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FFF3C4; border: 1px solid #D98A0B; color: #171717"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"></path></svg><span style="font-size: 13px; line-height: 1.5">{{blockers}}</span></div></sc-if>
+    <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #B3261E; color: #171717"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg><span style="font-size: 13px; line-height: 1.5">This unit cannot be used as a replacement. Submitting logs a rejected attempt and adds a flag to the Audit Queue.</span></div></sc-if>
     <sc-if value="{{pending}}" hint-placeholder-val="{{false}}">
-      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FBF4F4; border: 1px solid #E8CFCF; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v4M12 16h.01"></path></svg><span style="display: flex; flex-direction: column; gap: 8px"><strong style="font-size: 14px">Waiting for {{approver}} to confirm</strong><span style="font-size: 13px">Shown here so you can try the approver’s step in this prototype.</span><button type="button" onClick="{{confirmAs}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px">Confirm as {{approver}}</button></span></div>
+      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FFF9DD; border: 1px solid #E8D98A; color: #171717"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v4M12 16h.01"></path></svg><span style="display: flex; flex-direction: column; gap: 8px"><strong style="font-size: 14px">Waiting for {{approver}} to confirm</strong><span style="font-size: 13px">Shown here so you can try the approver’s step in this prototype.</span><button type="button" onClick="{{confirmAs}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px">Confirm as {{approver}}</button></span></div>
     </sc-if>
-    <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #E6F4EA; border: 1px solid #2E7D32; color: #1F1A1A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span style="font-size: 13px; line-height: 1.5"><strong>Replacement complete.</strong> KB-0007 is RETIRED, {{newId}} is ISSUED / IN_USE at WIL workstation 5. The old → new link, verifier and time are saved in the audit log.</span></div></sc-if>
+    <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #E8F3EA; border: 1px solid #2F6B3A; color: #171717"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span style="font-size: 13px; line-height: 1.5"><strong>Replacement complete.</strong> KB-0007 is RETIRED, {{newId}} is ISSUED / IN_USE at WIL workstation 5. The old → new link, verifier and time are saved in the audit log.</span></div></sc-if>
     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
-      <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reject}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B71C1C; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Log rejected attempt</button></sc-if>
-      <sc-if value="{{canSubmit}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{submit}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Submit for second approval</button></sc-if>
-      <sc-if value="{{waitSubmit}}" hint-placeholder-val="{{true}}"><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #DDD6D5; color: #6B6466; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Submit for second approval</button></sc-if>
+      <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reject}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B3261E; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Log rejected attempt</button></sc-if>
+      <sc-if value="{{canSubmit}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{submit}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Submit for second approval</button></sc-if>
+      <sc-if value="{{waitSubmit}}" hint-placeholder-val="{{true}}"><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #E7E2D6; color: #5F5F5F; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Submit for second approval</button></sc-if>
     </div>
   </section>
 </div>
 <sc-if value="{{hasRejections}}" hint-placeholder-val="{{false}}">
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Rejected attempts (logged)</h2>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Rejected attempts (logged)</h2>
     <sc-for list="{{rejections}}" as="r" hint-placeholder-count="1">
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; border: 1px solid #EFEAE9; border-radius: 10px; font-size: 13px">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; border: 1px solid #F0ECE3; border-radius: 10px; font-size: 13px">
         <strong style="font-family: ui-monospace, Menlo, monospace">{{r.id}}</strong>
-        <span style="color: #6B6466">{{r.when}}</span>
-        <span style="color: #B71C1C">{{r.reason}}</span>
+        <span style="color: #5F5F5F">{{r.when}}</span>
+        <span style="color: #B3261E">{{r.reason}}</span>
       </div>
     </sc-for>
-    <span style="font-size: 12px; color: #6B6466">Each rejection is recorded in the audit history and routed to the Audit Queue.</span>
+    <span style="font-size: 12px; color: #5F5F5F">Each rejection is recorded in the audit history and routed to the Audit Queue.</span>
   </section>
 </sc-if>
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
-    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4A4540; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4A4540; font-size: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
   </div>
 </sc-if>
 
@@ -124,14 +145,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1150}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
@@ -154,8 +175,8 @@ class Component extends DCLogic {
     const r1 = true, r2 = !!u && !u.issued && u.status === 'IN_STOCK', r3 = !!u && u.after, r4 = has && id !== 'KB-0007';
     const allOk = !!u && r2 && r3 && r4;
     const mk = (ok, text, note) => ({ text, note, mark: !has && text.indexOf('Old') !== 0 ? '•' : ok ? '✓' : '✕',
-      dot: 'flex: 0 0 auto; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + (!has && text.indexOf('Old') !== 0 ? 'background: #EFEAE9; color: #6B6466' : ok ? 'background: #2E7D32; color: #FFFFFF' : 'background: #B71C1C; color: #FFFFFF'),
-      noteColor: ok || !has ? '#6B6466' : '#B71C1C' });
+      dot: 'flex: 0 0 auto; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + (!has && text.indexOf('Old') !== 0 ? 'background: #F0ECE3; color: #5F5F5F' : ok ? 'background: #2F6B3A; color: #FFFFFF' : 'background: #B3261E; color: #FFFFFF'),
+      noteColor: ok || !has ? '#5F5F5F' : '#B3261E' });
     const rules = [
       mk(r1 && s.oldOk, 'Old unit set to RETIRED (or sent to repair)', s.oldOk ? 'KB-0007 inspected: not repairable → RETIRED' : 'Scan KB-0007 to verify the old unit'),
       mk(r2, 'New unit is IN_STOCK with no issue or usage history', !has ? 'Scan or pick a unit' : !u ? id + ' is not in the ledger' : u.issued ? id + ' was previously issued (' + u.status + ')' : 'Never issued'),
@@ -163,16 +184,16 @@ class Component extends DCLogic {
       mk(r4, 'New asset ID differs from the old ID', !has ? '—' : r4 ? id + ' ≠ KB-0007' : 'Same unit as the old one')
     ];
     const cands = ['KB-0150', 'KB-0151', 'KB-0152', 'KB-0101'].map(c => ({ id: c, dr: ledger[c].dr + ' · ' + ledger[c].drDate, pick: () => this.setState({ newId: c, phase: 'edit' }),
-      style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 44px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font: 600 13px ui-monospace, Menlo, monospace; color: #1F1A1A; ' + (id === c ? 'background: #FBF4F4; border: 2px solid #7B1113' : 'background: #FFFFFF; border: 1px solid #DDD6D5') }));
+      style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 44px; padding: 8px 12px; border-radius: 10px; cursor: pointer; font: 600 13px ui-monospace, Menlo, monospace; color: #171717; ' + (id === c ? 'background: #FFF9DD; border: 2px solid #F5A623' : 'background: #FFFFFF; border: 1px solid #E7E2D6') }));
     const missing = [];
     if (!has) missing.push('choose the new unit'); if (!s.oldOk) missing.push('verify the old-unit scan'); if (!s.pOld) missing.push('attach the old unit photo'); if (!s.pNew) missing.push('attach the new unit photo'); if (!s.approver) missing.push('select the second approver');
     const failed = has && !allOk && s.phase === 'edit';
     const ready = allOk && s.oldOk && s.pOld && s.pNew && !!s.approver && s.phase === 'edit';
-    const ph = (on) => 'display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer; font: 600 13px Inter, sans-serif; align-self: flex-start; ' + (on ? 'background: #E6F4EA; color: #1E6B24; border: 1px solid #2E7D32' : 'background: #FFFFFF; color: #7B1113; border: 1.5px dashed #7B1113');
+    const ph = (on) => 'display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer; font: 600 13px Inter, sans-serif; align-self: flex-start; ' + (on ? 'background: #E8F3EA; color: #2F6B3A; border: 1px solid #2F6B3A' : 'background: #FFFFFF; color: #B45309; border: 1.5px dashed #B45309');
     const stepState = [true, allOk, s.phase !== 'edit', s.phase === 'done'];
     const steps = ['Request raised', 'New unit verified', 'Submitted', 'Second person confirmed'].map((label, i) => ({ label, n: i + 1,
-      style: 'display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (stepState[i] ? 'background: #E6F4EA; color: #1E6B24' : 'background: #FFFFFF; color: #6B6466; border: 1px solid #DDD6D5'),
-      dot: 'width: 24px; height: 24px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; ' + (stepState[i] ? 'background: #2E7D32; color: #FFFFFF' : 'background: #EFEAE9; color: #4F494A') }));
+      style: 'display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 999px; font-size: 13px; font-weight: 600; ' + (stepState[i] ? 'background: #E8F3EA; color: #2F6B3A' : 'background: #FFFFFF; color: #5F5F5F; border: 1px solid #E7E2D6'),
+      dot: 'width: 24px; height: 24px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; ' + (stepState[i] ? 'background: #2F6B3A; color: #FFFFFF' : 'background: #F0ECE3; color: #4A4540') }));
     return {
       ...eaToast(this), steps, rules, cands, newId: s.newId, approver: s.approver,
       onNew: e => this.setState({ newId: e.target.value, phase: 'edit' }), onAp: e => this.setState({ approver: e.target.value }),

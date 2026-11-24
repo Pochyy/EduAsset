@@ -13,128 +13,149 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="central" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="central" active="C-RepairBER" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Repair &amp; BER</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="central-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">Central Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Module 3 · Units &amp; Assets</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Repair &amp; BER</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
-  <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 3 · BER DECISION SUPPORT &amp; CONDEMNATION</p>
-  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Repair &amp; Beyond Economic Repair</h1>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">BER = ((cumulative repair costs + pending quote) ÷ current replacement cost) × 100 · below 50% repair is approved · 50% or higher maintenance is blocked</p>
+  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Repair &amp; Beyond Economic Repair</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">BER = ((cumulative repair costs + pending quote) ÷ current replacement cost) × 100 · below 50% repair is approved · 50% or higher maintenance is blocked</p>
 </header>
 
 <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
-  <section aria-label="Durable assets" style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Durable assets</h2>
+  <section aria-label="Durable assets" style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Durable assets</h2>
     <sc-for list="{{assets}}" as="a" hint-placeholder-count="3">
       <button type="button" onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="{{a.style}}">
         <span style="display: flex; justify-content: space-between; gap: 8px; width: 100%"><span style="font-weight: 700; font-size: 14px">{{a.id}}</span><span style="{{a.badgeStyle}}">{{a.health}}</span></span>
-        <span style="font-size: 12px; color: #6B6466; text-align: left">{{a.name}}</span>
-        <span style="display: block; width: 100%; height: 8px; border-radius: 4px; background: #EFEAE9; overflow: hidden"><span style="{{a.bar}}"></span></span>
-        <span style="font-size: 12px; color: #4F494A">Cumulative {{a.cum}} · {{a.pct}} of replacement cost</span>
+        <span style="font-size: 12px; color: #5F5F5F; text-align: left">{{a.name}}</span>
+        <span style="display: block; width: 100%; height: 8px; border-radius: 4px; background: #F0ECE3; overflow: hidden"><span style="{{a.bar}}"></span></span>
+        <span style="font-size: 12px; color: #4A4540">Cumulative {{a.cum}} · {{a.pct}} of replacement cost</span>
       </button>
     </sc-for>
   </section>
 
   <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
-    <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px">
-        <div style="display: flex; flex-direction: column; gap: 2px"><h2 style="margin: 0; font-size: 20px; font-weight: 700">{{sel.id}}</h2><span style="font-size: 13px; color: #6B6466">{{sel.name}} · {{sel.loc}} · Custodian: WIL Lab Manager</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><h2 style="margin: 0; font-size: 20px; font-weight: 700">{{sel.id}}</h2><span style="font-size: 13px; color: #5F5F5F">{{sel.name}} · {{sel.loc}} · Custodian: WIL Lab Manager</span></div>
         <span style="{{sel.badgeStyle}}">{{sel.health}}</span>
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px">
-        <div style="padding: 12px; border: 1px solid #EFEAE9; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Replacement value</span><div style="font-size: 20px; font-weight: 700">{{sel.value}}</div></div>
-        <div style="padding: 12px; border: 1px solid #EFEAE9; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Repairs to date</span><div style="font-size: 20px; font-weight: 700">{{sel.cum}}</div></div>
-        <div style="padding: 12px; border: 1px solid #EFEAE9; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">50% limit</span><div style="font-size: 20px; font-weight: 700">{{sel.limit}}</div></div>
+        <div style="padding: 12px; border: 1px solid #F0ECE3; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Replacement value</span><div style="font-size: 20px; font-weight: 700">{{sel.value}}</div></div>
+        <div style="padding: 12px; border: 1px solid #F0ECE3; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Repairs to date</span><div style="font-size: 20px; font-weight: 700">{{sel.cum}}</div></div>
+        <div style="padding: 12px; border: 1px solid #F0ECE3; border-radius: 10px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">50% limit</span><div style="font-size: 20px; font-weight: 700">{{sel.limit}}</div></div>
       </div>
-      <div style="overflow-x: auto; border: 1px solid #DDD6D5; border-radius: 10px; background: #FFFFFF">
+      <div style="overflow-x: auto; border: 1px solid #E7E2D6; border-radius: 10px; background: #FFFFFF">
         <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; min-width: 520px">
-          <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Repair</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Work done</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Invoice</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Cumulative BER</th></tr></thead>
-          <tbody><sc-for list="{{sel.repairs}}" as="r" hint-placeholder-count="2"><tr><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.when}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.what}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.cost}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; font-weight: 600">{{r.ber}}</td></tr></sc-for></tbody>
+          <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Repair</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Work done</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Invoice</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Cumulative BER</th></tr></thead>
+          <tbody><sc-for list="{{sel.repairs}}" as="r" hint-placeholder-count="2"><tr><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.when}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.what}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.cost}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717; font-weight: 600">{{r.ber}}</td></tr></sc-for></tbody>
         </table>
       </div>
     </section>
 
     <sc-if value="{{active}}" hint-placeholder-val="{{true}}">
-    <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
-      <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Log repair quote</h2>
+    <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+      <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Log repair quote</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px">
         <div style="display: flex; flex-direction: column; gap: 6px">
-          <label for="amt" style="font-size: 12px; font-weight: 600; color: #6B6466">Technician quote (₱)</label>
+          <label for="amt" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Technician quote (₱)</label>
           <input id="amt" type="number" inputmode="decimal" value="{{quote}}" onInput="{{onQuote}}" placeholder="e.g. 5000" style="{{quoteStyle}}">
-          <sc-if value="{{quoteErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B71C1C">{{quoteErr}}</span></sc-if>
+          <sc-if value="{{quoteErr}}" hint-placeholder-val="{{false}}"><span role="alert" style="font-size: 12px; color: #B3261E">{{quoteErr}}</span></sc-if>
         </div>
         <fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px">
-          <legend style="font-size: 12px; font-weight: 600; color: #6B6466; margin-bottom: 6px">Inspection result</legend>
+          <legend style="font-size: 12px; font-weight: 600; color: #5F5F5F; margin-bottom: 6px">Inspection result</legend>
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><sc-for list="{{rep}}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button></sc-for></div>
         </fieldset>
       </div>
       <div style="{{resultStyle}}">
         <span style="font-size: 28px; font-weight: 800; color: {{resultColor}}">{{berText}}</span>
-        <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{resultTitle}}</strong><span style="font-size: 13px; color: #4F494A">{{resultText}}</span></span>
+        <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{resultTitle}}</strong><span style="font-size: 13px; color: #4A4540">{{resultText}}</span></span>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end">
-        <sc-if value="{{canRepair}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{approveRepair}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Approve repair → UNDER_REPAIR</button></sc-if>
-        <sc-if value="{{mustCondemn}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{askCondemn}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B71C1C; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Block maintenance &amp; condemn</button></sc-if>
+        <sc-if value="{{canRepair}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{approveRepair}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg> Approve repair → UNDER_REPAIR</button></sc-if>
+        <sc-if value="{{mustCondemn}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{askCondemn}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B3261E; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Block maintenance &amp; condemn</button></sc-if>
       </div>
       <sc-if value="{{returnVisible}}" hint-placeholder-val="{{false}}">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid #EFEAE9">
-          <span style="font-size: 13px; line-height: 1.5; color: #6B6466">{{returnHint}}</span>
-          <sc-if value="{{canReturn}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{returnToService}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Mark repaired · return to service</button></sc-if>
-          <sc-if value="{{returnLocked}}" hint-placeholder-val="{{false}}"><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #DDD6D5; color: #6B6466; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Mark repaired · return to service</button></sc-if>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid #F0ECE3">
+          <span style="font-size: 13px; line-height: 1.5; color: #5F5F5F">{{returnHint}}</span>
+          <sc-if value="{{canReturn}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{returnToService}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Mark repaired · return to service</button></sc-if>
+          <sc-if value="{{returnLocked}}" hint-placeholder-val="{{false}}"><button type="button" disabled="" aria-disabled="true" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #E7E2D6; color: #5F5F5F; font: 600 14px Inter, sans-serif; cursor: not-allowed; white-space: nowrap">Mark repaired · return to service</button></sc-if>
         </div>
       </sc-if>
     </section>
     </sc-if>
     <sc-if value="{{condemned}}" hint-placeholder-val="{{false}}">
-      <section style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #C62828; color: #1F1A1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 14px">{{sel.id}} is CONDEMNED / BER and RETIRED</strong><span style="font-size: 13px">It can never be issued again. The pre-filled Condemnation and Disposal form is ready for the Property Office.</span><button type="button" onClick="{{openForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"></path></svg> View condemnation form</button></span></section>
+      <section style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #FDECEC; border: 1px solid #B3261E; color: #171717"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg><span style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 14px">{{sel.id}} is CONDEMNED / BER and RETIRED</strong><span style="font-size: 13px">It can never be issued again. The pre-filled Condemnation and Disposal form is ready for the Property Office.</span><button type="button" onClick="{{openForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap; align-self: flex-start; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"></path></svg> View condemnation form</button></span></section>
     </sc-if>
   </div>
 </div>
 
 <sc-if value="{{confirm}}" hint-placeholder-val="{{false}}">
-  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
-    <div role="alertdialog" aria-modal="true" aria-labelledby="cn-t" aria-describedby="cn-d" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 16px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(31, 10, 10, 0.25)">
-      <span style="width: 48px; height: 48px; border-radius: 24px; background: #FDECEC; color: #B71C1C; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01"></path></svg></span>
+  <div style="position: fixed; inset: 0; background: rgba(23, 23, 23, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
+    <div role="alertdialog" aria-modal="true" aria-labelledby="cn-t" aria-describedby="cn-d" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 14px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(23, 23, 23, 0.25)">
+      <span style="width: 48px; height: 48px; border-radius: 24px; background: #FDECEC; color: #B3261E; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3zM12 9v4M12 17h.01"></path></svg></span>
       <h2 id="cn-t" style="margin: 0; font-size: 20px; font-weight: 700">Condemn {{sel.id}}?</h2>
-      <p id="cn-d" style="margin: 0; font-size: 14px; line-height: 1.6; color: #4F494A">The repair invoice will be blocked, the health state becomes CONDEMNED / BER and the inventory status RETIRED. A retired unit can never be issued again. This cannot be undone from the app.</p>
-      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end"><button type="button" onClick="{{cancel}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Cancel</button><button type="button" onClick="{{doCondemn}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B71C1C; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Condemn and generate form</button></div>
+      <p id="cn-d" style="margin: 0; font-size: 14px; line-height: 1.6; color: #4A4540">The repair invoice will be blocked, the health state becomes CONDEMNED / BER and the inventory status RETIRED. A retired unit can never be issued again. This cannot be undone from the app.</p>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end"><button type="button" onClick="{{cancel}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Cancel</button><button type="button" onClick="{{doCondemn}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #B3261E; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Condemn and generate form</button></div>
     </div>
   </div>
 </sc-if>
 
 <sc-if value="{{form}}" hint-placeholder-val="{{false}}">
-  <div style="position: fixed; inset: 0; background: rgba(31, 26, 26, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
-    <div role="dialog" aria-modal="true" aria-labelledby="fm-t" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 16px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(31, 10, 10, 0.25); max-width: 640px">
-      <div style="display: flex; justify-content: space-between; gap: 10px"><div><p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">PRE-FILLED · PAR/ICS-COMPLIANT</p><h2 id="fm-t" style="margin: 4px 0 0; font-size: 20px; font-weight: 700">Condemnation &amp; Disposal Form</h2></div><button type="button" onClick="{{closeForm}}" aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: #F6F3F2; cursor: pointer; font-size: 20px">×</button></div>
-      <div style="border: 1px solid #DDD6D5; border-radius: 12px; overflow: hidden">
-        <div style="background: #7B1113; color: #FFFFFF; padding: 12px 16px; font-size: 13px; display: flex; justify-content: space-between"><strong>CIT Property Office</strong><span>CD-2026-0019</span></div>
+  <div style="position: fixed; inset: 0; background: rgba(23, 23, 23, 0.5); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; z-index: 50">
+    <div role="dialog" aria-modal="true" aria-labelledby="fm-t" style="width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFFFF; border-radius: 14px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(23, 23, 23, 0.25); max-width: 640px">
+      <div style="display: flex; justify-content: space-between; gap: 10px"><div><p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #B45309">PRE-FILLED · PAR/ICS-COMPLIANT</p><h2 id="fm-t" style="margin: 4px 0 0; font-size: 20px; font-weight: 700">Condemnation &amp; Disposal Form</h2></div><button type="button" onClick="{{closeForm}}" aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 10px; background: #FAF9F6; cursor: pointer; font-size: 20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button></div>
+      <div style="border: 1px solid #E7E2D6; border-radius: 12px; overflow: hidden">
+        <div style="background: #F5A623; color: #171717; padding: 12px 16px; font-size: 13px; display: flex; justify-content: space-between"><strong>CIT Property Office</strong><span>CD-2026-0019</span></div>
         <dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
-          <sc-for list="{{formFields}}" as="f" hint-placeholder-count="6"><div style="padding: 10px 16px; border-top: 1px solid #EFEAE9"><dt style="font-size: 11px; font-weight: 600; color: #6B6466">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div></sc-for>
+          <sc-for list="{{formFields}}" as="f" hint-placeholder-count="6"><div style="padding: 10px 16px; border-top: 1px solid #F0ECE3"><dt style="font-size: 12px; font-weight: 600; color: #5F5F5F">{{f.k}}</dt><dd style="margin: 2px 0 0; font-size: 14px; font-weight: 600">{{f.v}}</dd></div></sc-for>
         </dl>
-        <div style="padding: 12px 16px; border-top: 1px solid #EFEAE9; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 11px; font-weight: 600; color: #6B6466">MAINTENANCE EXPENSE LEDGER</span><sc-for list="{{sel.repairs}}" as="r" hint-placeholder-count="3"><span style="font-size: 13px; display: flex; justify-content: space-between; gap: 8px"><span>{{r.when}} · {{r.what}}</span><strong>{{r.cost}}</strong></span></sc-for></div>
+        <div style="padding: 12px 16px; border-top: 1px solid #F0ECE3; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">MAINTENANCE EXPENSE LEDGER</span><sc-for list="{{sel.repairs}}" as="r" hint-placeholder-count="3"><span style="font-size: 13px; display: flex; justify-content: space-between; gap: 8px"><span>{{r.when}} · {{r.what}}</span><strong>{{r.cost}}</strong></span></sc-for></div>
       </div>
-      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end"><button type="button" onClick="{{closeForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Close</button><button type="button" onClick="{{download}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg> Download form</button></div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end"><button type="button" onClick="{{closeForm}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Close</button><button type="button" onClick="{{download}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg> Download form</button></div>
     </div>
   </div>
 </sc-if>
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
-    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4A4540; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4A4540; font-size: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
   </div>
 </sc-if>
 
@@ -145,14 +166,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1250}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
@@ -174,9 +195,9 @@ class Component extends DCLogic {
     const tone = { OPERATIONAL: 'success', NEEDS_MAINTENANCE: 'warning', UNDER_REPAIR: 'warning', 'CONDEMNED / BER': 'danger' };
     const cumOf = a => a.repairs.reduce((t, r) => t + r[2], 0);
     const assets = s.assets.map(a => { const c = cumOf(a), p = c / a.value * 100; return { ...a, cum: peso(c), pct: pct(p), on: s.sel === a.key ? 'true' : 'false', badgeStyle: eaBadge(tone[a.health]),
-      bar: 'display: block; height: 100%; width: ' + Math.min(100, p * 2) + '%; background: ' + (p >= 50 ? '#B71C1C' : p >= 35 ? '#E0A800' : '#2E7D32'),
+      bar: 'display: block; height: 100%; width: ' + Math.min(100, p * 2) + '%; background: ' + (p >= 50 ? '#B3261E' : p >= 35 ? '#D98A0B' : '#2F6B3A'),
       pick: () => this.setState({ sel: a.key, tried: false, repairable: true }),
-      style: 'display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%; padding: 14px; border-radius: 12px; cursor: pointer; font-family: Inter, sans-serif; color: #1F1A1A; text-align: left; ' + (s.sel === a.key ? 'background: #FBF4F4; border: 2px solid #7B1113' : 'background: #FFFFFF; border: 1px solid #DDD6D5') }; });
+      style: 'display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%; padding: 14px; border-radius: 12px; cursor: pointer; font-family: Inter, sans-serif; color: #171717; text-align: left; ' + (s.sel === a.key ? 'background: #FFF9DD; border: 2px solid #F5A623' : 'background: #FFFFFF; border: 1px solid #E7E2D6') }; });
     const a = s.assets.find(x => x.key === s.sel); const cum = cumOf(a);
     let run = 0; const repairs = a.repairs.map(r => { run += r[2]; return { when: r[0], what: r[1], cost: peso(r[2]), ber: pct(run / a.value * 100) }; });
     const quote = s.quotes[s.sel] || '';
@@ -187,17 +208,17 @@ class Component extends DCLogic {
     const blocked = qValid && (ber >= 50 || !s.repairable);
     const ok = qValid && ber < 50 && s.repairable;
     const rep = [[true, 'Repairable'], [false, 'Not repairable']].map(([v, label]) => ({ label, on: s.repairable === v ? 'true' : 'false', pick: () => this.setState({ repairable: v }),
-      style: 'min-height: 44px; padding: 0 16px; border-radius: 10px; cursor: pointer; font: 600 14px Inter, sans-serif; ' + (s.repairable === v ? 'background: #FBF4F4; color: #7B1113; border: 2px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5') }));
+      style: 'min-height: 44px; padding: 0 16px; border-radius: 10px; cursor: pointer; font: 600 14px Inter, sans-serif; ' + (s.repairable === v ? 'background: #FFF9DD; color: #B45309; border: 2px solid #F5A623' : 'background: #FFFFFF; color: #4A4540; border: 1px solid #E7E2D6') }));
     return {
       ...eaToast(this), assets, active: !condemned, condemned,
       sel: { ...a, value: peso(a.value), cum: peso(cum), limit: peso(a.value / 2), badgeStyle: eaBadge(tone[a.health]), repairs },
       quote, onQuote: e => this.setState({ quotes: { ...s.quotes, [s.sel]: e.target.value }, tried: false }), quoteErr,
-      quoteStyle: 'min-height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; border: 1px solid ' + (quoteErr ? '#C62828' : '#DDD6D5'),
+      quoteStyle: 'min-height: 44px; padding: 0 12px; border-radius: 8px; font: 400 14px Inter, sans-serif; border: 1px solid ' + (quoteErr ? '#B3261E' : '#E7E2D6'),
       rep, berText: qValid ? pct(ber) : pct(cum / a.value * 100),
-      resultColor: !qValid ? '#4F494A' : blocked ? '#B71C1C' : '#1E6B24',
+      resultColor: !qValid ? '#4A4540' : blocked ? '#B3261E' : '#2F6B3A',
       resultTitle: !qValid ? 'Enter a quote to see the decision' : blocked ? (s.repairable ? 'BER is 50% or higher: maintenance blocked' : 'Not repairable: retire the unit') : 'Below 50%: repair approved',
       resultText: !qValid ? 'Cumulative repairs so far: ' + peso(cum) + ' of ' + peso(a.value) + '.' : (peso(cum) + ' + ' + peso(q) + ' = ' + peso(cum + q) + ' of ' + peso(a.value) + ' replacement value.'),
-      resultStyle: 'display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 12px; ' + (!qValid ? 'background: #F6F3F2; border: 1px solid #EFEAE9' : blocked ? 'background: #FDECEC; border: 1px solid #C62828' : 'background: #E6F4EA; border: 1px solid #2E7D32'),
+      resultStyle: 'display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 12px; ' + (!qValid ? 'background: #FAF9F6; border: 1px solid #F0ECE3' : blocked ? 'background: #FDECEC; border: 1px solid #B3261E' : 'background: #E8F3EA; border: 1px solid #2F6B3A'),
       canRepair: ok, mustCondemn: blocked,
       returnVisible: a.health === 'UNDER_REPAIR' && s.repairable,
       canReturn: a.health === 'UNDER_REPAIR' && s.repairable && !blocked,

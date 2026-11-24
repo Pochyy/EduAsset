@@ -13,85 +13,106 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="lab" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="lab" active="L-TurnoverScan" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="lab-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Turnover Scan</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="lab-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Supplies</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Turnover Scan</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
-  <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULE 2 · 1-TO-1 TURNOVER</p>
-  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Turnover scan</h1>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Scan the spent unit before a new cartridge, drum or spool is released.</p>
+  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Turnover scan</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">Scan the spent unit before a new cartridge, drum or spool is released.</p>
 </header>
 
-<section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; align-items: end">
-  <div style="display: flex; flex-direction: column; gap: 6px"><label for="mc" style="font-size: 12px; font-weight: 600; color: #6B6466">Machine</label><select id="mc" value="{{machine}}" onChange="{{onMachine}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="prn">WIL-PRN-01 · HP LaserJet MFP · Lab 3</option><option value="3dp">WIL-3DP-001 · 3D printer · Lab 1</option></select></div>
-  <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Requested new unit</span><strong style="font: 700 15px ui-monospace, Menlo, monospace; min-height: 44px; display: flex; align-items: center">{{m.newUnit}}</strong></div>
-  <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Currently active on this machine</span><strong style="font: 700 15px ui-monospace, Menlo, monospace; min-height: 44px; display: flex; align-items: center">{{m.active}}</strong></div>
+<section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; align-items: end">
+  <div style="display: flex; flex-direction: column; gap: 6px"><label for="mc" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Machine</label><select id="mc" value="{{machine}}" onChange="{{onMachine}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%"><option value="prn">WIL-PRN-01 · HP LaserJet MFP · Lab 3</option><option value="3dp">WIL-3DP-001 · 3D printer · Lab 1</option></select></div>
+  <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Requested new unit</span><strong style="font: 700 15px ui-monospace, Menlo, monospace; min-height: 44px; display: flex; align-items: center">{{m.newUnit}}</strong></div>
+  <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Currently active on this machine</span><strong style="font: 700 15px ui-monospace, Menlo, monospace; min-height: 44px; display: flex; align-items: center">{{m.active}}</strong></div>
 </section>
 
 <div style="{{bannerStyle}}"><span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">{{bannerTitle}}</strong><span style="font-size: 13px; line-height: 1.5">{{bannerText}}</span></span></div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 20px">
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Camera / webcam scanner</h2>
-    <div role="img" aria-label="Camera viewfinder" style="position: relative; height: 280px; border-radius: 14px; background: #5A0F14; border: 2px solid #F2B705; display: flex; align-items: center; justify-content: center; color: #FFF4D1">
-      <span style="position: absolute; left: 20px; top: 20px; width: 36px; height: 36px; border-left: 5px solid #F2B705; border-top: 5px solid #F2B705; border-radius: 6px 0 0 0"></span>
-      <span style="position: absolute; right: 20px; top: 20px; width: 36px; height: 36px; border-right: 5px solid #F2B705; border-top: 5px solid #F2B705; border-radius: 0 6px 0 0"></span>
-      <span style="position: absolute; left: 20px; bottom: 20px; width: 36px; height: 36px; border-left: 5px solid #F2B705; border-bottom: 5px solid #F2B705; border-radius: 0 0 0 6px"></span>
-      <span style="position: absolute; right: 20px; bottom: 20px; width: 36px; height: 36px; border-right: 5px solid #F2B705; border-bottom: 5px solid #F2B705; border-radius: 0 0 6px 0"></span>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Camera / webcam scanner</h2>
+    <div role="img" aria-label="Camera viewfinder" style="position: relative; height: 280px; border-radius: 12px; background: #171717; border: 2px solid #2A2418; display: flex; align-items: center; justify-content: center; color: #FFF3B0">
+      <span style="position: absolute; left: 20px; top: 20px; width: 36px; height: 36px; border-left: 5px solid #F5A623; border-top: 5px solid #F5A623; border-radius: 6px 0 0 0"></span>
+      <span style="position: absolute; right: 20px; top: 20px; width: 36px; height: 36px; border-right: 5px solid #F5A623; border-top: 5px solid #F5A623; border-radius: 0 6px 0 0"></span>
+      <span style="position: absolute; left: 20px; bottom: 20px; width: 36px; height: 36px; border-left: 5px solid #F5A623; border-bottom: 5px solid #F5A623; border-radius: 0 0 0 6px"></span>
+      <span style="position: absolute; right: 20px; bottom: 20px; width: 36px; height: 36px; border-right: 5px solid #F5A623; border-bottom: 5px solid #F5A623; border-radius: 0 0 6px 0"></span>
       <span style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 0 40px"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3z"></path></svg><span style="font-size: 13px">Point the camera at the spent unit’s QR code</span></span>
     </div>
     <form onSubmit="{{scan}}" novalidate="" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
-      <div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px"><label for="id" style="font-size: 12px; font-weight: 600; color: #6B6466">Or type the asset ID</label><input id="id" value="{{input}}" onInput="{{onInput}}" placeholder="e.g. TNR-WIL-2026-001" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace"></div>
-      <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #7B1113; color: #FFFFFF; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
+      <div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px"><label for="id" style="font-size: 12px; font-weight: 600; color: #5F5F5F">Or type the asset ID</label><input id="id" value="{{input}}" onInput="{{onInput}}" placeholder="e.g. TNR-WIL-2026-001" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%; font-family: ui-monospace, Menlo, monospace"></div>
+      <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 0; background: #F5A623; color: #171717; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Verify scan</button>
     </form>
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 12px; font-weight: 600; color: #6B6466">Demo scans:</span><button type="button" onClick="{{demoRight}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.active}}</button><button type="button" onClick="{{demoWrong}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #DDD6D5; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.wrong}}</button></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center"><span style="font-size: 12px; font-weight: 600; color: #5F5F5F">Demo scans:</span><button type="button" onClick="{{demoRight}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #E7E2D6; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.active}}</button><button type="button" onClick="{{demoWrong}}" style="min-height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #E7E2D6; background: #FFFFFF; cursor: pointer; font: 600 12px ui-monospace, Menlo, monospace">{{m.wrong}}</button></div>
   </section>
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Scan result</h2>
-    <sc-if value="{{idle}}" hint-placeholder-val="{{true}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">No scan yet. The result and the unit’s new status appear here.</p></sc-if>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Scan result</h2>
+    <sc-if value="{{idle}}" hint-placeholder-val="{{true}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">No scan yet. The result and the unit’s new status appear here.</p></sc-if>
     <sc-if value="{{showResult}}" hint-placeholder-val="{{false}}">
       <dl style="margin: 0; display: flex; flex-direction: column; gap: 10px">
-        <sc-for list="{{resultRows}}" as="r" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; gap: 10px; font-size: 14px"><dt style="color: #6B6466">{{r.k}}</dt><dd style="margin: 0; font-weight: 700; text-align: right">{{r.v}}</dd></div></sc-for>
+        <sc-for list="{{resultRows}}" as="r" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; gap: 10px; font-size: 14px"><dt style="color: #5F5F5F">{{r.k}}</dt><dd style="margin: 0; font-weight: 700; text-align: right">{{r.v}}</dd></div></sc-for>
       </dl>
       <span style="{{resultBadge}}">{{resultLabel}}</span>
     </sc-if>
-    <sc-if value="{{matched}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">The Central Property Custodian now verifies the turnover and approves the release. You will see {{m.newUnit}} become ISSUED / IN_USE and active on {{m.id}}.</p></sc-if>
-    <sc-if value="{{mismatch}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; color: #B71C1C; line-height: 1.5">This is not the unit active on {{m.id}}. Issuance stays locked and the scan was recorded in the audit log. Find the spent unit that was in the machine and scan it.</p></sc-if>
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><sc-if value="{{showResult}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #7B1113; background: #FFFFFF; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Scan again</button></sc-if><a href="lab-dashboard.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #7B1113; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Back to dashboard</a></div>
+    <sc-if value="{{matched}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">The Central Property Custodian now verifies the turnover and approves the release. You will see {{m.newUnit}} become ISSUED / IN_USE and active on {{m.id}}.</p></sc-if>
+    <sc-if value="{{mismatch}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; color: #B3261E; line-height: 1.5">This is not the unit active on {{m.id}}. Issuance stays locked and the scan was recorded in the audit log. Find the spent unit that was in the machine and scan it.</p></sc-if>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><sc-if value="{{showResult}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid #D98A0B; background: #FFFFFF; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Scan again</button></sc-if><a href="lab-dashboard.dc.html" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 0; background: transparent; color: #B45309; font: 600 14px Inter, sans-serif; cursor: pointer; text-decoration: none; white-space: nowrap">Back to dashboard</a></div>
   </section>
 </div>
 <sc-if value="{{hasLog}}" hint-placeholder-val="{{false}}">
-  <section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
-    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #1F1A1A">Scan audit trail</h2>
+  <section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #171717">Scan audit trail</h2>
     <sc-for list="{{log}}" as="l" hint-placeholder-count="2">
-      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #EFEAE9; border-radius: 10px; font-size: 13px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #F0ECE3; border-radius: 10px; font-size: 13px">
         <strong style="font-family: ui-monospace, Menlo, monospace">{{l.id}}</strong>
-        <span style="color: #6B6466">{{l.machine}}</span>
+        <span style="color: #5F5F5F">{{l.machine}}</span>
         <span style="{{l.badgeStyle}}">{{l.result}}</span>
-        <span style="margin-left: auto; color: #6B6466">{{l.when}}</span>
+        <span style="margin-left: auto; color: #5F5F5F">{{l.when}}</span>
       </div>
     </sc-for>
-    <span style="font-size: 12px; color: #6B6466">Every attempt is kept, including mismatches, with the account and time.</span>
+    <span style="font-size: 12px; color: #5F5F5F">Every attempt is kept, including mismatches, with the account and time.</span>
   </section>
 </sc-if>
 <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
   <div role="status" aria-live="polite" style="{{toastStyle}}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{toastIconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6"></path></svg>
-    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4F494A; line-height: 1.45">{{toastMsg}}</span></div>
-    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4F494A; font-size: 18px">×</button>
+    <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">{{toastTitle}}</strong><span style="font-size: 13px; color: #4A4540; line-height: 1.45">{{toastMsg}}</span></div>
+    <button type="button" onClick="{{closeToast}}" aria-label="Dismiss message" style="width: 44px; height: 44px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; color: #4A4540; font-size: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
   </div>
 </sc-if>
 
@@ -102,14 +123,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1000}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
@@ -128,15 +149,15 @@ class Component extends DCLogic {
       else eaShow(this, 'error', 'Scan does not match', id + ' is not active on ' + m.id + '. Issuance stays locked.'); };
     const r = s.result;
     const state = !r ? 'locked' : r.ok ? 'ok' : 'bad';
-    const B = { locked: ['#FFF4D1', '#E0A800', 'Issuance locked for ' + m.newUnit, 'Scan ' + m.active + ', the spent unit active on ' + m.id + ', to complete the turnover.'],
-      ok: ['#E6F4EA', '#2E7D32', 'Turnover complete: ' + m.active + ' is RETURNED_EMPTY', m.newUnit + ' is unlocked and waiting for the custodian’s disbursement approval.'],
-      bad: ['#FDECEC', '#C62828', 'Wrong unit scanned', 'Issuance stays locked until the correct spent unit is scanned.'] }[state];
+    const B = { locked: ['#FFF3C4', '#D98A0B', 'Issuance locked for ' + m.newUnit, 'Scan ' + m.active + ', the spent unit active on ' + m.id + ', to complete the turnover.'],
+      ok: ['#E8F3EA', '#2F6B3A', 'Turnover complete: ' + m.active + ' is RETURNED_EMPTY', m.newUnit + ' is unlocked and waiting for the custodian’s disbursement approval.'],
+      bad: ['#FDECEC', '#B3261E', 'Wrong unit scanned', 'Issuance stays locked until the correct spent unit is scanned.'] }[state];
     return {
       ...eaToast(this), machine: s.machine, m, input: s.input,
       onMachine: e => this.setState({ machine: e.target.value, result: null }), onInput: e => this.setState({ input: e.target.value }),
       scan: (e) => { e.preventDefault(); if (!s.input.trim()) { eaShow(this, 'error', 'Nothing scanned', 'Scan the QR code or type the asset ID.'); return; } check(s.input); },
       demoRight: () => check(m.active), demoWrong: () => check(m.wrong),
-      bannerStyle: 'display: flex; gap: 12px; padding: 16px 18px; border-radius: 12px; background: ' + B[0] + '; border: 1px solid ' + B[1] + '; color: #1F1A1A', bannerTitle: B[2], bannerText: B[3],
+      bannerStyle: 'display: flex; gap: 12px; padding: 16px 18px; border-radius: 12px; background: ' + B[0] + '; border: 1px solid ' + B[1] + '; color: #171717', bannerTitle: B[2], bannerText: B[3],
       idle: !r, showResult: !!r, matched: state === 'ok', mismatch: state === 'bad',
       resultRows: r ? [{ k: 'Scanned', v: r.id }, { k: 'Expected', v: m.active }, { k: 'Status', v: r.ok ? 'RETURNED_EMPTY' : 'Unchanged' }] : [],
       resultLabel: r && r.ok ? 'VERIFIED MATCH' : 'MISMATCH · LOGGED', resultBadge: eaBadge(r && r.ok ? 'success' : 'danger'),

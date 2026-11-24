@@ -33,6 +33,8 @@ documents.
 │   ├── API-CONTRACT.md         # endpoints, payloads, enums, role rules
 │   ├── SEED-DATA.json          # 28 units, 10 flags, items, reqs, turnovers, WOs
 │   └── SCREEN-MAP.md           # screen → SRS figure → requirements → actions
+├── PRODUCT.md                  # product truth, users, surfaces and constraints
+├── DESIGN.md                   # Wildcat visual system and tokens
 └── README.md
 ```
 
@@ -152,6 +154,13 @@ requirements. Key implemented behaviour:
 A separate screen-vs-SRS compliance report is kept with the project documentation (outside this
 repository).
 
+### Approved branding revision
+
+SRS §3.3.1 specified CIT-U maroon/gold. The owner approved a design revision on 2026-11-24:
+the Wildcat palette (butter `#FFF3B0`, amber `#F5A623`, burnt orange `#B45309`, ink `#171717`,
+warm white `#FAF9F6`) with Inter retained. The revision is recorded in `DESIGN.md` and does not
+change functional requirements, data or behaviour.
+
 ### Scope note
 
 **Figure 3.38 phone screens and phone-width layout are not included.** This build targets desktop
@@ -193,7 +202,7 @@ is `docs/SEED-DATA.json`.
 
 - HTML pages using the exported design-component runtime (`support.js` + `vendor/react*.js`).
 - No package manager, no build step, no backend.
-- Inter typeface (Google Fonts), CIT-U maroon/gold palette.
+- Inter typeface (Google Fonts), Wildcat butter/amber/ink palette.
 
 ---
 

@@ -11,3 +11,7 @@ node_modules/
 
 # Local preview artifacts
 *.log
+
+# Local agent tooling (Impeccable)
+.opencode/
+.impeccable/

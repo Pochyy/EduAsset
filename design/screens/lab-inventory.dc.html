@@ -13,45 +13,66 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#F6F3F2;color:#1F1A1A}
-a{color:#7B1113}a:hover{color:#5A0F14}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#FAF9F6;color:#171717}
+a{color:#B45309}a:hover{color:#8A3E07}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #171717;outline-offset:2px}
 @keyframes eaShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media (max-width: 860px){.ea-sidewrap{flex:1 1 100% !important;min-width:0 !important}.ea-side{flex-direction:row !important;overflow-x:auto;padding:8px 12px !important;height:auto !important;min-height:0 !important}.ea-sec{display:none}.ea-group{flex-direction:row !important}.ea-group a{white-space:nowrap}}
+/* wildcat surface */
+::selection{background:#F5A623;color:#171717}
+html{scrollbar-color:#D8C27A #FAF9F6;scrollbar-width:thin}
+input,select,textarea{caret-color:#B45309}
+table{font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance}
+p{text-wrap:pretty}
+a{text-underline-offset:3px;transition:color .15s ease}
+button[role="tab"][aria-selected="true"] .ea-tab-count{background:#FFFFFF !important;color:#171717 !important;border-radius:999px;padding:1px 8px}
+
+
+button{transition:background .15s ease,transform .08s ease}
+button:hover{filter:brightness(.98)}
+button:active{transform:translateY(1px)}
+button[style*="background: #F5A623"]:hover{background:#E8961A !important}
+a[style*="background: #F5A623"]:hover{background:#E8961A !important}
+button[style*="background: #F5A623"]:active{background:#D98A0B !important}
+button[style*="background: #B3261E"]:hover{background:#9A1F19 !important}
+button[style*="border: 1.5px solid #D98A0B"]:hover{background:#FFF9DD !important}
+.ea-primary:hover{background:#E8961A !important}
+.ea-primary:active{background:#D98A0B !important}
+
 </style>
 </helmet>
 <div style="min-height: 100vh; display: flex; flex-direction: column">
   <dc-import name="TopBar" portal="lab" hint-size="100%,72px"></dc-import>
   <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
-    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #7B1113">
+    <div class="ea-sidewrap" style="flex: 0 1 264px; min-width: 240px; background: #FFF3B0">
       <dc-import name="Sidebar" portal="lab" active="L-LabInventory" hint-size="100%,900px"></dc-import>
     </div>
     <main style="flex: 999 1 560px; min-width: 0; padding: 24px clamp(16px, 3vw, 40px) 56px; box-sizing: border-box">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="lab-dashboard.dc.html" style="color: #6B6466; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B5ABAA">/</span> <span style="color: #1F1A1A; font-weight: 600">Lab Inventory</span></nav>
+        <nav aria-label="Breadcrumb" style="font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 44px"><a href="lab-dashboard.dc.html" style="color: #5F5F5F; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px">WIL Lab Portal</a> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Equipment</span> <span aria-hidden="true" style="color: #B8AFA0">/</span> <span style="color: #171717; font-weight: 600">Lab Inventory</span></nav>
 <header style="display: flex; flex-direction: column; gap: 6px">
-  <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #7A5800">MODULES 2 &amp; 3 · LAB INVENTORY</p>
-  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #1F1A1A">Lab inventory &amp; equipment status</h1>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Every unit registered to your lab, which consumable is active on which machine, and each machine’s health.</p>
+  <h1 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; font-weight: 700; color: #171717">Lab inventory &amp; equipment status</h1>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">Every unit registered to your lab, which consumable is active on which machine, and each machine’s health.</p>
 </header>
 
-<section style="background: #FFFFFF; border: 1px solid #DDD6D5; border-radius: 14px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<section style="background: #FFFFFF; border: 1px solid #E7E2D6; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
     <div role="tablist" aria-label="Inventory views" style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{tabs}}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button></sc-for></div>
-    <div style="display: flex; flex-direction: column; gap: 4px; width: min(280px, 100%)"><label for="lq" style="position: absolute; left: -9999px">Search this lab</label><input id="lq" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="Search asset ID or item" style="min-height: 44px; padding: 0 12px; border: 1px solid #DDD6D5; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #1F1A1A; background: #FFFFFF; box-sizing: border-box; width: 100%"></div>
+    <div style="display: flex; flex-direction: column; gap: 4px; width: min(280px, 100%)"><label for="lq" style="position: absolute; left: -9999px">Search this lab</label><input id="lq" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="Search asset ID or item" style="min-height: 44px; padding: 0 12px; border: 1px solid #E7E2D6; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #171717; background: #FFFFFF; box-sizing: border-box; width: 100%"></div>
   </div>
   <sc-if value="{{has}}" hint-placeholder-val="{{true}}">
-    <div style="overflow-x: auto; border: 1px solid #DDD6D5; border-radius: 10px; background: #FFFFFF">
+    <div style="overflow-x: auto; border: 1px solid #E7E2D6; border-radius: 10px; background: #FFFFFF">
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; min-width: 760px">
-        <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Asset ID</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Item</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Location</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">{{col4}}</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FBF4F4; color: #7B1113; font-weight: 600; font-size: 12px; border-bottom: 1px solid #DDD6D5; white-space: nowrap">Status</th></tr></thead>
-        <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="6"><tr><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A; font: 700 12px ui-monospace, Menlo, monospace">{{r.id}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.item}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.loc}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A">{{r.extra}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #EFEAE9; vertical-align: middle; color: #1F1A1A"><span style="{{r.badgeStyle}}">{{r.status}}</span></td></tr></sc-for></tbody>
+        <thead><tr><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Asset ID</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Item</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Location</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">{{col4}}</th><th scope="col" style="text-align: left; padding: 12px 14px; background: #FFF9DD; color: #B45309; font-weight: 600; font-size: 12px; border-bottom: 1px solid #E7E2D6; white-space: nowrap">Status</th></tr></thead>
+        <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="6"><tr><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717; font: 700 12px ui-monospace, Menlo, monospace">{{r.id}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.item}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.loc}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717">{{r.extra}}</td><td style="padding: 12px 14px; border-bottom: 1px solid #F0ECE3; vertical-align: middle; color: #171717"><span style="{{r.badgeStyle}}">{{r.status}}</span></td></tr></sc-for></tbody>
       </table>
     </div>
   </sc-if>
   <sc-if value="{{none}}" hint-placeholder-val="{{false}}">
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 16px; text-align: center"><span style="width: 56px; height: 56px; border-radius: 28px; background: #FBF4F4; color: #7B1113; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"></path></svg></span><strong style="font-size: 16px">No matching units in your lab</strong><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Try another asset ID, or switch views.</p></div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 16px; text-align: center"><span style="width: 56px; height: 56px; border-radius: 28px; background: #FFF9DD; color: #B45309; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"></path></svg></span><strong style="font-size: 16px">No matching units in your lab</strong><p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">Try another asset ID, or switch views.</p></div>
   </sc-if>
-  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #6B6466">Something broken or jamming? <a href="lab-report-incident.dc.html">Report an incident</a>. Need a new cartridge? <a href="lab-turnover-scan.dc.html">Do a turnover scan</a>.</p>
+  <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5F5F">Something broken or jamming? <a href="lab-report-incident.dc.html">Report an incident</a>. Need a new cartridge? <a href="lab-turnover-scan.dc.html">Do a turnover scan</a>.</p>
 </section>
 
       </div>
@@ -61,14 +82,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1000}}'>
 
-var EA_TONE = { success: 'background: #E6F4EA; color: #1E6B24', warning: 'background: #FFF4D1; color: #6E4F00', danger: 'background: #FDECEC; color: #B71C1C', neutral: 'background: #F0ECEB; color: #4F494A', info: 'background: #FBF4F4; color: #7B1113' };
+var EA_TONE = { success: 'background: #E8F3EA; color: #2F6B3A', warning: 'background: #FFF3C4; color: #92400E', danger: 'background: #FDECEC; color: #B3261E', neutral: 'background: #F3EFE5; color: #4A4540', info: 'background: #FFF9DD; color: #B45309' };
 function eaBadge(t) { return 'display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; ' + (EA_TONE[t] || EA_TONE.neutral); }
 function eaToast(self) {
   var t = self.state.toast;
-  var c = !t ? '#2E7D32' : (t.tone === 'error' ? '#C62828' : t.tone === 'info' ? '#7B1113' : '#2E7D32');
-  var bg = !t ? '#E6F4EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FBF4F4' : '#E6F4EA');
+  var c = !t ? '#2F6B3A' : (t.tone === 'error' ? '#B3261E' : t.tone === 'info' ? '#B45309' : '#2F6B3A');
+  var bg = !t ? '#E8F3EA' : (t.tone === 'error' ? '#FDECEC' : t.tone === 'info' ? '#FFF9DD' : '#E8F3EA');
   return { toastOn: !!t, toastTitle: t ? t.title : '', toastMsg: t ? t.msg : '',
-    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(31, 10, 10, 0.18); color: #1F1A1A',
+    toastStyle: 'position: fixed; right: 20px; bottom: 20px; left: auto; z-index: 60; width: min(420px, calc(100vw - 40px)); box-sizing: border-box; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: ' + bg + '; border: 1px solid ' + c + '; box-shadow: 0 12px 28px rgba(23, 23, 23, 0.18); color: #171717',
     toastIconColor: c, closeToast: function () { self.setState({ toast: null }); } };
 }
 function eaShow(self, tone, title, msg) { self.setState({ toast: { tone: tone, title: title, msg: msg } }); clearTimeout(self._tt); self._tt = setTimeout(function () { self.setState({ toast: null }); }, 5000); }
@@ -86,7 +107,7 @@ class Component extends DCLogic {
     const q = s.q.trim().toLowerCase();
     const rows = data[s.tab].filter(r => !q || r[0].toLowerCase().includes(q) || r[1].toLowerCase().includes(q)).map(([id, item, loc, extra, status]) => ({ id, item, loc, extra, status, badgeStyle: eaBadge(ht[status]) }));
     const tabs = [['machines', 'Machines'], ['consumables', 'Consumables'], ['peripherals', 'Peripherals']].map(([id, label]) => ({ label, sel: s.tab === id ? 'true' : 'false', pick: () => this.setState({ tab: id }),
-      style: 'min-height: 44px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #7B1113; color: #FFFFFF; border: 1px solid #7B1113' : 'background: #FFFFFF; color: #4F494A; border: 1px solid #DDD6D5') }));
+      style: 'min-height: 44px; padding: 0 14px; border-radius: 999px; cursor: pointer; font: 600 13px Inter, sans-serif; ' + (s.tab === id ? 'background: #F5A623; color: #171717; border: 1px solid #B45309' : 'background: #FFFFFF; color: #4A4540; border: 1px solid #E7E2D6') }));
     return { tabs, rows, has: rows.length > 0, none: rows.length === 0, q: s.q, onQ: e => this.setState({ q: e.target.value }), col4: s.tab === 'machines' ? 'Installed consumable' : s.tab === 'consumables' ? 'Installed on / location' : 'Assigned to' };
   }
 }
