@@ -195,7 +195,7 @@ export function LabReportIncident() {
             ) : null}
 
             <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-              <legend className="text-xs font-semibold text-muted">What happened?</legend>
+              <legend className="text-xs font-medium text-muted">What happened?</legend>
               <div className="flex flex-wrap items-center gap-2">
                 {incidentTypes.map((incident) => {
                   const selected = type === incident.id
@@ -250,7 +250,7 @@ export function LabReportIncident() {
             </Field>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold text-muted">
+              <span className="text-xs font-medium text-muted">
                 Photo of the item’s condition (required)
               </span>
               <button
@@ -284,7 +284,7 @@ export function LabReportIncident() {
         </Card>
 
         <Card className="flex flex-col gap-3 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             What happens next
           </h2>
           <ol className="m-0 flex list-decimal flex-col gap-2.5 pl-5 text-[13px] leading-relaxed text-ink">
@@ -303,7 +303,7 @@ export function LabReportIncident() {
           </ol>
           <Link
             to="/lab/work-orders"
-            className="mt-1 inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+            className="mt-1 inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
           >
             Track work orders
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -331,7 +331,7 @@ export function LabReportIncident() {
               key={row.k}
               className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 odd:bg-paper"
             >
-              <dt className="text-xs font-semibold text-muted">{row.k}</dt>
+              <dt className="text-xs font-medium text-muted">{row.k}</dt>
               <dd className="m-0 text-[13px] font-medium text-ink">{row.v}</dd>
             </div>
           ))}

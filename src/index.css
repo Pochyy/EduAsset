@@ -92,6 +92,11 @@
   table {
     font-variant-numeric: tabular-nums;
   }
+
+  strong,
+  b {
+    font-weight: 600;
+  }
 }
 
 @keyframes ea-dialog-in {

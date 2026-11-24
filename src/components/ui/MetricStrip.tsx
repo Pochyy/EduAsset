@@ -32,10 +32,10 @@ export function MetricStrip({ ariaLabel, items, className }: MetricStripProps) {
         {items.map((item) => {
           const body = (
             <>
-              <span className="text-xs font-semibold text-muted">{item.label}</span>
+              <span className="text-xs font-medium text-muted">{item.label}</span>
               <span
                 className={cn(
-                  'mt-2 font-bold text-ink',
+                  'mt-2 font-semibold text-ink',
                   item.text
                     ? 'text-[15px] leading-snug'
                     : 'text-[28px] leading-none tracking-[-0.02em]',
@@ -44,7 +44,7 @@ export function MetricStrip({ ariaLabel, items, className }: MetricStripProps) {
                 {item.value}
               </span>
               {item.cta && item.href ? (
-                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-rust group-hover:text-rust-deep">
+                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-medium text-rust group-hover:text-rust-deep">
                   {item.cta}
                   <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>

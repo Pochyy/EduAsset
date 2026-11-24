@@ -56,9 +56,9 @@ export function Dialog({ open, onClose, title, eyebrow, children, footer, classN
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             {eyebrow ? (
-              <p className="text-xs font-semibold tracking-[0.08em] text-rust">{eyebrow}</p>
+              <p className="text-xs font-medium text-rust">{eyebrow}</p>
             ) : null}
-            <h2 id={titleId} className="text-xl font-bold tracking-[-0.02em] text-ink">
+            <h2 id={titleId} className="text-xl font-semibold tracking-[-0.02em] text-ink">
               {title}
             </h2>
           </div>

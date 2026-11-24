@@ -91,7 +91,7 @@ function TurnoverSteps({
               <span
                 aria-hidden="true"
                 className={cn(
-                  'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold',
+                  'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold',
                   done
                     ? 'bg-success text-white'
                     : current
@@ -204,7 +204,7 @@ export function TurnoverApproval() {
               <Card key={turnover.turnoverId} className="flex flex-col gap-4 p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5">
-                    <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+                    <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
                       {machineText}
                     </h2>
                     <p className="text-[13px] text-muted">

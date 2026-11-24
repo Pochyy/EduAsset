@@ -20,7 +20,7 @@ export function Sidebar({ portal, onNavigate, className }: SidebarProps) {
     >
       {navFor(portal).map((group) => (
         <div key={group.label}>
-          <div className="px-3 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-[0.1em] text-rust">
+          <div className="px-3 pb-1.5 pt-4 text-[11px] font-medium tracking-[0.02em] text-warm-muted">
             {group.label}
           </div>
           <div className="flex flex-col gap-0.5">
@@ -49,7 +49,7 @@ export function Sidebar({ portal, onNavigate, className }: SidebarProps) {
                       />
                       <span className="flex-1">{item.label}</span>
                       {count ? (
-                        <span className="min-w-[22px] rounded-full bg-amber px-2 py-0.5 text-center text-[11px] font-bold leading-tight text-ink">
+                        <span className="min-w-[2ch] text-right text-[11px] font-medium leading-tight tabular-nums text-warm-muted">
                           {count}
                         </span>
                       ) : null}

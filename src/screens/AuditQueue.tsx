@@ -193,7 +193,7 @@ export function AuditQueue() {
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor={`flag-note-${flag.id}`}
-                      className="text-xs font-semibold text-muted"
+                      className="text-xs font-medium text-muted"
                     >
                       Review note (required)
                     </label>
@@ -228,7 +228,7 @@ export function AuditQueue() {
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   <Link
                     to={action.to}
-                    className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-semibold text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                   >
                     {action.label}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />

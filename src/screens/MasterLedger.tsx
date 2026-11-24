@@ -6,6 +6,7 @@ import { useToast } from '../context/ToastContext'
 import { healthStatus, inventoryStatus } from '../lib/lab'
 import { qrPath } from '../lib/qr'
 import { usePageTitle } from '../lib/usePageTitle'
+import { cn } from '../lib/utils'
 import type { SeedUnit } from '../types'
 import { Badge, type BadgeTone } from '../components/ui/Badge'
 import { Button, buttonStyles } from '../components/ui/Button'
@@ -24,6 +25,14 @@ const healthFor = (unit: SeedUnit): { label: string; tone: BadgeTone } =>
   unit.healthState === 'NOT_APPLICABLE'
     ? { label: '—', tone: 'neutral' }
     : healthStatus(unit.healthState)
+
+const healthDot: Record<BadgeTone, string> = {
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-danger',
+  neutral: 'bg-neutral-text',
+  info: 'bg-rust',
+}
 
 const baseHistory = (unit: SeedUnit): HistoryEntry[] => {
   const entries: HistoryEntry[] = [
@@ -198,7 +207,7 @@ export function MasterLedger() {
 
       <Card className="grid gap-4 p-5 sm:grid-cols-2 xl:grid-cols-[1.5fr_1fr_1fr_auto] xl:items-end">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="ledger-search" className="text-xs font-semibold text-muted">
+          <label htmlFor="ledger-search" className="text-xs font-medium text-muted">
             Search asset ID or item
           </label>
           <div className="relative">
@@ -218,7 +227,7 @@ export function MasterLedger() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="ledger-category" className="text-xs font-semibold text-muted">
+          <label htmlFor="ledger-category" className="text-xs font-medium text-muted">
             Category
           </label>
           <Select
@@ -233,7 +242,7 @@ export function MasterLedger() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="ledger-inventory" className="text-xs font-semibold text-muted">
+          <label htmlFor="ledger-inventory" className="text-xs font-medium text-muted">
             Inventory status
           </label>
           <Select
@@ -306,13 +315,19 @@ export function MasterLedger() {
                         <Badge tone={inv.tone}>{inv.label}</Badge>
                       </TD>
                       <TD>
-                        <Badge tone={health.tone}>{health.label}</Badge>
+                        <span className="inline-flex items-center gap-1.5 text-xs text-neutral-text">
+                          <span
+                            aria-hidden="true"
+                            className={cn('h-1.5 w-1.5 rounded-full', healthDot[health.tone])}
+                          />
+                          {health.label}
+                        </span>
                       </TD>
                       <TD className="text-right">
                         <button
                           type="button"
                           onClick={() => openRecord(unit)}
-                          className="inline-flex min-h-11 items-center gap-1 rounded-control px-2.5 text-[13px] font-semibold text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                          className="inline-flex min-h-11 items-center gap-1 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                         >
                           View
                           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -342,9 +357,7 @@ export function MasterLedger() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="text-xs font-semibold tracking-[0.08em] text-rust">
-                  UNIT RECORD
-                </span>
+                <span className="text-xs font-medium text-rust">Unit record</span>
                 <h2
                   id="unit-record-title"
                   className="font-mono text-[22px] font-bold tracking-[-0.02em] text-ink"
@@ -413,14 +426,14 @@ export function MasterLedger() {
                 { k: 'QR payload', v: `/items/${openUnit.assetId}` },
               ].map((field) => (
                 <div key={field.k}>
-                  <dt className="text-xs font-semibold text-muted">{field.k}</dt>
+                  <dt className="text-xs font-medium text-muted">{field.k}</dt>
                   <dd className="m-0 mt-0.5 text-sm font-semibold text-ink">{field.v}</dd>
                 </div>
               ))}
             </dl>
 
             <div className="flex flex-col gap-1.5 rounded-card border border-line p-4">
-              <label htmlFor="unit-serial" className="text-xs font-semibold text-muted">
+              <label htmlFor="unit-serial" className="text-xs font-medium text-muted">
                 Edit manufacturer serial (optional)
               </label>
               <div className="flex flex-wrap gap-2">
@@ -459,14 +472,14 @@ export function MasterLedger() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h3 className="text-[15px] font-bold text-ink">History (uneditable audit log)</h3>
+              <h3 className="text-[15px] font-semibold text-ink">History (uneditable audit log)</h3>
               <ol className="m-0 flex list-none flex-col gap-0 border-l-2 border-line-soft p-0 pl-1">
                 {history.map((entry, index) => (
                   <li
                     key={`${entry.event}-${index}`}
                     className="relative pb-3.5 pl-[18px]"
                   >
-                    <span className="absolute left-[-7px] top-1 h-3 w-3 rounded-full border-2 border-surface bg-amber" />
+                    <span className="absolute left-[-7px] top-1 h-3 w-3 rounded-full border-2 border-surface bg-rust/40" />
                     <span className="block text-[13px] font-semibold text-ink">
                       {entry.event}
                     </span>
@@ -485,7 +498,7 @@ export function MasterLedger() {
               ) : null}
               <Link
                 to="/central/replacements"
-                className="inline-flex min-h-11 items-center px-2.5 text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+                className="inline-flex min-h-11 items-center px-2.5 text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
               >
                 Start replacement
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />

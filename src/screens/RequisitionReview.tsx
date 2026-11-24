@@ -212,7 +212,7 @@ export function RequisitionReview() {
                       <TD
                         numeric
                         className={cn(
-                          'font-bold',
+                          'font-semibold',
                           varianceColor(requisition.variancePercent),
                         )}
                       >
@@ -262,20 +262,20 @@ export function RequisitionReview() {
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               <div className="bg-surface p-3">
-                <span className="text-xs font-semibold text-muted">Baseline</span>
-                <span className="mt-1 block text-[22px] font-bold leading-tight text-ink">
+                <span className="text-xs font-medium text-muted">Baseline</span>
+                <span className="mt-1 block text-[22px] font-semibold leading-tight text-ink">
                   {reviewing.baselineVolume} {reviewing.unit}
                 </span>
               </div>
               <div className="bg-surface p-3">
-                <span className="text-xs font-semibold text-muted">This term</span>
-                <span className="mt-1 block text-[22px] font-bold leading-tight text-ink">
+                <span className="text-xs font-medium text-muted">This term</span>
+                <span className="mt-1 block text-[22px] font-semibold leading-tight text-ink">
                   {reviewing.currentTermVolume} {reviewing.unit}
                 </span>
               </div>
               <div className="bg-danger-bg p-3">
-                <span className="text-xs font-semibold text-muted">Variance V</span>
-                <span className="mt-1 block text-[22px] font-bold leading-tight text-danger">
+                <span className="text-xs font-medium text-muted">Variance V</span>
+                <span className="mt-1 block text-[22px] font-semibold leading-tight text-danger">
                   {formatVariance(reviewing.variancePercent)}
                 </span>
               </div>
@@ -291,7 +291,7 @@ export function RequisitionReview() {
             </p>
 
             <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-              <legend className="text-xs font-semibold text-muted">Decision</legend>
+              <legend className="text-xs font-medium text-muted">Decision</legend>
               <div className="flex flex-wrap items-center gap-2.5">
                 {(['approve', 'reject'] as Decision[]).map((value) => {
                   const selected = decision === value
@@ -321,7 +321,7 @@ export function RequisitionReview() {
             </fieldset>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="review-reason" className="text-xs font-semibold text-muted">
+              <label htmlFor="review-reason" className="text-xs font-medium text-muted">
                 {decision === 'reject'
                   ? 'Reason for rejection (required)'
                   : 'Note for the audit trail (optional)'}

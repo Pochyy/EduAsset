@@ -63,7 +63,7 @@ export function Logo({ size = 40, subtitle, subtitleClassName, hero = false, cla
           <span
             className={cn(
               'font-medium leading-tight text-warm-muted',
-              hero ? 'text-xs tracking-[0.1em] uppercase' : 'text-xs',
+              hero ? 'text-xs tracking-[0.02em]' : 'text-xs',
               subtitleClassName,
             )}
           >

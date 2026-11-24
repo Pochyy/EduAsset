@@ -70,7 +70,7 @@ export function AppShell({ portal }: { portal: Portal }) {
             className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-butter shadow-[0_24px_48px_rgba(23,23,23,0.24)]"
           >
             <div className="flex h-14 shrink-0 items-center justify-between border-b border-butter-line pl-4 pr-2">
-              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-rust">
+              <span className="text-[11px] font-medium tracking-[0.02em] text-warm-muted">
                 Navigate
               </span>
               <button

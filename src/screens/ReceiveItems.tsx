@@ -247,7 +247,7 @@ export function ReceiveItems() {
             >
               <span
                 className={cn(
-                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
                   done
                     ? 'bg-success text-white'
                     : current
@@ -268,7 +268,7 @@ export function ReceiveItems() {
 
       {step === 1 ? (
         <Card className="flex max-w-2xl flex-col gap-4 p-5">
-          <h2 className="text-[15px] font-bold text-ink">1 · Link the delivery record</h2>
+          <h2 className="text-[15px] font-semibold text-ink">1 · Link the delivery record</h2>
           <p className="text-[13px] leading-relaxed text-muted">
             Units can only enter EduAsset through a receiving record tied to a delivery receipt or
             purchase order.
@@ -312,7 +312,7 @@ export function ReceiveItems() {
       {step === 2 ? (
         <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
           <Card className="flex flex-col gap-4 p-5">
-            <h2 className="text-[15px] font-bold text-ink">2 · Photograph one item type</h2>
+            <h2 className="text-[15px] font-semibold text-ink">2 · Photograph one item type</h2>
             <button
               type="button"
               onClick={() => {
@@ -379,7 +379,7 @@ export function ReceiveItems() {
           </Card>
 
           <Card className="flex flex-col gap-4 p-5">
-            <h2 className="text-[15px] font-bold text-ink">AI suggestion</h2>
+            <h2 className="text-[15px] font-semibold text-ink">AI suggestion</h2>
             {ai === 'idle' ? (
               <p className="text-[13px] leading-relaxed text-muted">
                 The suggestion appears here. It names the item and picks a category from the fixed
@@ -443,7 +443,7 @@ export function ReceiveItems() {
             className="flex flex-col gap-4"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-[15px] font-bold text-ink">
+              <h2 className="text-[15px] font-semibold text-ink">
                 3 · Confirm details &amp; quantity
               </h2>
               <Badge tone={source === 'ai' ? 'warning' : 'neutral'}>
@@ -523,7 +523,7 @@ export function ReceiveItems() {
               </Field>
 
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-semibold text-muted">Manufacturer serials</span>
+                <span className="text-xs font-medium text-muted">Manufacturer serials</span>
                 <span className="text-[13px] leading-relaxed text-neutral-text">
                   Optional. Add serials per unit later in the Master Ledger; the AI never reads
                   serials.
@@ -596,7 +596,7 @@ export function ReceiveItems() {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold text-ink">4 · Printable QR sheet</h2>
+            <h2 className="text-[15px] font-semibold text-ink">4 · Printable QR sheet</h2>
             <div className="flex flex-wrap gap-2">
               <Button variant="secondary" onClick={reset}>
                 Receive more items

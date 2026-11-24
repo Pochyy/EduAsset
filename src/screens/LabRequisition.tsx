@@ -157,7 +157,7 @@ export function LabRequisition() {
       <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr] xl:items-start">
         <Card className="p-5">
           <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
               New requisition · WIL Lab 3
             </h2>
 
@@ -203,24 +203,24 @@ export function LabRequisition() {
 
             <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               <div className="bg-surface p-3">
-                <span className="text-xs font-semibold text-muted">Baseline (Hbase)</span>
-                <span className="mt-1 block text-xl font-bold leading-tight text-ink">
+                <span className="text-xs font-medium text-muted">Baseline (Hbase)</span>
+                <span className="mt-1 block text-xl font-semibold leading-tight text-ink">
                   {selected.baseline} {selected.unit}
                 </span>
               </div>
               <div className="bg-surface p-3">
-                <span className="text-xs font-semibold text-muted">
+                <span className="text-xs font-medium text-muted">
                   This term incl. request
                 </span>
-                <span className="mt-1 block text-xl font-bold leading-tight text-ink">
+                <span className="mt-1 block text-xl font-semibold leading-tight text-ink">
                   {currentVolume} {selected.unit}
                 </span>
               </div>
               <div className="bg-surface p-3">
-                <span className="text-xs font-semibold text-muted">Variance V</span>
+                <span className="text-xs font-medium text-muted">Variance V</span>
                 <span
                   className={cn(
-                    'mt-1 block text-xl font-bold leading-tight tabular-nums',
+                    'mt-1 block text-xl font-semibold leading-tight tabular-nums',
                     varianceColors[band],
                   )}
                 >
@@ -267,7 +267,7 @@ export function LabRequisition() {
         </Card>
 
         <Card className="flex flex-col gap-3 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             This term’s requests
           </h2>
           <ul className="m-0 flex list-none flex-col p-0">

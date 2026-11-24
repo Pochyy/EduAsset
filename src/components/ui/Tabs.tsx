@@ -16,7 +16,11 @@ interface TabsProps {
 
 export function Tabs({ tabs, value, onChange, ariaLabel, className }: TabsProps) {
   return (
-    <div role="tablist" aria-label={ariaLabel} className={cn('flex flex-wrap gap-2', className)}>
+    <div
+      role="tablist"
+      aria-label={ariaLabel}
+      className={cn('flex flex-wrap gap-x-6 border-b border-line', className)}
+    >
       {tabs.map((tab) => {
         const active = tab.id === value
         return (
@@ -27,18 +31,18 @@ export function Tabs({ tabs, value, onChange, ariaLabel, className }: TabsProps)
             aria-selected={active}
             onClick={() => onChange(tab.id)}
             className={cn(
-              'inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors',
+              'inline-flex min-h-11 items-center gap-2 border-b-2 px-0.5 text-[13px] font-medium transition-colors',
               active
-                ? 'border-amber-press bg-amber text-ink'
-                : 'border-line bg-surface text-neutral-text hover:bg-butter-soft',
+                ? 'border-ink text-ink'
+                : 'border-transparent text-muted hover:border-line hover:text-ink',
             )}
           >
             {tab.label}
             {tab.count !== undefined ? (
               <span
                 className={cn(
-                  'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-bold leading-none',
-                  active ? 'bg-white text-ink' : 'bg-neutral-bg text-neutral-text',
+                  'text-[11px] font-medium leading-none tabular-nums',
+                  active ? 'text-rust' : 'text-muted',
                 )}
               >
                 {tab.count}

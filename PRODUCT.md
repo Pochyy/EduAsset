@@ -13,8 +13,9 @@ approved 17-screen prototype, exported as HTML using the design-component runtim
 Tailwind application** at the repository root is the working replacement for it: all 17 screens are
 implemented, including Login, both dashboards, demand/turnover decisions, ledger/audit tools,
 repair/BER, verified replacement, intake and the full Lab portal. The React slice was merged to
-`main` on 24 November 2026 (`e70eee4`). Production still targets React + Spring Boot + MySQL; neither
-front end is the production application. Current state and next work are tracked in
+`main` on 24 November 2026 (`e70eee4`); the same-day craft pass refines type, labels and chrome
+without changing screen scope or SRS behaviour. Production still targets React + Spring Boot + MySQL;
+neither front end is the production application. Current state and next work are tracked in
 `docs/HANDOFF.md`.
 
 ## Who it is for

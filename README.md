@@ -9,7 +9,8 @@ The repository holds two front ends:
   static prototype. All 17 screens are implemented in React, including the full Lab portal, Central
   demand/turnover decisions, ledger and audit tools, asset lifecycle and intake.
 - **Static design reference** under `design/`. All 17 approved desktop screens remain available
-  there and are the visual source of truth while the React screens are ported.
+  there as the layout and screen-flow record. The React app implements them with the craft
+  refinements documented in `DESIGN.md`.
 
 > **Prototype only.** No backend, database, real authentication or persistence. React auth is a
 > local mock kept in `localStorage`; all data is sample data. Production still targets React +
@@ -40,12 +41,14 @@ The repository holds two front ends:
 | Work Orders | **Implemented** | 3.20 |
 
 All 17 screens are implemented in the React app. The approved static reference remains under
-`design/` for comparison.
+`design/` as the layout record; `DESIGN.md` is authoritative for the current type and chrome.
 
 **Current state:** the React app covers the full 17-screen SRS surface, including the complete Lab
-portal, Central decisions, ledger/audit tools, repair/BER, verified replacement and intake. The
-remaining work is backend/API wiring, automated tests and deployment — not screen parity. Start with
-**[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state and verification record.
+portal, Central decisions, ledger/audit tools, repair/BER, verified replacement and intake. A light
+craft pass now uses sentence-case chrome, quieter type, status-only pills and underline filter tabs;
+it changes presentation only, not SRS behaviour. The remaining work is backend/API wiring, automated
+tests and deployment — not screen parity. Start with **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the
+state and verification record.
 
 ---
 

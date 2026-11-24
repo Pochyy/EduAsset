@@ -31,7 +31,7 @@ export function PageHeader({ breadcrumbs, title, description, actions, className
                 {crumb.label}
               </Link>
             ) : (
-              <span className={index === breadcrumbs.length - 1 ? 'font-semibold text-ink' : 'text-muted'}>
+              <span className={index === breadcrumbs.length - 1 ? 'font-medium text-ink' : 'text-muted'}>
                 {crumb.label}
               </span>
             )}
@@ -41,7 +41,7 @@ export function PageHeader({ breadcrumbs, title, description, actions, className
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1.5">
-          <h1 className="text-[clamp(26px,2.4vw,30px)] font-extrabold leading-tight tracking-[-0.03em] text-ink">
+          <h1 className="text-[clamp(26px,2.4vw,30px)] font-semibold leading-tight tracking-[-0.02em] text-ink">
             {title}
           </h1>
           {description ? (

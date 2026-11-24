@@ -146,7 +146,7 @@ export function Reconciliation() {
         <>
           <Card className="grid gap-4 p-5 md:grid-cols-[1fr_auto] md:items-end">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="reconciliation-room" className="text-xs font-semibold text-muted">
+              <label htmlFor="reconciliation-room" className="text-xs font-medium text-muted">
                 Room to reconcile
               </label>
               <Select
@@ -176,7 +176,7 @@ export function Reconciliation() {
               <div className="flex min-w-[240px] flex-1 flex-col gap-1.5">
                 <label
                   htmlFor="reconciliation-frequency"
-                  className="text-xs font-semibold text-muted"
+                  className="text-xs font-medium text-muted"
                 >
                   Scheduled scans
                 </label>
@@ -227,10 +227,10 @@ export function Reconciliation() {
       {phase === 'scan' ? (
         <Card className="flex flex-col gap-4 p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
               Scanning {room}
             </h2>
-            <span className="text-[13px] font-semibold text-neutral-text">
+            <span className="text-[13px] font-medium text-neutral-text">
               {matched.length} of {expectedUnits.length} expected units scanned
             </span>
           </div>
@@ -258,7 +258,7 @@ export function Reconciliation() {
             className="flex flex-wrap items-end gap-2.5"
           >
             <div className="flex min-w-[260px] flex-1 flex-col gap-1.5">
-              <label htmlFor="reconciliation-scan" className="text-xs font-semibold text-muted">
+              <label htmlFor="reconciliation-scan" className="text-xs font-medium text-muted">
                 Scanned asset ID
               </label>
               <Input
@@ -283,7 +283,7 @@ export function Reconciliation() {
           </form>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted">Quick scan (demo):</span>
+            <span className="text-xs font-medium text-muted">Quick scan (demo):</span>
             {[...expectedIds.slice(0, 6), 'KB-0099']
               .filter((id) => !scans.includes(id))
               .map((id) => (
@@ -357,7 +357,7 @@ export function Reconciliation() {
 
       {phase === 'done' ? (
         <Card className="flex flex-col gap-4 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Reconciliation result · {room}
           </h2>
 

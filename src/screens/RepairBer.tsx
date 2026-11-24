@@ -178,7 +178,7 @@ export function RepairBer() {
 
       <div className="grid gap-5 xl:grid-cols-[1fr_2fr] xl:items-start">
         <Card className="flex flex-col gap-3 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Durable assets
           </h2>
           <div className="flex flex-col gap-2.5">
@@ -200,7 +200,7 @@ export function RepairBer() {
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    <strong className="text-sm font-bold text-ink">{unit.assetId}</strong>
+                    <strong className="text-sm font-semibold text-ink">{unit.assetId}</strong>
                     <Badge tone={health.tone}>{health.label}</Badge>
                   </span>
                   <span className="text-xs text-muted">{unit.itemName}</span>
@@ -224,7 +224,7 @@ export function RepairBer() {
           <Card className="flex flex-col gap-4 p-5">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div className="flex flex-col gap-0.5">
-                <h2 className="font-mono text-xl font-bold tracking-[-0.02em] text-ink">
+                <h2 className="font-mono text-xl font-semibold tracking-[-0.02em] text-ink">
                   {selected.assetId}
                 </h2>
                 <span className="text-[13px] text-muted">
@@ -243,8 +243,8 @@ export function RepairBer() {
                 { k: '50% limit', v: formatPeso(replacementValue / 2) },
               ].map((metric) => (
                 <div key={metric.k} className="bg-surface p-3">
-                  <span className="text-xs font-semibold text-muted">{metric.k}</span>
-                  <span className="mt-1 block text-xl font-bold leading-tight text-ink">
+                  <span className="text-xs font-medium text-muted">{metric.k}</span>
+                  <span className="mt-1 block text-xl font-semibold leading-tight text-ink">
                     {metric.v}
                   </span>
                 </div>
@@ -285,7 +285,7 @@ export function RepairBer() {
 
           {!condemned ? (
             <Card className="flex flex-col gap-4 p-5">
-              <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+              <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
                 Log repair quote
               </h2>
 
@@ -311,7 +311,7 @@ export function RepairBer() {
                 </Field>
 
                 <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-                  <legend className="text-xs font-semibold text-muted">Inspection result</legend>
+                  <legend className="text-xs font-medium text-muted">Inspection result</legend>
                   <div className="flex flex-wrap items-center gap-2.5">
                     {[
                       { value: true, label: 'Repairable' },
@@ -354,7 +354,7 @@ export function RepairBer() {
               >
                 <span
                   className={cn(
-                    'text-[28px] font-extrabold tabular-nums',
+                    'text-[28px] font-semibold tabular-nums',
                     !quoteValid
                       ? 'text-neutral-text'
                       : blocked
@@ -496,13 +496,13 @@ export function RepairBer() {
           <dl className="m-0 grid grid-cols-2">
             {formFields.map((field) => (
               <div key={field.k} className="border-t border-line-soft px-4 py-2.5">
-                <dt className="text-xs font-semibold text-muted">{field.k}</dt>
+                <dt className="text-xs font-medium text-muted">{field.k}</dt>
                 <dd className="m-0 mt-0.5 text-sm font-semibold text-ink">{field.v}</dd>
               </div>
             ))}
           </dl>
           <div className="flex flex-col gap-1.5 border-t border-line-soft px-4 py-3">
-            <span className="text-xs font-semibold text-muted">Maintenance expense ledger</span>
+            <span className="text-xs font-medium text-muted">Maintenance expense ledger</span>
             {repairs.map((repair, index) => (
               <span
                 key={`${repair.when}-${index}`}

@@ -41,30 +41,31 @@ export function TopBar({ portal, onMenu }: TopBarProps) {
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
-        <span className="hidden rounded-full border border-butter-line bg-butter px-2.5 py-1 text-[12px] font-semibold tracking-[0.05em] text-[#6B4A00] xl:inline-flex">
-          PROTOTYPE · SAMPLE DATA
+        <span className="hidden items-center gap-1.5 text-[11px] font-medium text-warm-muted xl:inline-flex">
+          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-rust/60" />
+          Prototype · sample data
         </span>
 
         <Link
           to={alertsHref(portal)}
           aria-label={`${alerts} alerts`}
-          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-butter text-rust transition-colors hover:bg-butter-soft"
+          className="relative flex h-11 w-11 items-center justify-center rounded-control bg-butter text-rust transition-colors hover:bg-butter-soft"
         >
           <Bell className="h-5 w-5" aria-hidden="true" />
-          <span className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber px-1 text-[11px] font-bold leading-none text-ink">
+          <span className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border border-butter-line bg-surface px-1 text-[10px] font-semibold leading-none text-rust">
             {alerts}
           </span>
         </Link>
 
-        <div className="hidden items-center gap-2.5 rounded-full bg-butter py-1.5 pl-1.5 pr-3.5 md:flex">
+        <div className="hidden items-center gap-2.5 rounded-control bg-butter py-1.5 pl-1.5 pr-3.5 md:flex">
           <span
             aria-hidden="true"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber text-[13px] font-bold text-ink"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-amber text-[13px] font-semibold text-ink"
           >
             {initialsOf(user?.name ?? 'EduAsset')}
           </span>
           <span className="flex flex-col leading-tight">
-            <span className="max-w-[180px] truncate text-[13px] font-semibold text-ink">
+            <span className="max-w-[180px] truncate text-[13px] font-medium text-ink">
               {user?.name}
             </span>
             <span className="text-xs text-[#6B4A00]">{role}</span>
@@ -73,12 +74,13 @@ export function TopBar({ portal, onMenu }: TopBarProps) {
 
         <button
           type="button"
+          aria-label="Sign out"
           onClick={() => {
             logout()
             navigate('/login', { replace: true })
           }}
           className={cn(
-            'flex min-h-11 items-center gap-1.5 rounded-control px-2 text-[13px] font-semibold text-ink',
+            'flex min-h-11 items-center gap-1.5 rounded-control px-2 text-[13px] font-medium text-ink',
             'transition-colors hover:bg-butter-soft sm:px-2.5',
           )}
         >

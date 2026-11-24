@@ -82,7 +82,7 @@ export function Login() {
           className="flex w-full max-w-[400px] flex-col gap-[18px]"
         >
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-[30px] font-bold leading-tight tracking-[-0.02em] text-ink">
+            <h2 className="text-[30px] font-semibold leading-tight tracking-[-0.02em] text-ink">
               Sign in
             </h2>
             <p className="text-sm text-muted">
@@ -91,7 +91,7 @@ export function Login() {
           </div>
 
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-            <legend className="mb-2 text-xs font-semibold text-muted">Portal</legend>
+            <legend className="mb-2 text-xs font-medium text-muted">Portal</legend>
             <div className="grid grid-cols-2 gap-2.5">
               {portals.map((option) => {
                 const selected = portal === option.id

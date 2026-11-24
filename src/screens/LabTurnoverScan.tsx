@@ -153,17 +153,17 @@ export function LabTurnoverScan() {
         </Field>
 
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-muted">Requested new unit</span>
-          <strong className="flex min-h-11 items-center font-mono text-[15px] font-bold text-ink">
+          <span className="text-xs font-medium text-muted">Requested new unit</span>
+          <strong className="flex min-h-11 items-center font-mono text-[15px] font-semibold text-ink">
             {machineConfig.newUnitId}
           </strong>
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-semibold text-muted">
+          <span className="text-xs font-medium text-muted">
             Currently active on this machine
           </span>
-          <strong className="flex min-h-11 items-center font-mono text-[15px] font-bold text-ink">
+          <strong className="flex min-h-11 items-center font-mono text-[15px] font-semibold text-ink">
             {activeUnit?.assetId ?? machineConfig.activeUnitId}
           </strong>
         </div>
@@ -183,7 +183,7 @@ export function LabTurnoverScan() {
 
       <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
         <Card className="flex flex-col gap-4 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Camera / webcam scanner
           </h2>
 
@@ -216,7 +216,7 @@ export function LabTurnoverScan() {
           </form>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted">Demo scans:</span>
+            <span className="text-xs font-medium text-muted">Demo scans:</span>
             <Button
               type="button"
               variant="secondary"
@@ -239,7 +239,7 @@ export function LabTurnoverScan() {
         </Card>
 
         <Card className="flex flex-col gap-4 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Scan result</h2>
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Scan result</h2>
 
           {!result ? (
             <p className="text-[13px] leading-relaxed text-muted">
@@ -281,7 +281,7 @@ export function LabTurnoverScan() {
                 </Button>
                 <Link
                   to="/lab/dashboard"
-                  className="inline-flex min-h-11 items-center px-2.5 text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+                  className="inline-flex min-h-11 items-center px-2.5 text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
                 >
                   Back to dashboard
                 </Link>
@@ -293,7 +293,7 @@ export function LabTurnoverScan() {
 
       {log.length > 0 ? (
         <Card className="flex flex-col gap-2 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Scan audit trail
           </h2>
           {log.map((entry, index) => (

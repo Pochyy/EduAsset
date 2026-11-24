@@ -49,7 +49,7 @@ export function TH({ numeric = false, className, ...props }: ThProps) {
     <th
       scope="col"
       className={cn(
-        'whitespace-nowrap border-b border-line px-4 py-3 text-xs font-semibold text-rust',
+        'whitespace-nowrap border-b border-line px-4 py-3 text-xs font-medium text-rust',
         numeric ? 'text-right' : 'text-left',
         className,
       )}

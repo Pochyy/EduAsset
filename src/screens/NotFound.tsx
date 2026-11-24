@@ -14,8 +14,8 @@ export function NotFound() {
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-paper px-6 py-12 text-center">
       <Logo size={56} hero subtitle="Property custodianship · predictive inventory" />
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-bold uppercase tracking-[0.1em] text-rust">404</p>
-        <h1 className="text-[clamp(28px,4vw,40px)] font-extrabold tracking-[-0.03em] text-ink">
+        <p className="text-xs font-medium tracking-[0.02em] text-rust">404</p>
+        <h1 className="text-[clamp(28px,4vw,40px)] font-semibold tracking-[-0.02em] text-ink">
           Page not found
         </h1>
         <p className="max-w-md text-sm leading-relaxed text-muted">

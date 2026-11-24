@@ -275,7 +275,7 @@ export function ReorderAlerts() {
                         <button
                           type="button"
                           onClick={() => setPrId(row.id)}
-                          className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-semibold text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                          className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                         >
                           <FileText className="h-4 w-4" aria-hidden="true" />
                           View PR
@@ -285,7 +285,7 @@ export function ReorderAlerts() {
                         type="button"
                         onClick={() => openSettings(row)}
                         aria-label={`Forecast settings for ${row.name}`}
-                        className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-semibold text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                       >
                         <Settings className="h-4 w-4" aria-hidden="true" />
                         Settings
@@ -320,7 +320,7 @@ export function ReorderAlerts() {
               key={field.k}
               className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 odd:bg-paper"
             >
-              <dt className="text-xs font-semibold text-muted">{field.k}</dt>
+              <dt className="text-xs font-medium text-muted">{field.k}</dt>
               <dd className="m-0 text-[13px] font-medium text-ink">{field.v}</dd>
             </div>
           ))}

@@ -150,8 +150,10 @@ export function CentralDashboard() {
       <div className="grid gap-5 xl:grid-cols-2">
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Needs your action</h2>
-            <Badge tone="warning">{dashboardActions.length} open</Badge>
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Needs your action</h2>
+            <span className="text-xs font-medium tabular-nums text-muted">
+              {dashboardActions.length} open
+            </span>
           </div>
           <ul className="m-0 flex list-none flex-col p-0">
             {dashboardActions.map((task) => (
@@ -159,9 +161,9 @@ export function CentralDashboard() {
                 key={task.id}
                 className="flex items-center gap-3 border-t border-line-soft py-3 first:border-t-0 first:pt-0"
               >
-                <Badge tone="info" className="shrink-0">
+                <span className="w-7 shrink-0 font-mono text-[11px] font-medium text-warm-muted">
                   {task.module}
-                </Badge>
+                </span>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <Link
                     to={task.href}
@@ -173,7 +175,7 @@ export function CentralDashboard() {
                 </div>
                 <Link
                   to={task.href}
-                  className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-control px-2.5 text-[13px] font-semibold text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                  className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                 >
                   {task.cta}
                   <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -184,7 +186,7 @@ export function CentralDashboard() {
         </Card>
 
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Durable equipment health
           </h2>
           <p className="text-[13px] leading-relaxed text-muted">
@@ -219,7 +221,7 @@ export function CentralDashboard() {
                 <span className="text-[11px] tabular-nums text-muted">
                   {Math.round((entry.value / healthTotal) * 100)}%
                 </span>
-                <span className="w-6 text-right text-[15px] font-bold tabular-nums text-ink">
+                <span className="w-6 text-right text-[15px] font-semibold tabular-nums text-ink">
                   {entry.value}
                 </span>
               </div>
@@ -232,7 +234,7 @@ export function CentralDashboard() {
 
           <Link
             to="/central/repairs"
-            className="mt-auto inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+            className="mt-auto inline-flex min-h-11 items-center gap-1.5 self-start text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
           >
             Open Repair &amp; BER
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -243,10 +245,10 @@ export function CentralDashboard() {
       <div className="grid gap-5 xl:grid-cols-2">
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">Depletion outlook</h2>
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Depletion outlook</h2>
             <Link
               to="/central/alerts"
-              className="inline-flex min-h-11 items-center text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+              className="inline-flex min-h-11 items-center text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
             >
               All items
             </Link>
@@ -286,7 +288,7 @@ export function CentralDashboard() {
         </Card>
 
         <Card className="flex min-w-0 flex-col gap-3.5 p-5">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Recent activity (audit log)
           </h2>
           <ol className="m-0 flex list-none flex-col p-0">
@@ -297,7 +299,7 @@ export function CentralDashboard() {
               >
                 <span
                   aria-hidden="true"
-                  className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber"
+                  className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-rust/40"
                 />
                 <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <span className="text-[13px] leading-snug text-ink">{entry.text}</span>

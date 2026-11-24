@@ -94,12 +94,12 @@ export function LabDashboard() {
 
       <Card className="flex flex-col gap-4 p-5">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
             Machines &amp; active consumables
           </h2>
           <Link
             to="/lab/inventory"
-            className="inline-flex min-h-11 items-center text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+            className="inline-flex min-h-11 items-center text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
           >
             Lab inventory
           </Link>
@@ -142,12 +142,12 @@ export function LabDashboard() {
       <div className="grid gap-5 xl:grid-cols-2">
         <Card className="flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
               My requisitions
             </h2>
             <Link
               to="/lab/requisition"
-              className="inline-flex min-h-11 items-center text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+              className="inline-flex min-h-11 items-center text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
             >
               New request
             </Link>
@@ -179,12 +179,12 @@ export function LabDashboard() {
 
         <Card className="flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold tracking-[-0.01em] text-ink">
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
               Open work orders
             </h2>
             <Link
               to="/lab/work-orders"
-              className="inline-flex min-h-11 items-center text-[13px] font-semibold text-rust transition-colors hover:text-rust-deep"
+              className="inline-flex min-h-11 items-center text-[13px] font-medium text-rust transition-colors hover:text-rust-deep"
             >
               All work orders
             </Link>

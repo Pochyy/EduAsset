@@ -1,8 +1,8 @@
 # Session Handoff — React Vertical Slice
 
 **Date:** 24 November 2026
-**React code:** `e70eee4` — fast-forward from `f595110`
-**Main:** React slice `e70eee4` plus the visual pass, all 17 screens and handoff docs
+**React code:** `e1cce6d` on `main`; the 24 November craft pass is on `design/unslop-pass`
+**Main:** React slice `e1cce6d`, all 17 screens and handoff docs
 **Branches preserved:** `feat/react-tailwind` at `e70eee4`; `design/precision-pass`; `feat/lab-readonly`; `feat/lab-actions`; `feat/central-review`; `feat/central-assets`; `feat/final-portal`
 **Static design branch:** `design/wildcat-theme` at `f595110`
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
@@ -64,11 +64,24 @@ Tabs, MetricStrip, EmptyState, PageHeader. `src/components/brand/Logo.tsx` holds
 
 - `AppShell` with sticky 72px top bar, 264px butter sidebar, 1200px content column, skip link,
   mobile drawer with overlay/Escape/body lock.
-- `Sidebar` with stage groups (Demand, Turnover, Units & assets, Intake), rust labels, amber count
-  pills, white active surface and 3px amber leading bar.
-- `TopBar` with portal label, prototype pill, alert count, user pill, sign out.
+- `Sidebar` with stage groups (Demand, Turnover, Units & assets, Intake), sentence-case warm-muted
+  labels, quiet counts, white active surface and 3px amber leading bar.
+- `TopBar` with portal label, quiet prototype meta, alert count, user chip and sign out (explicit
+  `aria-label` so the icon-only control is named at narrow widths).
 - Nav counts live in `src/components/layout/nav.ts` and are driven by `useQueueCounts()` from the
   shared store.
+
+### Craft pass (24 November)
+
+- App headings and card titles use 600; labels and metadata use 500. The wordmark and sign-in hero
+  keep the 800 brand voice.
+- Sentence case replaces uppercase tracked labels in the sidebar, drawer, dialog eyebrows, unit
+  record and replacement cards. SRS status values stay uppercase inside badges.
+- Filter tabs are underline tabs with quiet numeric counts. Pills are status-only.
+- Counts and module codes are muted text; Master Ledger health is a dot plus label.
+- Top-bar meta is quiet, count badges are no longer amber, and Verified Replacement steps are a
+  progress rail rather than a row of pills.
+- No SRS copy, data, routes, validation or workflow behaviour changed.
 
 ### Screens
 
@@ -196,8 +209,9 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
 
 - `npm run build` passes on the final-portal branch and on `main` after merge.
 - Production preview serves the app, relative JS/CSS, and `/design/` with no console errors.
-- Re-verified after the visual precision pass: login, forecast recalculation, settings validation and
-  save, route guards and mobile drawer still behave exactly as before.
+- Re-verified after the visual precision pass and again after the 24 November craft pass: login,
+  forecast recalculation, settings validation and save, route guards and mobile drawer still behave
+  exactly as before.
 - Read-only Lab batch: Dashboard, Inventory and Work Orders tested at 1440 and 390; inventory tabs
   and search, work-order Open/Closed tabs and progress all work; sidebar counts come from the store.
 - Lab actions: submitting an elevated requisition produced RQ-1023 (`PROCESSED` with justification);
@@ -223,7 +237,11 @@ A visual-only pass refined the implemented surfaces without changing routes, dat
   KB-0156; both appeared in Master Ledger search. QR labels rendered.
 - Verified Replacement: KB-0152 passed all four rules, went through second-approver confirmation,
   completed as KB-0007 → KB-0152, and the progress steps stayed green after the store updated.
-- Lighthouse on all 17 screens: **Accessibility 100 · Best Practices 100 · SEO 100**.
+- Lighthouse on all 17 screens before and after the craft pass: **Accessibility 100 · Best
+  Practices 100 · SEO 100**. The sign-out control now has an accessible name when its visible label
+  is hidden at narrow widths.
+- Craft-pass route sweep at 598 and 390: all 17 screens render one `h1`, with no console errors and
+  no page-level horizontal overflow.
 - 18-route sweep across all Central/Lab routes and index redirects: every route renders one `h1`,
   no `Page not found`, no runtime exceptions, no page-level horizontal overflow.
 - Checked at 1440 and 390 px. At 390 the page does not overflow; dense tables scroll inside their own
@@ -249,8 +267,8 @@ Do not reintroduce these:
 7. **Login headline orphan** — H1 is capped at 40px with a 620px max width; don't raise it without
    checking the two-line break.
 8. **Dashboard table at 1024** — two-column dashboard sections start at `xl`, not `lg`.
-9. **Amber contrast** — amber surfaces always use ink text; never white on amber. Active tab counts
-   stay white pills with ink text.
+9. **Amber contrast** — amber surfaces always use ink text; never white on amber. Counts and filter
+   totals are quiet text; do not turn them back into amber badges or white pills.
 10. **Hash routing** — keep `HashRouter` unless a hosting rewrite/404 fallback is configured.
 
 ---
@@ -295,7 +313,9 @@ Screen parity is complete. The remaining work is production hardening, not porti
 
 ### Do not
 
-- Do not edit `design/` to make a React problem go away; it is the approved reference.
+- Do not edit `design/` to make a React problem go away; it is the approved layout reference.
+- Do not reintroduce uppercase tracked labels, amber count pills or pill-shaped filter tabs; see
+  `DESIGN.md` for the current hierarchy.
 - Do not change copy, seed data, routes or SRS logic without an SRS reason.
 - Do not add new colors, fonts, gradients, glass or decorative kickers.
 - Do not reintroduce four cloned KPI cards where a `MetricStrip` belongs.

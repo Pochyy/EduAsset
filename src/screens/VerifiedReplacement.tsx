@@ -173,26 +173,22 @@ export function VerifiedReplacement() {
         description="Requested by WIL Lab Assistant on Nov 17 · Reason: broken keyboard at WIL workstation 5 (photo attached)."
       />
 
-      <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
+      <ol className="m-0 flex list-none flex-wrap gap-x-6 gap-y-1 p-0">
         {steps.map((entry, index) => (
-          <li
-            key={entry.label}
-            className={cn(
-              'flex min-h-11 items-center gap-2 rounded-full border px-3 text-[13px] font-semibold',
-              entry.done
-                ? 'border-success-line bg-success-bg text-success'
-                : 'border-line bg-surface text-muted',
-            )}
-          >
+          <li key={entry.label} className="flex min-h-11 items-center gap-2 text-[13px]">
             <span
               className={cn(
-                'flex h-6 w-6 items-center justify-center rounded-full text-[11px]',
-                entry.done ? 'bg-success text-white' : 'bg-neutral-bg text-neutral-text',
+                'flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-medium',
+                entry.done
+                  ? 'border-success bg-success text-white'
+                  : 'border-line bg-surface text-muted',
               )}
             >
               {entry.done ? <Check className="h-3 w-3" /> : index + 1}
             </span>
-            {entry.label}
+            <span className={cn('font-medium', entry.done ? 'text-ink' : 'text-muted')}>
+              {entry.label}
+            </span>
           </li>
         ))}
       </ol>
@@ -200,7 +196,7 @@ export function VerifiedReplacement() {
       <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
         <Card className="flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold tracking-[0.08em] text-rust">OLD UNIT</span>
+            <span className="text-xs font-medium text-rust">Old unit</span>
             <Badge tone={phase === 'done' ? 'danger' : 'warning'}>
               {phase === 'done' ? 'RETIRED' : 'PENDING RETIREMENT'}
             </Badge>
@@ -211,7 +207,7 @@ export function VerifiedReplacement() {
             repairable)
           </span>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="replacement-old" className="text-xs font-semibold text-muted">
+            <label htmlFor="replacement-old" className="text-xs font-medium text-muted">
               Scan or type the old unit’s asset ID
             </label>
             <div className="flex gap-2">
@@ -251,7 +247,7 @@ export function VerifiedReplacement() {
 
         <Card className="flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold tracking-[0.08em] text-rust">NEW UNIT</span>
+            <span className="text-xs font-medium text-rust">New unit</span>
             <Badge
               tone={
                 phase === 'done'
@@ -273,7 +269,7 @@ export function VerifiedReplacement() {
             </Badge>
           </div>
 
-          <label htmlFor="replacement-new" className="text-xs font-semibold text-muted">
+          <label htmlFor="replacement-new" className="text-xs font-medium text-muted">
             Scan or type the new unit’s asset ID
           </label>
           <div className="flex gap-2">
@@ -304,7 +300,7 @@ export function VerifiedReplacement() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-semibold text-muted">
+            <span className="text-xs font-medium text-muted">
               Candidates · IN_STOCK, never issued
             </span>
             <div className="flex flex-wrap gap-2">
@@ -359,7 +355,7 @@ export function VerifiedReplacement() {
 
       <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
         <Card className="flex flex-col gap-3 p-5">
-          <h2 className="text-[15px] font-bold text-ink">Validation rules</h2>
+          <h2 className="text-[15px] font-semibold text-ink">Validation rules</h2>
           <ul className="m-0 flex list-none flex-col gap-3 p-0">
             {[
               {
@@ -402,7 +398,7 @@ export function VerifiedReplacement() {
               <li key={rule.text} className="flex items-start gap-2.5">
                 <span
                   className={cn(
-                    'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[12px] font-bold',
+                    'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[12px] font-semibold',
                     rule.ok
                       ? 'bg-success text-white'
                       : !normalizedNewId && !rule.text.startsWith('Old')
@@ -435,11 +431,11 @@ export function VerifiedReplacement() {
         </Card>
 
         <Card className="flex flex-col gap-3 p-5">
-          <h2 className="text-[15px] font-bold text-ink">
+          <h2 className="text-[15px] font-semibold text-ink">
             Evidence &amp; two-person verification
           </h2>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="replacement-approver" className="text-xs font-semibold text-muted">
+            <label htmlFor="replacement-approver" className="text-xs font-medium text-muted">
               Second approver (required)
             </label>
             <Select
@@ -515,7 +511,7 @@ export function VerifiedReplacement() {
 
       {rejections.length > 0 ? (
         <Card className="flex flex-col gap-2 p-5">
-          <h2 className="text-[15px] font-bold text-ink">Rejected attempts (logged)</h2>
+          <h2 className="text-[15px] font-semibold text-ink">Rejected attempts (logged)</h2>
           {rejections.map((rejection) => (
             <div
               key={`${rejection.id}-${rejection.when}`}
