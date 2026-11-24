@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import type { Portal } from '../../types'
 import { cn } from '../../lib/utils'
+import { useQueueCounts } from '../../data/counts'
 import { navFor } from './nav'
 
 interface SidebarProps {
@@ -10,6 +11,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ portal, onNavigate, className }: SidebarProps) {
+  const counts = useQueueCounts()
+
   return (
     <nav
       aria-label="Main menu"
@@ -23,6 +26,7 @@ export function Sidebar({ portal, onNavigate, className }: SidebarProps) {
           <div className="flex flex-col gap-0.5">
             {group.items.map((item) => {
               const Icon = item.icon
+              const count = item.countKey ? counts[item.countKey] : item.count
               return (
                 <NavLink
                   key={item.to}
@@ -44,9 +48,9 @@ export function Sidebar({ portal, onNavigate, className }: SidebarProps) {
                         aria-hidden="true"
                       />
                       <span className="flex-1">{item.label}</span>
-                      {item.count !== undefined ? (
+                      {count ? (
                         <span className="min-w-[22px] rounded-full bg-amber px-2 py-0.5 text-center text-[11px] font-bold leading-tight text-ink">
-                          {item.count}
+                          {count}
                         </span>
                       ) : null}
                     </>

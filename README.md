@@ -6,8 +6,9 @@ Labs (WIL) and the CIT Property Office.
 The repository holds two front ends:
 
 - **React + Tailwind application** at the repository root. This is the in-progress replacement for
-  the static prototype. The app shell, design tokens, Login, Central Dashboard and Reorder Alerts are
-  implemented; all other routes are wired as marked placeholders.
+  the static prototype. The app shell, design tokens, Login, Central Dashboard, Reorder Alerts, Lab
+  Dashboard, Lab Inventory and Work Orders are implemented; the other 11 routes are marked
+  placeholders.
 - **Static design reference** under `design/`. All 17 approved desktop screens remain available
   there and are the visual source of truth while the React screens are ported.
 
@@ -32,21 +33,21 @@ The repository holds two front ends:
 | Reconciliation | Placeholder | 3.26 |
 | Audit Queue | Placeholder | 3.27 |
 | Receive New Items | Placeholder | 3.30–3.34 |
-| Lab Dashboard | Placeholder | 3.37 |
+| Lab Dashboard | **Implemented** | 3.37 |
 | Lab Supply Requisition | Placeholder | 3.6 |
 | Turnover Scan | Placeholder | 3.11–3.12 |
 | Report Incident | Placeholder | 3.19 |
-| Lab Inventory | Placeholder | 3.14 |
-| Work Orders | Placeholder | 3.20 |
+| Lab Inventory | **Implemented** | 3.14 |
+| Work Orders | **Implemented** | 3.20 |
 
-The 14 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
+The 11 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
 each states what will be ported from its approved static screen.
 
-**Current state:** the React vertical slice is merged (`e70eee4`, 24 November 2026), followed by a
-visual precision pass on the shell, dashboard, alerts and placeholders. Three screens are
-implemented; fourteen remain placeholders. The static reference is still the complete 17-screen
-artifact. Start the next session with **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state,
-verification record and recommended porting order.
+**Current state:** the React vertical slice is merged (`e70eee4`, 24 November 2026), followed by the
+visual precision pass and the read-only Lab portal batch. Six screens are implemented; eleven remain
+placeholders. The static reference is still the complete 17-screen artifact. Start the next session
+with **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state, verification record and recommended
+porting order.
 
 ---
 
@@ -114,10 +115,10 @@ hand-off.
 │   │   ├── brand/              # SVG logo
 │   │   ├── layout/             # AppShell, TopBar, Sidebar, nav config
 │   │   └── ui/                 # Button, Card, Table, Badge, Dialog, Tabs, …
-│   ├── context/                # mock auth + toasts
-│   ├── data/                   # seed access, dashboard and forecast data
-│   ├── lib/                    # helpers and page titles
-│   ├── screens/                # Login, CentralDashboard, ReorderAlerts, placeholders
+│   ├── context/                # mock auth, shared app data, toasts
+│   ├── data/                   # seed access, counts, dashboard and forecast data
+│   ├── lib/                    # helpers, lab selectors and page titles
+│   ├── screens/                # implemented screens and placeholders
 │   ├── App.tsx                 # routes and role guards
 │   ├── index.css               # Tailwind 4 theme tokens and base styles
 │   ├── main.tsx                # providers and HashRouter
@@ -179,12 +180,12 @@ components under `src/components/ui/`. `DESIGN.md` remains the design specificat
 
 | Screen | SRS figure | React |
 |---|---|---|
-| Dashboard | 3.37 | Placeholder |
+| Dashboard | 3.37 | Implemented |
 | Supply Requisition | 3.6 | Placeholder |
 | Turnover Scan (match + mismatch) | 3.11, 3.12 | Placeholder |
 | Report Incident | 3.19 | Placeholder |
-| Lab Inventory | 3.14 | Placeholder |
-| Work Orders | 3.20 | Placeholder |
+| Lab Inventory | 3.14 | Implemented |
+| Work Orders | 3.20 | Implemented |
 
 ---
 
@@ -266,7 +267,7 @@ is written back to a database; a page refresh resets in-memory state.
 
 ## Known limitations
 
-- Only three of the 17 screens are ported to React; the other 14 routes are placeholders. See
+- Only six of the 17 screens are ported to React; the other 11 routes are placeholders. See
   [`docs/HANDOFF.md`](docs/HANDOFF.md) for the remaining queue.
 - Mock auth only; no real account check, backend session or role enforcement. Portal guards are
   client-side.

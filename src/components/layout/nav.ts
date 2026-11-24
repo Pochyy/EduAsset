@@ -15,12 +15,14 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { Portal } from '../../types'
+import type { QueueCounts } from '../../data/counts'
 
 export interface NavItem {
   label: string
   to: string
   icon: LucideIcon
   count?: number
+  countKey?: keyof QueueCounts
 }
 
 export interface NavGroup {
@@ -36,13 +38,20 @@ export const centralNav: NavGroup[] = [
   {
     label: 'Demand',
     items: [
-      { label: 'Reorder Alerts', to: '/central/alerts', icon: Bell, count: 3 },
-      { label: 'Requisition Review', to: '/central/requisitions', icon: ClipboardList, count: 2 },
+      { label: 'Reorder Alerts', to: '/central/alerts', icon: Bell, countKey: 'alerts' },
+      {
+        label: 'Requisition Review',
+        to: '/central/requisitions',
+        icon: ClipboardList,
+        countKey: 'requisitions',
+      },
     ],
   },
   {
     label: 'Turnover',
-    items: [{ label: 'Turnover Approval', to: '/central/turnover', icon: Repeat, count: 1 }],
+    items: [
+      { label: 'Turnover Approval', to: '/central/turnover', icon: Repeat, countKey: 'turnover' },
+    ],
   },
   {
     label: 'Units & assets',
@@ -51,7 +60,7 @@ export const centralNav: NavGroup[] = [
       { label: 'Repair & BER', to: '/central/repairs', icon: Wrench },
       { label: 'Replacements', to: '/central/replacements', icon: ArrowLeftRight },
       { label: 'Reconciliation', to: '/central/reconciliation', icon: ScanLine },
-      { label: 'Audit Queue', to: '/central/audit', icon: ShieldCheck, count: 8 },
+      { label: 'Audit Queue', to: '/central/audit', icon: ShieldCheck, countKey: 'audit' },
     ],
   },
   {
@@ -77,7 +86,7 @@ export const labNav: NavGroup[] = [
     items: [
       { label: 'Report Incident', to: '/lab/incidents', icon: AlertTriangle },
       { label: 'Lab Inventory', to: '/lab/inventory', icon: Boxes },
-      { label: 'Work Orders', to: '/lab/work-orders', icon: ListChecks, count: 2 },
+      { label: 'Work Orders', to: '/lab/work-orders', icon: ListChecks, countKey: 'workOrders' },
     ],
   },
 ]

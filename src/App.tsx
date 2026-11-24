@@ -6,6 +6,9 @@ import type { Portal } from './types'
 import { AppShell } from './components/layout/AppShell'
 import { CentralDashboard } from './screens/CentralDashboard'
 import { ComingSoon } from './screens/ComingSoon'
+import { LabDashboard } from './screens/LabDashboard'
+import { LabInventory } from './screens/LabInventory'
+import { LabWorkOrders } from './screens/LabWorkOrders'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
 import { ReorderAlerts } from './screens/ReorderAlerts'
@@ -149,18 +152,6 @@ const labPlaceholders: Placeholder[] = [
     reference: 'lab-turnover-scan.dc.html',
   },
   {
-    path: 'inventory',
-    title: 'Lab inventory',
-    srs: '3.14',
-    summary: "See the lab's machines, supplies and status at a glance.",
-    items: [
-      'Machines and linked units',
-      'Supply stock by item',
-      'Health and inventory status',
-    ],
-    reference: 'lab-inventory.dc.html',
-  },
-  {
     path: 'incidents',
     title: 'Report incident',
     srs: '3.19',
@@ -171,18 +162,6 @@ const labPlaceholders: Placeholder[] = [
       'Create a work order for the technician',
     ],
     reference: 'lab-report-incident.dc.html',
-  },
-  {
-    path: 'work-orders',
-    title: 'Work orders',
-    srs: '3.20',
-    summary: 'Track technician work orders, quotes and repair status.',
-    items: [
-      'Status from reported to closed',
-      'Quote and BER visibility',
-      'Repair history per unit',
-    ],
-    reference: 'lab-work-orders.dc.html',
   },
 ]
 
@@ -260,28 +239,9 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="dashboard" replace />} />
-        <Route
-          path="dashboard"
-          element={
-            <ComingSoon
-              breadcrumbs={[
-                { label: 'WIL Lab', href: '/lab/dashboard' },
-                { label: 'Dashboard' },
-              ]}
-              title="Lab dashboard"
-              summary="Your machines, supplies and requests at a glance."
-              srs="3.37"
-              items={[
-                'Quick actions for requisitions, scans and incidents',
-                'Lab supply levels and machine health',
-                'Open requests and work-order status',
-              ]}
-              reference="lab-dashboard.dc.html"
-              backTo="/lab/dashboard"
-              backLabel="Back to Lab dashboard"
-            />
-          }
-        />
+        <Route path="dashboard" element={<LabDashboard />} />
+        <Route path="inventory" element={<LabInventory />} />
+        <Route path="work-orders" element={<LabWorkOrders />} />
         {labPlaceholders.map((placeholder) =>
           placeholderRoute('lab', placeholder, 'WIL Lab', '/lab/dashboard'),
         )}
