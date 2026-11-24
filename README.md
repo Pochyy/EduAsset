@@ -42,6 +42,11 @@ The repository holds two front ends:
 The 14 placeholder routes already use the real shell, breadcrumbs, sidebar counts and role guards;
 each states what will be ported from its approved static screen.
 
+**Current `main`:** `e70eee4` (24 November 2026), the React vertical slice merged. Three screens are
+implemented; fourteen remain placeholders. The static reference is still the complete 17-screen
+artifact. Start the next session with **[`docs/HANDOFF.md`](docs/HANDOFF.md)** for the state,
+verification record and recommended porting order.
+
 ---
 
 ## Run the React app
@@ -133,6 +138,7 @@ hand-off.
 │       └── vendor/
 ├── docs/
 │   ├── API-CONTRACT.md         # endpoints, payloads, enums, role rules
+│   ├── HANDOFF.md              # session state, verification record, next work
 │   ├── SEED-DATA.json          # 28 units, 10 flags, items, reqs, turnovers, WOs
 │   └── SCREEN-MAP.md           # screen → SRS figure → requirements → actions
 ├── PRODUCT.md                  # product truth, users, surfaces and constraints
@@ -259,7 +265,8 @@ is written back to a database; a page refresh resets in-memory state.
 
 ## Known limitations
 
-- Only three of the 17 screens are ported to React; the other 14 routes are placeholders.
+- Only three of the 17 screens are ported to React; the other 14 routes are placeholders. See
+  [`docs/HANDOFF.md`](docs/HANDOFF.md) for the remaining queue.
 - Mock auth only; no real account check, backend session or role enforcement. Portal guards are
   client-side.
 - No API wiring, database or persistence.

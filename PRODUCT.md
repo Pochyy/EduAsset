@@ -11,9 +11,10 @@ queue, and provides AI-assisted item intake.
 The repository holds two front ends. The **static design reference** under `design/` is the
 approved 17-screen prototype, exported as HTML using the design-component runtime. The **React +
 Tailwind application** at the repository root is the in-progress replacement for it: the shell,
-Login, Central Dashboard and Reorder Alerts are implemented, and the remaining screens are routed
-placeholders. Production still targets React + Spring Boot + MySQL; neither front end is the
-production application.
+Login, Central Dashboard and Reorder Alerts are implemented, and the remaining 14 screens are routed
+placeholders. The React slice was merged to `main` on 24 November 2026 (`e70eee4`). Production still
+targets React + Spring Boot + MySQL; neither front end is the production application. Current port
+state and next work are tracked in `docs/HANDOFF.md`.
 
 ## Who it is for
 
