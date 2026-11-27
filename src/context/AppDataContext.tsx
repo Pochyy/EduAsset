@@ -5,14 +5,17 @@ import {
   type Dispatch,
   type ReactNode,
 } from 'react'
+import { initialForecast, type ForecastRow } from '../data/reorder'
 import { seed } from '../data/seed'
 import type {
+  PolicySettings,
   SeedAuditFlag,
   SeedItem,
   SeedRequisition,
   SeedTurnover,
   SeedUnit,
   SeedWorkOrder,
+  TermCalendar,
 } from '../types'
 
 export interface AppData {
@@ -22,6 +25,9 @@ export interface AppData {
   turnovers: SeedTurnover[]
   workOrders: SeedWorkOrder[]
   auditFlags: SeedAuditFlag[]
+  forecast: ForecastRow[]
+  term: TermCalendar
+  policy: PolicySettings
 }
 
 export type AppDataAction =
@@ -44,6 +50,8 @@ export type AppDataAction =
   | { type: 'units/add'; units: SeedUnit[] }
   | { type: 'item/patch'; id: string; patch: Partial<SeedItem> }
   | { type: 'item/add'; item: SeedItem }
+  | { type: 'forecast/update'; id: string; patch: Partial<ForecastRow> }
+  | { type: 'policy/update'; patch: Partial<PolicySettings> }
 
 interface AppDataContextValue {
   data: AppData
@@ -57,6 +65,9 @@ const initialData: AppData = {
   turnovers: seed.turnovers,
   workOrders: seed.workOrders,
   auditFlags: seed.auditFlags,
+  forecast: initialForecast,
+  term: seed.term,
+  policy: seed.policy,
 }
 
 function reducer(state: AppData, action: AppDataAction): AppData {
@@ -178,6 +189,18 @@ function reducer(state: AppData, action: AppDataAction): AppData {
         items: state.items.some((item) => item.itemId === action.item.itemId)
           ? state.items
           : [action.item, ...state.items],
+      }
+    case 'forecast/update':
+      return {
+        ...state,
+        forecast: state.forecast.map((row) =>
+          row.id === action.id ? { ...row, ...action.patch } : row,
+        ),
+      }
+    case 'policy/update':
+      return {
+        ...state,
+        policy: { ...state.policy, ...action.patch },
       }
     default:
       return state

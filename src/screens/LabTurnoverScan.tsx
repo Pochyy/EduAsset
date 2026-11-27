@@ -272,7 +272,7 @@ export function LabTurnoverScan() {
                 )}
               >
                 {result.ok
-                  ? `The Central Property Custodian now verifies the turnover and approves the release. You will see ${machineConfig.newUnitId} become ISSUED / IN_USE and active on ${machineConfig.machineId}.`
+                  ? `The Central Property Custodian now verifies the turnover and approves the release. You will see ${machineConfig.newUnitId} become IN_USE and active on ${machineConfig.machineId}.`
                   : `This is not the unit active on ${machineConfig.machineId}. Issuance stays locked and the scan was recorded in the audit log. Find the spent unit that was in the machine and scan it.`}
               </p>
               <div className="flex flex-wrap items-center gap-2">

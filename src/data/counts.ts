@@ -1,5 +1,5 @@
 import { useAppData } from '../context/AppDataContext'
-import { initialForecast, isAlert } from './reorder'
+import { isAlert } from './reorder'
 
 export interface QueueCounts {
   alerts: number
@@ -15,7 +15,7 @@ export function useQueueCounts(): QueueCounts {
   const { data } = useAppData()
 
   return {
-    alerts: initialForecast.filter(isAlert).length,
+    alerts: data.forecast.filter((row) => isAlert(row, data.policy)).length,
     requisitions: data.requisitions.filter(
       (requisition) => requisition.status === 'LOCKED_REVIEW',
     ).length,

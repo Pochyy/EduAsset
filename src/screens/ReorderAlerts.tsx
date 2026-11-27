@@ -1,16 +1,30 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { CircleCheck, FileText, Info, RefreshCw, Settings } from 'lucide-react'
+import {
+  CircleCheck,
+  FileText,
+  Info,
+  RefreshCw,
+  Settings,
+  SlidersHorizontal,
+} from 'lucide-react'
 import {
   burnRate,
+  burnRateBasis,
+  burnRateSeason,
+  burnRateWindow,
   daysLeft,
-  initialForecast,
   isAlert,
+  isNoRecentUse,
   projectedDemand,
   triggerDays,
+  windowDays,
+  windowIssues,
+  type BurnRateBasis,
   type ForecastRow,
 } from '../data/reorder'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
+import { PolicySettingsDialog } from '../components/PolicySettingsDialog'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
@@ -21,20 +35,36 @@ import { MetricStrip } from '../components/ui/MetricStrip'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TBody, TD, TH, THead, TR, TableWrap } from '../components/ui/Table'
 import { Tabs } from '../components/ui/Tabs'
+import { useAppData } from '../context/AppDataContext'
 import { useToast } from '../context/ToastContext'
 
 type TabKey = 'all' | 'alert' | 'ok'
 
-const alertTone = (row: ForecastRow): 'success' | 'warning' | 'danger' => {
-  if (!isAlert(row)) return 'success'
-  return daysLeft(row) < 14 ? 'danger' : 'warning'
+interface DerivedRow {
+  row: ForecastRow
+  alert: boolean
+  noRecent: boolean
+  burn: number
+  days: number | null
+  trigger: number
+  need: number
+  basis: BurnRateBasis
+  window: number
+}
+
+const alertTone = (entry: DerivedRow): 'success' | 'warning' | 'danger' | 'neutral' => {
+  if (entry.noRecent) return 'neutral'
+  if (!entry.alert) return 'success'
+  return entry.days !== null && entry.days < 14 ? 'danger' : 'warning'
 }
 
 export function ReorderAlerts() {
   usePageTitle('Central · Reorder Alerts')
+  const { data, dispatch } = useAppData()
   const { showToast } = useToast()
+  const policy = data.policy
+  const items = data.forecast
 
-  const [items, setItems] = useState<ForecastRow[]>(initialForecast)
   const [tab, setTab] = useState<TabKey>('all')
   const [loading, setLoading] = useState(false)
   const [prId, setPrId] = useState<string | null>(null)
@@ -42,6 +72,7 @@ export function ReorderAlerts() {
   const [leadDraft, setLeadDraft] = useState('')
   const [bufferDraft, setBufferDraft] = useState('')
   const [tried, setTried] = useState(false)
+  const [policyOpen, setPolicyOpen] = useState(false)
   const timer = useRef<number | null>(null)
 
   useEffect(
@@ -51,17 +82,20 @@ export function ReorderAlerts() {
     [],
   )
 
-  const derived = useMemo(
+  const derived = useMemo<DerivedRow[]>(
     () =>
       items.map((row) => ({
         row,
-        alert: isAlert(row),
-        burn: burnRate(row),
-        days: daysLeft(row),
+        alert: isAlert(row, policy),
+        noRecent: isNoRecentUse(row, policy),
+        burn: burnRate(row, policy),
+        days: daysLeft(row, policy),
         trigger: triggerDays(row),
-        need: projectedDemand(row),
+        need: projectedDemand(row, policy),
+        basis: burnRateBasis(row, policy),
+        window: windowDays(row, policy),
       })),
-    [items],
+    [items, policy],
   )
 
   const alerts = derived.filter((entry) => entry.alert)
@@ -72,15 +106,20 @@ export function ReorderAlerts() {
   const prRow = items.find((row) => row.id === prId) ?? null
   const prCalc = prRow
     ? {
-        br: burnRate(prRow),
-        d: daysLeft(prRow),
+        br: burnRate(prRow, policy),
+        brWindow: burnRateWindow(prRow, policy),
+        brSeason: burnRateSeason(prRow),
+        d: daysLeft(prRow, policy),
         trig: triggerDays(prRow),
-        need: projectedDemand(prRow),
+        need: projectedDemand(prRow, policy),
+        basis: burnRateBasis(prRow, policy),
+        window: windowDays(prRow, policy),
+        windowIssues: windowIssues(prRow, policy),
       }
     : null
 
   const editingRow = items.find((row) => row.id === editingId) ?? null
-  const editingDays = editingRow ? daysLeft(editingRow) : 0
+  const editingDays = editingRow ? daysLeft(editingRow, policy) : null
 
   const leadNumber = Number(leadDraft)
   const bufferNumber = Number(bufferDraft)
@@ -111,7 +150,7 @@ export function ReorderAlerts() {
       showToast(
         'info',
         'Forecast recalculated',
-        'Burn rates use issuance scans from the last 14 days.',
+        'Burn rates use 14/42-day issuance windows and last-term seasonality.',
       )
     }, 1400)
   }
@@ -128,11 +167,11 @@ export function ReorderAlerts() {
     setTried(true)
     if (!draftsValid || !editingRow) return
 
-    setItems((current) =>
-      current.map((row) =>
-        row.id === editingRow.id ? { ...row, lead: leadNumber, buffer: bufferNumber } : row,
-      ),
-    )
+    dispatch({
+      type: 'forecast/update',
+      id: editingRow.id,
+      patch: { lead: leadNumber, buffer: bufferNumber },
+    })
     setEditingId(null)
     showToast(
       'success',
@@ -155,8 +194,16 @@ export function ReorderAlerts() {
         { k: 'Item', v: `${prRow.name} (${prRow.code})` },
         { k: 'Requesting unit', v: 'WildCat Innovation Labs' },
         { k: 'Current stock', v: `${prRow.stock} units` },
-        { k: 'Burn rate (14-day SMA)', v: `${prCalc.br.toFixed(2)} / day` },
-        { k: 'Days to depletion', v: `${prCalc.d.toFixed(1)} days` },
+        { k: 'Burn rate (BR = max(BR_w, BR_season))', v: `${prCalc.br.toFixed(2)} / day` },
+        { k: 'BR basis', v: `${prCalc.basis} · ${prCalc.window}-day window` },
+        {
+          k: 'BR_w / BR_season',
+          v: `${prCalc.brWindow.toFixed(2)} / ${prCalc.brSeason.toFixed(2)} per day`,
+        },
+        {
+          k: 'Days to depletion',
+          v: prCalc.d === null ? 'No recent use' : `${prCalc.d.toFixed(1)} days`,
+        },
         { k: 'Trigger (L + S)', v: `${prCalc.trig} days` },
         {
           k: 'Projected demand over L + S',
@@ -174,18 +221,24 @@ export function ReorderAlerts() {
           { label: 'Reorder Alerts' },
         ]}
         title="Reorder lead-time & depletion alerts"
-        description="BR = units consumed in the last 14 days ÷ 14 · D = remaining stock ÷ BR · alert when D ≤ lead time + safety buffer."
+        description="BR = max(BR_w, BR_season) · BR_w uses a 14-day window, or 42 days for low-volume items · D = stock ÷ BR · alert when D ≤ lead time + safety buffer."
         actions={
-          <Button variant="secondary" onClick={recalculate} disabled={loading}>
-            <RefreshCw
-              className={cn(
-                'h-[18px] w-[18px]',
-                loading && 'animate-spin motion-reduce:animate-none',
-              )}
-              aria-hidden="true"
-            />
-            Recalculate
-          </Button>
+          <>
+            <Button variant="secondary" onClick={() => setPolicyOpen(true)}>
+              <SlidersHorizontal className="h-[18px] w-[18px]" aria-hidden="true" />
+              Policy settings
+            </Button>
+            <Button variant="secondary" onClick={recalculate} disabled={loading}>
+              <RefreshCw
+                className={cn(
+                  'h-[18px] w-[18px]',
+                  loading && 'animate-spin motion-reduce:animate-none',
+                )}
+                aria-hidden="true"
+              />
+              Recalculate
+            </Button>
+          </>
         }
       />
 
@@ -207,7 +260,7 @@ export function ReorderAlerts() {
           tabs={[
             { id: 'all', label: 'All', count: derived.length },
             { id: 'alert', label: 'At / below trigger', count: alerts.length },
-            { id: 'ok', label: 'OK', count: derived.length - alerts.length },
+            { id: 'ok', label: 'OK / no recent use', count: derived.length - alerts.length },
           ]}
         />
 
@@ -223,14 +276,14 @@ export function ReorderAlerts() {
             <span className="block h-3.5 w-[85%] animate-pulse rounded-full bg-line-soft motion-reduce:animate-none" />
             <span className="block h-3.5 w-[70%] animate-pulse rounded-full bg-line-soft motion-reduce:animate-none" />
             <span className="text-xs text-muted">
-              Recomputing burn rates from the last 14 days of issuance scans…
+              Recomputing 14/42-day burn rates and last-term seasonality…
             </span>
           </div>
         ) : rows.length === 0 ? (
           <EmptyState
             icon={CircleCheck}
             title="No items in this view"
-            description="Every consumable has more days of stock than its procurement lead time plus safety buffer."
+            description="Every consumable either has enough stock for its lead time and buffer, or has no recent use."
           />
         ) : (
           <TableWrap className="rounded-control">
@@ -249,50 +302,58 @@ export function ReorderAlerts() {
                 </tr>
               </THead>
               <TBody>
-                {rows.map(({ row, alert, burn, days }) => (
-                  <TR key={row.id}>
-                    <TD>
-                      <span className="flex flex-col gap-0.5">
-                        <span className="font-semibold">{row.name}</span>
-                        <span className="text-xs text-muted">
-                          {row.code} · {row.consumed} used in 14 days
+                {rows.map((entry) => {
+                  const { row, alert, noRecent, burn, days, basis, window } = entry
+                  return (
+                    <TR key={row.id}>
+                      <TD>
+                        <span className="flex flex-col gap-0.5">
+                          <span className="font-semibold">{row.name}</span>
+                          <span className="text-xs text-muted">
+                            {row.code} · {windowIssues(row, policy)} used in {window} days
+                          </span>
                         </span>
-                      </span>
-                    </TD>
-                    <TD numeric>{row.stock}</TD>
-                    <TD numeric>{burn.toFixed(2)}</TD>
-                    <TD numeric className="font-semibold">
-                      {Number.isFinite(days) ? days.toFixed(1) : '—'}
-                    </TD>
-                    <TD numeric>{triggerDays(row)} d</TD>
-                    <TD>
-                      <Badge tone={alertTone(row)}>
-                        {alert ? 'ALERT · PR DRAFTED' : 'OK'}
-                      </Badge>
-                    </TD>
-                    <TD className="whitespace-nowrap text-right">
-                      {alert ? (
+                      </TD>
+                      <TD numeric>{row.stock}</TD>
+                      <TD numeric>
+                        <span className="flex flex-col items-end gap-0.5">
+                          <span>{burn.toFixed(2)}</span>
+                          <span className="text-[11px] font-normal text-muted">{basis}</span>
+                        </span>
+                      </TD>
+                      <TD numeric className="font-semibold">
+                        {noRecent ? 'No recent use' : days !== null ? days.toFixed(1) : '—'}
+                      </TD>
+                      <TD numeric>{triggerDays(row)} d</TD>
+                      <TD>
+                        <Badge tone={alertTone(entry)}>
+                          {noRecent ? 'NO RECENT USE' : alert ? 'ALERT · PR DRAFTED' : 'OK'}
+                        </Badge>
+                      </TD>
+                      <TD className="whitespace-nowrap text-right">
+                        {alert ? (
+                          <button
+                            type="button"
+                            onClick={() => setPrId(row.id)}
+                            className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
+                          >
+                            <FileText className="h-4 w-4" aria-hidden="true" />
+                            View PR
+                          </button>
+                        ) : null}
                         <button
                           type="button"
-                          onClick={() => setPrId(row.id)}
+                          onClick={() => openSettings(row)}
+                          aria-label={`Forecast settings for ${row.name}`}
                           className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
                         >
-                          <FileText className="h-4 w-4" aria-hidden="true" />
-                          View PR
+                          <Settings className="h-4 w-4" aria-hidden="true" />
+                          Settings
                         </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        onClick={() => openSettings(row)}
-                        aria-label={`Forecast settings for ${row.name}`}
-                        className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2.5 text-[13px] font-medium text-rust transition-colors hover:bg-butter-soft hover:text-rust-deep"
-                      >
-                        <Settings className="h-4 w-4" aria-hidden="true" />
-                        Settings
-                      </button>
-                    </TD>
-                  </TR>
-                ))}
+                      </TD>
+                    </TR>
+                  )
+                })}
               </TBody>
             </Table>
           </TableWrap>
@@ -351,6 +412,7 @@ export function ReorderAlerts() {
             <p className="text-sm leading-relaxed text-muted">
               <span className="font-semibold text-ink">{editingRow.name}</span> ·{' '}
               {editingRow.code}. Adjust the procurement lead time and safety buffer for this item.
+              Forecast window lengths are shared policy values.
             </p>
 
             <Field
@@ -398,7 +460,7 @@ export function ReorderAlerts() {
                 <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
                 <span className="text-[13px] leading-relaxed text-ink">
                   New trigger: alert when D ≤ <strong>{previewTrigger}</strong> days. Current D ={' '}
-                  {editingDays.toFixed(1)} days.
+                  {editingDays === null ? 'no recent use' : `${editingDays.toFixed(1)} days`}.
                 </span>
               </div>
             ) : null}
@@ -412,6 +474,8 @@ export function ReorderAlerts() {
           </form>
         ) : null}
       </Dialog>
+
+      <PolicySettingsDialog open={policyOpen} onClose={() => setPolicyOpen(false)} />
     </>
   )
 }

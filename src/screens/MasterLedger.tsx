@@ -42,7 +42,7 @@ const baseHistory = (unit: SeedUnit): HistoryEntry[] => {
     },
   ]
 
-  if (unit.inventoryStatus === 'ISSUED_IN_USE') {
+  if (unit.inventoryStatus === 'IN_USE') {
     entries.push({ event: `Issued to ${unit.location}`, meta: 'Current record · Lab Assistant' })
   }
   if (unit.inventoryStatus === 'RETURNED_EMPTY') {
@@ -252,7 +252,7 @@ export function MasterLedger() {
           >
             <option value="all">All statuses</option>
             <option value="IN_STOCK">IN_STOCK</option>
-            <option value="ISSUED_IN_USE">ISSUED / IN_USE</option>
+            <option value="IN_USE">IN_USE</option>
             <option value="RETURNED_EMPTY">RETURNED_EMPTY</option>
             <option value="RETIRED">RETIRED</option>
           </Select>

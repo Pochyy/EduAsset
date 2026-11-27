@@ -1,7 +1,8 @@
 import { ArrowRight, ScanLine, Plus, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { actions, activity, health, healthTotal, kpis, outlook } from '../data/dashboard'
+import { actions, activity, health, healthTotal, kpis } from '../data/dashboard'
 import { useQueueCounts } from '../data/counts'
+import { burnRate, daysLeft, isAlert, isNoRecentUse, triggerDays } from '../data/reorder'
 import { useAppData } from '../context/AppDataContext'
 import { formatVariance, itemNameOf, labLabel } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -113,6 +114,26 @@ export function CentralDashboard() {
   const attentionCount = health
     .filter((entry) => entry.tone === 'warning' || entry.tone === 'danger')
     .reduce((total, entry) => total + entry.value, 0)
+
+  const outlookRows = data.forecast.map((row) => {
+    const days = daysLeft(row, data.policy)
+    const noRecent = isNoRecentUse(row, data.policy)
+    const alert = isAlert(row, data.policy)
+    return {
+      item: row.name,
+      days: noRecent ? 'No recent use' : days === null ? '—' : `${days.toFixed(1)} days`,
+      trigger: `${triggerDays(row)} days`,
+      status: noRecent ? 'NO RECENT USE' : alert ? 'ALERT · PR DRAFTED' : 'OK',
+      tone: noRecent
+        ? ('neutral' as const)
+        : alert
+          ? days !== null && days < 14
+            ? ('danger' as const)
+            : ('warning' as const)
+          : ('success' as const),
+      burn: burnRate(row, data.policy),
+    }
+  })
 
   return (
     <>
@@ -265,17 +286,17 @@ export function CentralDashboard() {
                 </tr>
               </THead>
               <TBody>
-                {outlook.map((row) => (
+                {outlookRows.map((row) => (
                   <TR key={row.item}>
                     <TD className="font-semibold">{row.item}</TD>
                     <TD numeric>{row.days}</TD>
                     <TD numeric>{row.trigger}</TD>
                     <TD>
                       <span className="flex flex-col items-start gap-1">
-                        <Badge tone={row.tone}>{row.tone === 'success' ? 'OK' : 'ALERT'}</Badge>
-                        {row.tone !== 'success' ? (
+                        <Badge tone={row.tone}>{row.status}</Badge>
+                        {row.status === 'ALERT · PR DRAFTED' ? (
                           <span className="whitespace-nowrap text-[11px] font-medium text-muted">
-                            PR drafted
+                            BR {row.burn.toFixed(2)}/day
                           </span>
                         ) : null}
                       </span>

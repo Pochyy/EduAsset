@@ -19,10 +19,11 @@ export const inventoryPeripheralIds = ['KB-0031', 'KB-0032', 'MS-0031', 'MON-003
 export const dashboardRequisitionIds = ['RQ-1021', 'RQ-1019', 'RQ-1016'] as const
 
 export const labRequisitionCatalog = [
-  { itemId: 'TNR', baseline: 6, used: 4, unit: 'cartridges' },
-  { itemId: 'A4', baseline: 2, used: 10, unit: 'reams' },
-  { itemId: 'PLA', baseline: 10, used: 3, unit: 'spools' },
-  { itemId: 'CTN', baseline: 10, used: 1, unit: 'cartridges' },
+  { itemId: 'TNR', baseline: 8, used: 5, unit: 'cartridges' },
+  { itemId: 'A4', baseline: 2, used: 0, unit: 'reams' },
+  { itemId: 'PLA', baseline: 8, used: 8, unit: 'spools' },
+  { itemId: 'CTN', baseline: 16, used: 10, unit: 'cartridges' },
+  { itemId: 'THRM', baseline: 0, used: 0, unit: 'rolls' },
 ] as const
 
 export const turnoverMachines = [
@@ -94,10 +95,12 @@ export const inventoryStatus = (value: string): StatusDisplay => {
   switch (value) {
     case 'IN_STOCK':
       return { label: 'IN STOCK', tone: 'info' }
-    case 'ISSUED_IN_USE':
-      return { label: 'ISSUED / IN_USE', tone: 'success' }
+    case 'IN_USE':
+      return { label: 'IN_USE', tone: 'success' }
     case 'RETURNED_EMPTY':
       return { label: 'RETURNED_EMPTY', tone: 'neutral' }
+    case 'RETURNED_PARTIAL':
+      return { label: 'RETURNED_PARTIAL', tone: 'warning' }
     case 'RETIRED':
       return { label: 'RETIRED', tone: 'neutral' }
     default:
@@ -141,11 +144,16 @@ export const shortLocation = (location: string) => location.replace(/^WIL /, '')
 export const itemNameOf = (items: SeedItem[], itemId: string) =>
   items.find((item) => item.itemId === itemId)?.name ?? itemId
 
-export const formatVariance = (variance: number) =>
-  `${variance >= 0 ? '+' : ''}${Math.round(variance * 10) / 10}%`
+export const formatVariance = (variance: number | null) =>
+  variance === null
+    ? '—'
+    : `${variance >= 0 ? '+' : ''}${Math.round(variance * 10) / 10}%`
 
 export const requisitionNote = (requisition: SeedRequisition) => {
   const variance = formatVariance(requisition.variancePercent)
+  if (requisition.band === 'NO_BASELINE') {
+    return 'No baseline · manual review (collect-baseline mode)'
+  }
   if (requisition.status === 'LOCKED_REVIEW') return `V ${variance} · auto-approval locked`
   if (requisition.justification) return `Justified: ${requisition.justification}`
   return `V ${variance} · within quota`
@@ -171,7 +179,7 @@ export const linkedConsumable = (unit: SeedUnit, units: SeedUnit[]) => {
       candidate.category === 'CONSUMABLE' &&
       candidate.linkedMachineId === unit.assetId,
   )
-  return linked.find((candidate) => candidate.inventoryStatus === 'ISSUED_IN_USE') ?? linked[0]
+  return linked.find((candidate) => candidate.inventoryStatus === 'IN_USE') ?? linked[0]
 }
 
 export const machineNote = (

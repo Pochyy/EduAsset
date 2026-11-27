@@ -5,15 +5,16 @@ with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 
 **React implementation:** all 17 screens are ported. The app shell, both dashboards, demand and
 turnover decisions, ledger/audit tools, repair/BER, verified replacement, intake and the complete Lab
-portal are live routes. The static reference remains under `design/` for visual comparison. Remaining
-work is backend/API wiring, tests and deployment; see `docs/HANDOFF.md`.
+portal are live routes. The static reference remains under `design/` for visual comparison. Revision 2
+is being applied module by module; pass 1 covers the foundation and Module 1. See
+`docs/REVISION-2-DELTA.md` and `docs/HANDOFF.md`.
 
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|
 | 1 | Sign in | `design/screens/login.dc.html` | 3.35 | NFR-S1, NFR-S2, NFR-U3 | Portal choice, inline validation, portal hand-off |
 | 2 | Central Dashboard | `design/screens/central-dashboard.dc.html` | 3.36 | §3.3.1, module overview | Queue cards, action list, depletion outlook, audit activity |
-| 3 | Reorder Alerts | `design/screens/central-reorder-alerts.dc.html` | 3.3, 3.4, 3.5 | FR-1.02–FR-1.08 | Recalculate, filter tabs, view PR, edit L/S with validation |
-| 4 | Requisition Review | `design/screens/central-requisition-review.dc.html` | 3.7, 3.8 | FR-1.11–FR-1.14 | Queue tabs, approve/reject, rejection reason ≥ 10 chars |
+| 3 | Reorder Alerts | `design/screens/central-reorder-alerts.dc.html` | 3.3, 3.4, 3.5 | FR-1.02–FR-1.08 | Recalculate, filter tabs, view PR, edit L/S with validation, policy windows, BR basis and no-recent-use state |
+| 4 | Requisition Review | `design/screens/central-requisition-review.dc.html` | 3.7, 3.8 | FR-1.11–FR-1.16 | Queue tabs, pro-rated expected volume, no-baseline badge, approve/reject, rejection reason ≥ 10 chars, policy settings, term report |
 | 5 | Turnover Approval | `design/screens/central-turnover-approval.dc.html` | 3.13 | FR-2.04, FR-2.07, FR-2.08 | Verify `RETURNED_EMPTY` gate, release with confirmation |
 | 6 | Master Ledger | `design/screens/central-master-ledger.dc.html` | 3.17, 3.18 | FR-3.01–FR-3.08, FR-3.24 | Search/filter, serial edit, 1-to-1 flag, reprint QR, history |
 | 7 | Repair & BER | `design/screens/central-repair-ber.dc.html` | 3.21, 3.22, 3.23 | FR-3.13–FR-3.17 | Quote, live BER, approve repair, return to service, condemn + form |
@@ -24,7 +25,7 @@ work is backend/API wiring, tests and deployment; see `docs/HANDOFF.md`.
 | 12 | Lab Dashboard | `design/screens/lab-dashboard.dc.html` | 3.37 | §3.3.1 | Quick actions, installed consumables, requisitions, work orders |
 | 13 | Lab Inventory | `design/screens/lab-inventory.dc.html` | 3.14 | FR-2.01, FR-2.09 | Machines/consumables/peripherals, active unit per machine |
 | 14 | Report Incident | `design/screens/lab-report-incident.dc.html` | 3.19 | FR-3.10, FR-3.11 | Scan, type, recurring flag, description, required photo |
-| 15 | Supply Requisition | `design/screens/lab-supply-requisition.dc.html` | 3.6 | FR-1.01, FR-1.09–FR-1.12 | Quantity, live variance, justification in the elevated band |
+| 15 | Supply Requisition | `design/screens/lab-supply-requisition.dc.html` | 3.6 | FR-1.01, FR-1.09–FR-1.12, FR-1.15 | Quantity, pro-rated expected volume, live variance, justification in the elevated band, no-baseline manual review |
 | 16 | Turnover Scan | `design/screens/lab-turnover-scan.dc.html` | 3.11, 3.12 | FR-2.03–FR-2.06 | Spent-unit scan, match/mismatch, audit trail |
 | 17 | Work Orders | `design/screens/lab-work-orders.dc.html` | 3.20 | FR-3.12 | Open/closed tabs, progress, BER decision |
 
@@ -33,8 +34,9 @@ work is backend/API wiring, tests and deployment; see `docs/HANDOFF.md`.
 - 28 units, including every asset referenced by the dashboard, replacement, lab-inventory and
   reconciliation screens.
 - 10 audit flags: 8 reviewable + 2 variance anomalies routed to Requisition Review.
-- 5 requisitions, 3 turnovers and 3 work orders.
-- 14 item definitions with lead time, safety buffer, replacement value and 1-to-1 policy.
+- 6 requisitions, 3 turnovers and 3 work orders.
+- 15 item definitions with lead time, safety buffer, replacement value and 1-to-1 policy.
+- Term calendar week 10 of 16 and revision-2 policy defaults (25/50 bands, 14/42-day windows).
 
 Exact JSON: `docs/SEED-DATA.json`.
 

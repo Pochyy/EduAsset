@@ -148,7 +148,7 @@ export function VerifiedReplacement() {
       type: 'unit/patch',
       id: normalizedNewId,
       patch: {
-        inventoryStatus: 'ISSUED_IN_USE',
+        inventoryStatus: 'IN_USE',
         healthState: 'OPERATIONAL',
         location: oldUnit!.location,
       },
@@ -260,7 +260,7 @@ export function VerifiedReplacement() {
               }
             >
               {phase === 'done'
-                ? 'ISSUED / IN_USE'
+                ? 'IN_USE'
                 : !normalizedNewId
                   ? 'NOT SELECTED'
                   : allValid
@@ -487,7 +487,7 @@ export function VerifiedReplacement() {
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-hidden="true" />
               <span className="text-[13px] leading-relaxed text-ink">
                 <strong>Replacement complete.</strong> {oldAssetId} is RETIRED,{' '}
-                {normalizedNewId} is ISSUED / IN_USE at {oldUnit.location}. The old → new link,
+                {normalizedNewId} is IN_USE at {oldUnit.location}. The old → new link,
                 verifier and time are saved in the audit log.
               </span>
             </div>

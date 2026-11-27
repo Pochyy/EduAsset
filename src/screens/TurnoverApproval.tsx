@@ -66,7 +66,7 @@ function TurnoverSteps({
     {
       title: 'Custodian approval',
       detail: released
-        ? `Approved · ${meta.newUnitId} ISSUED / IN_USE`
+        ? `Approved · ${meta.newUnitId} IN_USE`
         : scanned
           ? 'Your decision'
           : 'Locked',
@@ -136,7 +136,7 @@ export function TurnoverApproval() {
       itemName: itemNameOf(data.items, meta.itemId),
       category: 'CONSUMABLE',
       location: machine?.location ?? oldUnit?.location ?? 'WIL Lab',
-      inventoryStatus: 'ISSUED_IN_USE',
+      inventoryStatus: 'IN_USE',
       healthState: 'NOT_APPLICABLE',
       deliveryRecordId: oldUnit?.deliveryRecordId ?? `TO-${turnover.turnoverId}`,
       deliveryDate: new Date().toISOString().slice(0, 10),
@@ -175,7 +175,7 @@ export function TurnoverApproval() {
         <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
         <span className="text-[13px] leading-relaxed text-ink">
           Lab assistants scan the spent unit in the WIL portal. You verify the turnover here and
-          approve the release; the new unit becomes ISSUED / IN_USE on the linked machine.
+          approve the release; the new unit becomes IN_USE on the linked machine.
         </span>
       </div>
 
@@ -241,7 +241,7 @@ export function TurnoverApproval() {
                   {released ? (
                     <span className="flex items-center gap-1.5 text-[13px] font-semibold text-success">
                       <Check className="h-4 w-4" aria-hidden="true" />
-                      Released · new unit is ISSUED / IN_USE on {meta.machineId}
+                      Released · new unit is IN_USE on {meta.machineId}
                     </span>
                   ) : null}
                 </div>
@@ -274,7 +274,7 @@ export function TurnoverApproval() {
         {confirming && confirmingMeta ? (
           <p className="text-sm leading-relaxed text-neutral-text">
             {confirmingMeta.oldUnitId} was verified as RETURNED_EMPTY.{' '}
-            {confirmingMeta.newUnitId} will be set to ISSUED / IN_USE and linked to{' '}
+            {confirmingMeta.newUnitId} will be set to IN_USE and linked to{' '}
             {confirmingMeta.machineId}. This is recorded in the audit log.
           </p>
         ) : null}

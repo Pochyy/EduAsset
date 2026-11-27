@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ClipboardList } from 'lucide-react'
+import { ClipboardList, SlidersHorizontal } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
 import { useToast } from '../context/ToastContext'
 import {
@@ -10,7 +10,8 @@ import {
 } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
-import type { SeedRequisition } from '../types'
+import type { SeedRequisition, VarianceBand } from '../types'
+import { PolicySettingsDialog } from '../components/PolicySettingsDialog'
 import { Badge, type BadgeTone } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
@@ -43,6 +44,13 @@ const statusFor = (
   requisition: SeedRequisition,
   queue: QueueTab,
 ): { label: string; tone: BadgeTone; note: string } => {
+  if (queue === 'locked' && requisition.band === 'NO_BASELINE') {
+    return {
+      label: 'NO BASELINE · MANUAL REVIEW',
+      tone: 'warning',
+      note: 'Variance V cannot be computed; collect-baseline mode',
+    }
+  }
   if (queue === 'locked') {
     return { label: 'LOCKED · REVIEW', tone: 'danger', note: 'Anomaly flag logged' }
   }
@@ -70,8 +78,21 @@ const statusFor = (
   }
 }
 
-const varianceColor = (variance: number) =>
-  variance >= 50 ? 'text-danger' : variance > 25 ? 'text-warning' : 'text-success'
+const varianceColor = (band: VarianceBand) =>
+  band === 'ABNORMAL'
+    ? 'text-danger'
+    : band === 'ELEVATED'
+      ? 'text-warning'
+      : band === 'NO_BASELINE'
+        ? 'text-neutral-text'
+        : 'text-success'
+
+const varianceSurface = (band: VarianceBand) =>
+  band === 'ABNORMAL'
+    ? 'bg-danger-bg'
+    : band === 'ELEVATED'
+      ? 'bg-warning-bg'
+      : 'bg-surface'
 
 export function RequisitionReview() {
   usePageTitle('Central · Requisition Review')
@@ -83,6 +104,8 @@ export function RequisitionReview() {
   const [decision, setDecision] = useState<Decision>('approve')
   const [reason, setReason] = useState('')
   const [tried, setTried] = useState(false)
+  const [policyOpen, setPolicyOpen] = useState(false)
+  const policy = data.policy
 
   const rows = [...data.requisitions]
     .filter((requisition) => queueFor(requisition) === tab)
@@ -97,6 +120,16 @@ export function RequisitionReview() {
     },
     {} as Record<QueueTab, number>,
   )
+
+  const flagged = data.requisitions.filter(
+    (requisition) => requisition.band === 'ABNORMAL' || requisition.band === 'NO_BASELINE',
+  )
+  const termReport = {
+    flagged: flagged.length,
+    confirmed: flagged.filter((requisition) => requisition.status === 'APPROVED').length,
+    rejected: flagged.filter((requisition) => requisition.status === 'REJECTED').length,
+    pending: flagged.filter((requisition) => requisition.status === 'LOCKED_REVIEW').length,
+  }
 
   const reviewing = data.requisitions.find(
     (requisition) => requisition.requisitionId === reviewingId,
@@ -144,7 +177,13 @@ export function RequisitionReview() {
           { label: 'Requisition Review' },
         ]}
         title="Requisition review"
-        description="V = ((current term volume − baseline) ÷ baseline) × 100 · ≤ +25% auto-processed · +25% to +50% needs justification · ≥ +50% locked for your review."
+        description={`V = ((C_t − E) ÷ E) × 100, where E = Hbase × week ${data.term.weeksElapsed} ÷ ${data.term.weeksInTerm} · ≤ +${policy.varianceNormalPct}% auto-processed · +${policy.varianceNormalPct}% to +${policy.varianceLockPct}% needs justification · ≥ +${policy.varianceLockPct}% or no baseline is locked for review.`}
+        actions={
+          <Button variant="secondary" onClick={() => setPolicyOpen(true)}>
+            <SlidersHorizontal className="h-[18px] w-[18px]" aria-hidden="true" />
+            Policy settings
+          </Button>
+        }
       />
 
       <Card className="flex flex-col gap-4 p-5">
@@ -177,7 +216,7 @@ export function RequisitionReview() {
                   <TH>Requisition</TH>
                   <TH>Item</TH>
                   <TH>Qty</TH>
-                  <TH numeric>Hbase → current</TH>
+                  <TH numeric>Expected → current</TH>
                   <TH numeric>V</TH>
                   <TH>Status</TH>
                   <TH>
@@ -207,13 +246,16 @@ export function RequisitionReview() {
                         {requisition.quantity} {requisition.unit}
                       </TD>
                       <TD numeric>
-                        {requisition.baselineVolume} → {requisition.currentTermVolume}
+                        {requisition.expectedVolume === null
+                          ? '—'
+                          : Math.round(requisition.expectedVolume * 100) / 100}{' '}
+                        → {requisition.currentTermVolume}
                       </TD>
                       <TD
                         numeric
                         className={cn(
                           'font-semibold',
-                          varianceColor(requisition.variancePercent),
+                          varianceColor(requisition.band),
                         )}
                       >
                         {formatVariance(requisition.variancePercent)}
@@ -238,11 +280,50 @@ export function RequisitionReview() {
         )}
       </Card>
 
+      <Card className="flex flex-col gap-4 p-5">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div className="flex flex-col gap-0.5">
+            <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
+              Term variance review
+            </h2>
+            <p className="text-[13px] text-muted">
+              Flagged requisitions this term and the Custodian decisions recorded against them.
+            </p>
+          </div>
+          <span className="text-xs text-muted">
+            Week {data.term.weeksElapsed} of {data.term.weeksInTerm}
+          </span>
+        </div>
+        <dl className="m-0 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { label: 'Flagged', value: termReport.flagged },
+            { label: 'Confirmed (approved)', value: termReport.confirmed },
+            { label: 'Rejected', value: termReport.rejected },
+            { label: 'Pending', value: termReport.pending },
+          ].map((item) => (
+            <div key={item.label} className="rounded-control border border-line bg-paper p-3">
+              <dt className="text-xs font-medium text-muted">{item.label}</dt>
+              <dd className="m-0 mt-1 text-xl font-semibold tabular-nums text-ink">
+                {item.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p className="text-xs leading-relaxed text-muted">
+          Confirmed means the Custodian approved a flagged request after review. This report is
+          derived from the live queue; no separate tally is stored.
+        </p>
+      </Card>
+
       <Dialog
         open={Boolean(reviewing)}
         onClose={() => setReviewingId(null)}
         title={reviewing ? `Review ${reviewing.requisitionId}` : 'Review requisition'}
-        eyebrow="Locked · V ≥ +50%"
+        eyebrow={
+          reviewing?.band === 'NO_BASELINE'
+            ? 'No baseline · manual review'
+            : `Locked · V ≥ +${policy.varianceLockPct}%`
+        }
         className="max-w-2xl"
         footer={
           <>
@@ -260,11 +341,23 @@ export function RequisitionReview() {
       >
         {reviewing ? (
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-4 sm:divide-x sm:divide-y-0">
               <div className="bg-surface p-3">
-                <span className="text-xs font-medium text-muted">Baseline</span>
+                <span className="text-xs font-medium text-muted">Historical baseline</span>
                 <span className="mt-1 block text-[22px] font-semibold leading-tight text-ink">
-                  {reviewing.baselineVolume} {reviewing.unit}
+                  {reviewing.baselineVolume > 0
+                    ? `${reviewing.baselineVolume} ${reviewing.unit}`
+                    : 'None'}
+                </span>
+              </div>
+              <div className="bg-surface p-3">
+                <span className="text-xs font-medium text-muted">
+                  Expected at week {reviewing.weeksElapsed}
+                </span>
+                <span className="mt-1 block text-[22px] font-semibold leading-tight text-ink">
+                  {reviewing.expectedVolume === null
+                    ? '—'
+                    : `${Math.round(reviewing.expectedVolume * 100) / 100} ${reviewing.unit}`}
                 </span>
               </div>
               <div className="bg-surface p-3">
@@ -273,9 +366,14 @@ export function RequisitionReview() {
                   {reviewing.currentTermVolume} {reviewing.unit}
                 </span>
               </div>
-              <div className="bg-danger-bg p-3">
+              <div className={cn('p-3', varianceSurface(reviewing.band))}>
                 <span className="text-xs font-medium text-muted">Variance V</span>
-                <span className="mt-1 block text-[22px] font-semibold leading-tight text-danger">
+                <span
+                  className={cn(
+                    'mt-1 block text-[22px] font-semibold leading-tight',
+                    varianceColor(reviewing.band),
+                  )}
+                >
                   {formatVariance(reviewing.variancePercent)}
                 </span>
               </div>
@@ -286,8 +384,10 @@ export function RequisitionReview() {
               <strong>
                 {reviewing.quantity} {reviewing.unit}
               </strong>{' '}
-              of {itemNameOf(data.items, reviewing.itemId)}. Automated approval was locked
-              and an anomaly flag was logged in the audit trail.
+              of {itemNameOf(data.items, reviewing.itemId)}.{' '}
+              {reviewing.band === 'NO_BASELINE'
+                ? 'No usable historical baseline exists, so V cannot be computed. Approve the request or reject it with a reason; the item enters collect-baseline mode until a full term of data exists.'
+                : `Automated approval was locked because V is at or above +${policy.varianceLockPct}%; an anomaly flag was logged in the audit trail.`}
             </p>
 
             <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
@@ -343,6 +443,8 @@ export function RequisitionReview() {
           </div>
         ) : null}
       </Dialog>
+
+      <PolicySettingsDialog open={policyOpen} onClose={() => setPolicyOpen(false)} />
     </>
   )
 }

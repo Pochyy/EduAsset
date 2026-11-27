@@ -79,37 +79,6 @@ export const health = [
 
 export const healthTotal = health.reduce((total, item) => total + item.value, 0)
 
-export const outlook = [
-  {
-    item: 'HP LaserJet Toner W9004MC',
-    days: '9.3 days',
-    trigger: '28 days',
-    status: 'ALERT · PR DRAFTED',
-    tone: 'danger' as const,
-  },
-  {
-    item: 'Bond paper A4 (ream)',
-    days: '25.5 days',
-    trigger: '28 days',
-    status: 'ALERT · PR DRAFTED',
-    tone: 'warning' as const,
-  },
-  {
-    item: 'Color toner (cyan) W9001MC',
-    days: '28.0 days',
-    trigger: '28 days',
-    status: 'ALERT · PR DRAFTED',
-    tone: 'warning' as const,
-  },
-  {
-    item: 'PLA filament spool',
-    days: '42.0 days',
-    trigger: '21 days',
-    status: 'OK',
-    tone: 'success' as const,
-  },
-]
-
 export const activity = [
   { text: 'TNR-WIL-2026-001 scanned as RETURNED_EMPTY on WIL-PRN-01', meta: 'Lab Assistant · 10:42' },
   { text: 'Replacement rejected: KB-0099 was previously issued', meta: 'Property Custodian · 10:15' },

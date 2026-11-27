@@ -17,13 +17,14 @@ import { Card } from '../components/ui/Card'
 import { Field, Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 
-type Band = 'none' | 'normal' | 'elevated' | 'abnormal'
+type Band = 'none' | 'normal' | 'elevated' | 'abnormal' | 'no-baseline'
 
 const bandStyles: Record<Band, string> = {
   none: 'border-line bg-paper',
   normal: 'border-success-line bg-success-bg',
   elevated: 'border-warning-line bg-warning-bg',
   abnormal: 'border-danger-line bg-danger-bg',
+  'no-baseline': 'border-butter-line bg-butter-soft',
 }
 
 const varianceColors: Record<Band, string> = {
@@ -31,25 +32,7 @@ const varianceColors: Record<Band, string> = {
   normal: 'text-success',
   elevated: 'text-warning',
   abnormal: 'text-danger',
-}
-
-const bandCopy: Record<Band, { title: string; text: string }> = {
-  none: {
-    title: 'Enter a quantity to see how it compares',
-    text: 'Requests within +25% of the baseline are processed automatically.',
-  },
-  normal: {
-    title: 'Normal: processed automatically',
-    text: 'Within +25% of your historical baseline and standard quota.',
-  },
-  elevated: {
-    title: 'Elevated: justification needed',
-    text: 'Between +25% and +50% of the baseline. Add a short reason and the request is processed.',
-  },
-  abnormal: {
-    title: 'Abnormal surge: sent to the Central Property Custodian',
-    text: '+50% or more above baseline. Automated approval is locked and an anomaly flag is logged; the custodian decides.',
-  },
+  'no-baseline': 'text-neutral-text',
 }
 
 export function LabRequisition() {
@@ -58,10 +41,11 @@ export function LabRequisition() {
   const { showToast } = useToast()
 
   const [itemId, setItemId] = useState('TNR')
-  const [quantity, setQuantity] = useState('4')
+  const [quantity, setQuantity] = useState('2')
   const [justification, setJustification] = useState('')
   const [tried, setTried] = useState(false)
 
+  const policy = data.policy
   const selected =
     labRequisitionCatalog.find((entry) => entry.itemId === itemId) ?? labRequisitionCatalog[0]
   const quantityNumber = Number(quantity)
@@ -70,15 +54,45 @@ export function LabRequisition() {
     Number.isInteger(quantityNumber) &&
     quantityNumber >= 1 &&
     quantityNumber <= 100
+  const hasBaseline = selected.baseline > 0
+  const expectedVolume = hasBaseline
+    ? (selected.baseline * data.term.weeksElapsed) / data.term.weeksInTerm
+    : null
   const currentVolume = selected.used + (quantityValid ? quantityNumber : 0)
-  const variance = ((currentVolume - selected.baseline) / selected.baseline) * 100
+  const variance =
+    expectedVolume === null ? null : ((currentVolume - expectedVolume) / expectedVolume) * 100
   const band: Band = !quantityValid
     ? 'none'
-    : variance <= 25
-      ? 'normal'
-      : variance < 50
-        ? 'elevated'
-        : 'abnormal'
+    : variance === null
+      ? 'no-baseline'
+      : variance <= policy.varianceNormalPct
+        ? 'normal'
+        : variance < policy.varianceLockPct
+          ? 'elevated'
+          : 'abnormal'
+
+  const bandCopy: Record<Band, { title: string; text: string }> = {
+    none: {
+      title: 'Enter a quantity to see how it compares',
+      text: `Requests within +${policy.varianceNormalPct}% of the pro-rated expected volume are processed automatically.`,
+    },
+    normal: {
+      title: 'Normal: processed automatically',
+      text: `Within +${policy.varianceNormalPct}% of the expected volume at week ${data.term.weeksElapsed} of ${data.term.weeksInTerm}.`,
+    },
+    elevated: {
+      title: 'Elevated: justification needed',
+      text: `Between +${policy.varianceNormalPct}% and +${policy.varianceLockPct}% of the expected volume. Add a short reason and the request is processed.`,
+    },
+    abnormal: {
+      title: 'Abnormal surge: sent to the Central Property Custodian',
+      text: `+${policy.varianceLockPct}% or more above the expected volume. Automated approval is locked and an anomaly flag is logged; the custodian decides.`,
+    },
+    'no-baseline': {
+      title: 'No baseline: manual review',
+      text: 'This item has no usable historical baseline, so variance V cannot be computed. The request is routed to the Custodian in collect-baseline mode.',
+    },
+  }
 
   const quantityError =
     tried && !quantityValid ? 'Enter a whole number from 1 to 100.' : undefined
@@ -101,7 +115,7 @@ export function LabRequisition() {
       data.requisitions.map((requisition) => requisition.requisitionId),
     )
     const status =
-      band === 'abnormal'
+      band === 'abnormal' || band === 'no-baseline'
         ? 'LOCKED_REVIEW'
         : band === 'elevated'
           ? 'APPROVED'
@@ -113,8 +127,19 @@ export function LabRequisition() {
       quantity: quantityNumber,
       unit: selected.unit,
       baselineVolume: selected.baseline,
+      expectedVolume,
       currentTermVolume: currentVolume,
-      variancePercent: Math.round(variance * 10) / 10,
+      variancePercent: variance === null ? null : Math.round(variance * 10) / 10,
+      band:
+        band === 'no-baseline'
+          ? 'NO_BASELINE'
+          : band === 'abnormal'
+            ? 'ABNORMAL'
+            : band === 'elevated'
+              ? 'ELEVATED'
+              : 'NORMAL',
+      weeksElapsed: data.term.weeksElapsed,
+      weeksInTerm: data.term.weeksInTerm,
       status,
       requestedAt: new Date().toISOString(),
       justification: band === 'elevated' ? justification.trim() : null,
@@ -130,6 +155,12 @@ export function LabRequisition() {
         'info',
         `${id} sent for review`,
         'The Central Property Custodian will approve or reject it. You will see the decision here.',
+      )
+    } else if (band === 'no-baseline') {
+      showToast(
+        'info',
+        `${id} sent for manual review`,
+        'No historical baseline exists for this item; the Custodian will review it in collect-baseline mode.',
       )
     } else if (band === 'elevated') {
       showToast('success', `${id} submitted`, 'Processed with your justification.')
@@ -151,7 +182,7 @@ export function LabRequisition() {
           { label: 'Supply Requisition' },
         ]}
         title="Request supplies"
-        description="Your request is compared with this lab’s historical term baseline before it is processed."
+        description={`Your request is compared with the pro-rated expected volume at week ${data.term.weeksElapsed} of ${data.term.weeksInTerm}, using this lab’s historical baseline.`}
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr] xl:items-start">
@@ -201,11 +232,21 @@ export function LabRequisition() {
               </Field>
             </div>
 
-            <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="grid grid-cols-1 divide-y divide-line overflow-hidden rounded-control border border-line sm:grid-cols-4 sm:divide-x sm:divide-y-0">
               <div className="bg-surface p-3">
-                <span className="text-xs font-medium text-muted">Baseline (Hbase)</span>
+                <span className="text-xs font-medium text-muted">Historical baseline (Hbase)</span>
                 <span className="mt-1 block text-xl font-semibold leading-tight text-ink">
-                  {selected.baseline} {selected.unit}
+                  {hasBaseline ? `${selected.baseline} ${selected.unit}` : 'No baseline'}
+                </span>
+              </div>
+              <div className="bg-surface p-3">
+                <span className="text-xs font-medium text-muted">
+                  Expected at week {data.term.weeksElapsed}
+                </span>
+                <span className="mt-1 block text-xl font-semibold leading-tight text-ink">
+                  {expectedVolume === null
+                    ? '—'
+                    : `${Math.round(expectedVolume * 100) / 100} ${selected.unit}`}
                 </span>
               </div>
               <div className="bg-surface p-3">
@@ -228,6 +269,11 @@ export function LabRequisition() {
                 </span>
               </div>
             </div>
+
+            <p className="text-xs leading-relaxed text-muted">
+              Expected = Hbase × week {data.term.weeksElapsed} ÷ {data.term.weeksInTerm}; V =
+              (this term − expected) ÷ expected × 100.
+            </p>
 
             <div
               className={cn(
@@ -260,7 +306,9 @@ export function LabRequisition() {
 
             <div className="flex flex-wrap items-center justify-end gap-2">
               <Button type="submit">
-                {band === 'abnormal' ? 'Submit for custodian review' : 'Submit requisition'}
+                {band === 'abnormal' || band === 'no-baseline'
+                  ? 'Submit for custodian review'
+                  : 'Submit requisition'}
               </Button>
             </div>
           </form>

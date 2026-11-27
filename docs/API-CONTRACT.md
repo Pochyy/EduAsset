@@ -1,8 +1,10 @@
 # EduAsset API Contract (draft)
 
-**Status:** proposed contract derived from `Draf SRS.pdf` and the 17 prototype screens.
-**Audience:** backend implementation (Spring Boot + MySQL).
-**Base URL:** `/api/v1` — JSON over HTTPS.
+**Status:** revision-2 draft. The foundation and Module 1 sections are updated from
+`EduAsset_SRS_Revised.docx` and the SDD; Modules 2–4 still describe the old design and will be updated
+in their passes.
+**Audience:** backend implementation (Spring Boot + PostgreSQL on Supabase, per SDD v2).
+**Base URL:** `/api` — JSON over HTTPS.
 
 This is a **handoff draft**, not an implemented API. It defines the resources, payloads and rules the
 prototype implies. Field names are suggestions; keep the semantics and validation rules.
@@ -23,7 +25,7 @@ prototype implies. Field names are suggestions; keep the semantics and validatio
   "timestamp": "2026-11-19T10:42:00+08:00",
   "status": 409,
   "code": "INVALID_STATUS_TRANSITION",
-  "message": "RETURNED_EMPTY cannot move to ISSUED_IN_USE.",
+  "message": "RETURNED_EMPTY cannot move to IN_USE.",
   "fieldErrors": [{ "field": "quantity", "message": "Must be between 1 and 500." }]
 }
 ```
@@ -49,14 +51,15 @@ prototype implies. Field names are suggestions; keep the semantics and validatio
 
 ## 3. Enums
 
-Store these as canonical tokens. The UI may format them (`ISSUED_IN_USE` → "ISSUED / IN_USE").
+Store these as canonical tokens.
 
 | Enum | Values |
 |---|---|
-| `InventoryStatus` | `IN_STOCK`, `ISSUED_IN_USE`, `RETURNED_EMPTY`, `RETIRED` |
+| `InventoryStatus` | `IN_STOCK`, `IN_USE`, `RETURNED_EMPTY`, `RETURNED_PARTIAL`, `RETIRED` |
 | `HealthState` | `OPERATIONAL`, `NEEDS_MAINTENANCE`, `UNDER_REPAIR`, `CONDEMNED_BER`, `NOT_APPLICABLE` |
 | `ItemCategory` | `DURABLE`, `CONSUMABLE` |
-| `RequisitionStatus` | `AUTO_PROCESSED`, `PENDING_JUSTIFICATION`, `LOCKED_REVIEW`, `APPROVED`, `REJECTED`, `DECIDED` |
+| `VarianceBand` | `NORMAL`, `ELEVATED`, `ABNORMAL`, `NO_BASELINE` |
+| `RequisitionStatus` | `AUTO_PROCESSED`, `LOCKED_REVIEW`, `APPROVED`, `REJECTED` |
 | `TurnoverStatus` | `AWAITING_SPENT_SCAN`, `READY_TO_APPROVE`, `RELEASED` |
 | `RepairDecision` | `REPAIR_APPROVED`, `UNDER_REPAIR`, `RETURNED_TO_SERVICE`, `CONDEMNED` |
 | `ReplacementStatus` | `DRAFT`, `OLD_UNIT_VERIFIED`, `PENDING_SECOND_APPROVAL`, `COMPLETED`, `REJECTED` |
@@ -66,7 +69,8 @@ Store these as canonical tokens. The UI may format them (`ISSUED_IN_USE` → "IS
 
 **Status transitions enforced server-side** (reject anything else):
 
-- `IN_STOCK → ISSUED_IN_USE → RETURNED_EMPTY | RETIRED`
+- `IN_STOCK → IN_USE → RETURNED_EMPTY | RETURNED_PARTIAL | RETIRED`
+- `IN_USE ↔ RETURNED_PARTIAL` for filament spools (FR-2.11)
 - `CONDEMNED_BER → RETIRED` (terminal; can never be issued)
 - `AWAITING_SPENT_SCAN → READY_TO_APPROVE → RELEASED`
 - `DRAFT → OLD_UNIT_VERIFIED → PENDING_SECOND_APPROVAL → COMPLETED | REJECTED`
@@ -106,7 +110,11 @@ Returns the authenticated user and role. Every audit entry must carry this user.
   "itemId": "TNR",
   "name": "HP LaserJet Toner W9004MC",
   "stock": 2,
-  "burnRate14d": 0.21,
+  "brWindow": 0.21,
+  "brSeason": 0.14,
+  "burnRate": 0.21,
+  "windowDays": 14,
+  "basis": "14_DAY",
   "daysToDepletion": 9.3,
   "leadTimeDays": 21,
   "safetyBufferDays": 7,
@@ -116,12 +124,44 @@ Returns the authenticated user and role. Every audit entry must carry this user.
 }
 ```
 
-Computation: `burnRate14d = units consumed in the last 14 days / 14`;
-`daysToDepletion = stock / burnRate14d`; alert when `daysToDepletion <= leadTimeDays + safetyBufferDays`.
+`basis` is `14_DAY`, `42_DAY_LOW_VOLUME`, `LAST_TERM_SEASONAL` or `NO_RECENT_USE`.
+
+Computation (FR-1.03/1.04, SDD §5.1):
+
+```
+w = issues14 < policy.lowVolumeIssueThreshold
+    ? policy.lowVolumeWindowDays
+    : policy.forecastWindowDays
+BR_w = issues in the last w days / w
+BR_season = last-term issues in the same weeks / (leadTimeDays + safetyBufferDays)
+BR = max(BR_w, BR_season)
+daysToDepletion = BR > 0 ? stock / BR : null
+status = BR == 0 ? "NO_RECENT_USE"
+       : daysToDepletion <= triggerDays ? "ALERT_PR_DRAFTED" : "OK"
+```
+
+When `status = NO_RECENT_USE`, `daysToDepletion` is `null` and no Purchase Requisition is generated.
 
 ### `PUT /items/{itemId}/forecast-settings`
 `CENTRAL_CUSTODIAN`. Body: `{ "leadTimeDays": 21, "safetyBufferDays": 7 }`.
-Validate `leadTimeDays` 14–21 and `safetyBufferDays` 0–30 (integers).
+Validate `leadTimeDays` 14–21 and `safetyBufferDays` 0–30 (integers). Forecast window lengths are
+policy values and are changed through `/settings/policy`, not per item.
+
+### `GET /settings/policy` / `PUT /settings/policy`
+`CENTRAL_CUSTODIAN`. Reads or updates the policy values used by Module 1 (and later modules):
+
+```json
+{
+  "varianceNormalPct": 25,
+  "varianceLockPct": 50,
+  "forecastWindowDays": 14,
+  "lowVolumeWindowDays": 42,
+  "lowVolumeIssueThreshold": 3
+}
+```
+
+Validate `0 <= varianceNormalPct < varianceLockPct <= 100`; window days 1–180; threshold 1–20.
+Every change is audited with the actor and timestamp.
 
 ### `GET /reorder-alerts`
 Query: `tab=ALL|ALERT|OK`. Returns the forecast rows plus `purchaseRequisitionId` when an alert exists.
@@ -130,26 +170,40 @@ Query: `tab=ALL|ALERT|OK`. Returns the forecast rows plus `purchaseRequisitionId
 Recomputes forecasts; returns the updated list. This is the dashboard's **Recalculate** action.
 
 ### `GET /items/{itemId}/purchase-requisition`
-Returns the pre-generated PR: `prNumber`, item, requesting unit, current stock, burn rate, days to
-depletion, trigger, projected demand, requested quantity, status.
+Returns the pre-generated PR: `prNumber`, item, requesting unit, current stock, `brWindow`,
+`brSeason`, `burnRate`, `basis`, days to depletion, trigger, projected demand, requested quantity,
+status.
 
-### `GET /requisitions?status=`
+### `GET /requisitions?status=` / `GET /requisitions/term-report?term=`
+The term report returns the counts required by FR-1.16:
+`{ "flagged": 3, "confirmed": 0, "rejected": 1, "pending": 2 }`.
+
 ### `POST /requisitions`
 `LAB_ASSISTANT` / `LAB_MANAGER`.
 
 ```json
-{ "itemId": "A4", "quantity": 4, "labId": "WIL-LAB-3" }
+{ "itemId": "A4", "quantity": 4, "labId": "WIL-LAB-3", "justification": null }
 ```
 
-Server computes variance `V = ((currentTermVolume - H_base) / H_base) * 100` and returns one of:
+Server computes the pro-rated expected volume and variance (FR-1.10, FR-1.15):
 
-| Condition | Result |
-|---|---|
-| `V <= 25` | `AUTO_PROCESSED` |
-| `25 < V < 50` | `PENDING_JUSTIFICATION` — require `justification` |
-| `V >= 50` | `LOCKED_REVIEW` — write `VARIANCE` audit flag |
+```
+E = H_base * weeksElapsed / weeksInTerm      // null when H_base == 0 or no past term
+C_t = currentTermVolume + quantity
+V = E == null ? null : (C_t - E) / E * 100
+```
 
-Response: the requisition with `baselineVolume`, `currentTermVolume`, `variancePercent`, `status`.
+Bands and status:
+
+| Condition | Band | Status |
+|---|---|---|
+| `E == null` | `NO_BASELINE` | `LOCKED_REVIEW` — manual review, collect-baseline mode |
+| `V <= varianceNormalPct` (including V < 0) | `NORMAL` | `AUTO_PROCESSED` |
+| `varianceNormalPct < V < varianceLockPct` | `ELEVATED` | `APPROVED` after a justification is supplied |
+| `V >= varianceLockPct` | `ABNORMAL` | `LOCKED_REVIEW` — write `VARIANCE` audit flag |
+
+Response: the requisition with `baselineVolume`, `expectedVolume`, `currentTermVolume`,
+`variancePercent` (nullable), `band`, `weeksElapsed`, `weeksInTerm` and `status`.
 
 ### `GET /requisitions/{id}`
 ### `POST /requisitions/{id}/approve` / `POST /requisitions/{id}/reject`
@@ -172,7 +226,7 @@ Response: the requisition with `baselineVolume`, `currentTermVolume`, `varianceP
   `409 SPENT_UNIT_MISMATCH` with `{ "match": false }`.
 
 ### `POST /turnovers/{turnoverId}/approve`
-`CENTRAL_CUSTODIAN`. Re-checks the old unit is `RETURNED_EMPTY`, sets the new unit `ISSUED_IN_USE`,
+`CENTRAL_CUSTODIAN`. Re-checks the old unit is `RETURNED_EMPTY`, sets the new unit `IN_USE`,
 links it to the machine, writes the audit entry, returns `RELEASED`.
 
 ### `GET /machines/{machineId}/active-unit`
@@ -240,7 +294,7 @@ Multipart: old photo, new photo, `secondApproverId`. Moves to `PENDING_SECOND_AP
 both photos are mandatory.
 
 ### `POST /replacements/{id}/confirm`
-`SECOND_APPROVER`, must be a different user. Sets old `RETIRED`, new `ISSUED_IN_USE` at the location,
+`SECOND_APPROVER`, must be a different user. Sets old `RETIRED`, new `IN_USE` at the location,
 stores the old→new link, verifier and timestamps.
 
 ### `POST /replacements/{id}/reject`

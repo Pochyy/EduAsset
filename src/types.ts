@@ -49,15 +49,37 @@ export interface SeedUnit {
   pendingDisbursement: boolean
 }
 
+export type VarianceBand = 'NORMAL' | 'ELEVATED' | 'ABNORMAL' | 'NO_BASELINE'
+
+export interface PolicySettings {
+  varianceNormalPct: number
+  varianceLockPct: number
+  forecastWindowDays: number
+  lowVolumeWindowDays: number
+  lowVolumeIssueThreshold: number
+}
+
+export interface TermCalendar {
+  weeksInTerm: number
+  weeksElapsed: number
+}
+
 export interface SeedRequisition {
   requisitionId: string
   labId: string
   itemId: string
   quantity: number
   unit: string
+  /** Historical full-term baseline (H_base). Zero means no usable baseline. */
   baselineVolume: number
+  /** Pro-rated expected volume E for the elapsed portion of the term; null when no baseline exists. */
+  expectedVolume: number | null
+  /** Volume requisitioned so far this term including this request (C_t). */
   currentTermVolume: number
-  variancePercent: number
+  variancePercent: number | null
+  band: VarianceBand
+  weeksElapsed: number
+  weeksInTerm: number
   status: string
   requestedAt: string
   justification: string | null
@@ -105,6 +127,8 @@ export interface SeedAuditFlag {
 
 export interface SeedData {
   meta: Record<string, unknown>
+  term: TermCalendar
+  policy: PolicySettings
   users: SeedUser[]
   items: SeedItem[]
   units: SeedUnit[]
