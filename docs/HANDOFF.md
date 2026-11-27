@@ -9,7 +9,8 @@
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
 
 > **Revision 2 update (27 November 2026):** the current work is on `feat/srs-v2-update`, not `main`.
-> It adds the revised SRS/SDD modules, camera QR scanning, PR printing and the phone shell. See
+> It adds the revised SRS/SDD modules, real QR labels, camera QR scanning, PR printing, the phone
+> shell, replacement evidence/records and persisted mock repair history. See
 > `docs/REVISION-2-DELTA.md` for the authoritative pass-by-pass record. The status below describes the
 > earlier `main` slice and remains as historical context.
 

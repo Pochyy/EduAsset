@@ -181,6 +181,7 @@ export function TurnoverApproval() {
           location: oldUnit?.location ?? machine?.location ?? existingNew.location,
           linkedMachineId: turnover.machineId,
           slotId: turnover.slotId,
+          issuedEver: true,
           pendingDisbursement: false,
         }
       : {
@@ -194,6 +195,7 @@ export function TurnoverApproval() {
           deliveryRecordId: oldUnit?.deliveryRecordId ?? `TO-${turnover.turnoverId}`,
           deliveryDate: new Date().toISOString().slice(0, 10),
           serialNumber: null,
+          issuedEver: true,
           linkedMachineId: turnover.machineId,
           slotId: turnover.slotId,
           pendingDisbursement: false,
@@ -212,6 +214,8 @@ export function TurnoverApproval() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action: turnover.exceptionType ? 'TURNOVER_EXCEPTION_APPROVED' : 'TURNOVER_RELEASED',
         entityType: 'UNIT',
         entityId: turnover.newAssetId,
@@ -314,7 +318,7 @@ export function TurnoverApproval() {
                     </Button>
                   ) : null}
 
-                  {turnover.status === 'AWAITING_SPENT_SCAN' ? (
+                  {turnover.status === 'AWAITING_SCAN' ? (
                     <>
                       <span className="flex items-center gap-1.5 text-[13px] text-muted">
                         <Lock className="h-4 w-4" aria-hidden="true" />

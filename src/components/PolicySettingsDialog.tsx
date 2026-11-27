@@ -144,6 +144,8 @@ export function PolicySettingsDialog({ open, onClose }: PolicySettingsDialogProp
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action: 'POLICY_UPDATED',
         entityType: 'POLICY',
         entityId: 'POLICY',

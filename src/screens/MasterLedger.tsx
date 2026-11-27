@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Plus, QrCode, Search, Wrench, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { formatShortDate, healthStatus, inventoryStatus, itemNameOf, slotNameFor } from '../lib/lab'
-import { qrPath } from '../lib/qr'
+import { qrPayload } from '../lib/qr'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
 import type { SeedUnit } from '../types'
@@ -15,6 +16,7 @@ import { EmptyState } from '../components/ui/EmptyState'
 import { Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TableWrap, TBody, TD, TH, THead, TR } from '../components/ui/Table'
+import { QrLabel } from '../components/QrLabel'
 
 interface HistoryEntry {
   event: string
@@ -73,6 +75,7 @@ const baseHistory = (unit: SeedUnit): HistoryEntry[] => {
 export function MasterLedger() {
   usePageTitle('Central · Master Ledger')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [query, setQuery] = useState('')
@@ -135,13 +138,27 @@ export function MasterLedger() {
       id: openUnit.assetId,
       patch: { serialNumber: serial || null },
     })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'SERIAL_UPDATED',
+        entityType: 'UNIT',
+        entityId: openUnit.assetId,
+        detail: `Manufacturer serial updated to ${serial || 'none'}; asset ID and QR code unchanged.`,
+      },
+    })
     setUnitLogs((current) => ({
       ...current,
       [openUnit.assetId]: [
         ...(current[openUnit.assetId] ?? []),
         {
           event: 'Manufacturer serial updated',
-          meta: 'Just now · Property Custodian',
+          meta: `Just now · ${user?.name ?? 'Property Custodian'}`,
         },
       ],
     }))
@@ -160,6 +177,20 @@ export function MasterLedger() {
       id: openItem.itemId,
       patch: { requireOneToOne: next },
     })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: next ? 'ITEM_1TO1_ENABLED' : 'ITEM_1TO1_DISABLED',
+        entityType: 'ITEM',
+        entityId: openItem.itemId,
+        detail: `${openItem.name}: Require 1-to-1 Return ${next ? 'enabled' : 'disabled'}.`,
+      },
+    })
     setItemLogs((current) => ({
       ...current,
       [openItem.itemId]: [
@@ -168,7 +199,7 @@ export function MasterLedger() {
           event: next
             ? 'Marked “Require 1-to-1 Return”'
             : 'Removed “Require 1-to-1 Return”',
-          meta: 'Just now · Property Custodian',
+          meta: `Just now · ${user?.name ?? 'Property Custodian'}`,
         },
       ],
     }))
@@ -429,34 +460,36 @@ export function MasterLedger() {
               </button>
             </div>
 
-            <div className="flex items-center gap-4 rounded-card border border-line p-4">
-              <svg
-                viewBox="0 0 25 25"
-                role="img"
-                aria-label={`QR code for ${openUnit.assetId}`}
-                className="h-28 w-28 shrink-0 text-ink"
-              >
-                <path d={qrPath(openUnit.assetId)} fill="currentColor" />
-              </svg>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs leading-relaxed text-muted">
-                  The QR code only encodes the asset ID. Status is always decided by the
-                  database.
-                </span>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() =>
-                    showToast(
-                      'info',
-                      'Label ready to print',
-                      `${openUnit.assetId} with the asset ID printed under the code (prototype: sends to your printer in the build).`,
-                    )
-                  }
-                >
+            <div className="flex flex-wrap items-center gap-4 rounded-card border border-line p-4">
+              <div className="ea-print-area ea-single-label flex flex-wrap items-center gap-4">
+                <div className="ea-print-only w-full">
+                  <strong className="block text-sm text-ink">EduAsset · QR label</strong>
+                  <span className="block text-xs text-neutral-text">
+                    WildCat Innovation Labs · {openUnit.location}
+                  </span>
+                </div>
+                <QrLabel assetId={openUnit.assetId} className="h-28 w-28 text-ink" />
+                <div className="flex flex-col gap-1">
+                  <strong className="font-mono text-sm font-bold text-ink">
+                    {openUnit.assetId}
+                  </strong>
+                  <span className="text-xs leading-relaxed text-muted">{openUnit.itemName}</span>
+                  <span className="text-xs leading-relaxed text-muted">
+                    QR payload: {qrPayload(openUnit.assetId)}
+                  </span>
+                  <span className="text-xs leading-relaxed text-muted">
+                    Status is always decided by the database.
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Button variant="secondary" size="sm" onClick={() => window.print()}>
                   <QrCode className="h-4 w-4" aria-hidden="true" />
                   Reprint QR label
                 </Button>
+                <span className="max-w-[180px] text-xs leading-relaxed text-muted">
+                  Prints one label with the asset ID under the code.
+                </span>
               </div>
             </div>
 

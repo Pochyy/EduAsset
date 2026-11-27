@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AlertTriangle, Camera, Check, ScanLine } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { usePageTitle } from '../lib/usePageTitle'
 import type { SeedAuditFlag } from '../types'
@@ -21,6 +22,7 @@ const roomOf = (location: string) => location.match(/^WIL Lab \d/)?.[0] ?? locat
 export function Reconciliation() {
   usePageTitle('Central · Reconciliation')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const rooms = Array.from(
@@ -90,6 +92,20 @@ export function Reconciliation() {
     })()
 
     setPhase('done')
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'RECONCILIATION_COMPLETED',
+        entityType: 'ROOM',
+        entityId: room,
+        detail: `${room} scan finished: ${matched.length} of ${expectedUnits.length} expected units found, ${missing.length} missing, ${unexpected.length} unexpected.`,
+      },
+    })
 
     if (discrepancies === 0) {
       showToast('success', 'Room reconciled', 'All expected units were found.')

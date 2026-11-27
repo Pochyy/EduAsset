@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { AlertTriangle, Camera, Check, QrCode, X } from 'lucide-react'
+import { AlertTriangle, Check, QrCode, X } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { formatShortDate } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -11,10 +12,8 @@ import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { PhotoAttachment, type PhotoValue } from '../components/PhotoAttachment'
 import { QrScannerDialog } from '../components/QrScannerDialog'
-
-const oldAssetId = 'KB-0007'
-const requestDate = '2026-11-17'
 
 interface Rejection {
   id: string
@@ -33,16 +32,29 @@ const nextFlagId = (flags: SeedAuditFlag[]) => {
 export function VerifiedReplacement() {
   usePageTitle('Central · Verified Replacement')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
+
+  const replacement =
+    data.replacements.find((entry) => entry.replacementId === 'RR-0043') ??
+    data.replacements[0]
+  const oldAssetId = replacement?.oldAssetId ?? 'KB-0007'
+  const requestDate = replacement?.requestedAt.slice(0, 10) ?? '2026-11-17'
 
   const [oldScan, setOldScan] = useState(oldAssetId)
   const [oldVerified, setOldVerified] = useState(true)
   const [oldError, setOldError] = useState('')
-  const [newId, setNewId] = useState('')
-  const [oldPhoto, setOldPhoto] = useState(false)
-  const [newPhoto, setNewPhoto] = useState(false)
-  const [approver, setApprover] = useState('')
-  const [phase, setPhase] = useState<'edit' | 'pending' | 'done'>('edit')
+  const [newId, setNewId] = useState(replacement?.newAssetId ?? '')
+  const [oldPhoto, setOldPhoto] = useState<PhotoValue | null>(null)
+  const [newPhoto, setNewPhoto] = useState<PhotoValue | null>(null)
+  const [approver, setApprover] = useState(replacement?.verifier ?? '')
+  const [phase, setPhase] = useState<'edit' | 'pending' | 'done'>(
+    replacement?.status === 'COMPLETED'
+      ? 'done'
+      : replacement?.status === 'PENDING_SECOND_APPROVAL'
+        ? 'pending'
+        : 'edit',
+  )
   const [rejections, setRejections] = useState<Rejection[]>([])
   const [scanTarget, setScanTarget] = useState<'old' | 'new' | null>(null)
 
@@ -52,18 +64,25 @@ export function VerifiedReplacement() {
   const normalizedNewId = newId.trim().toUpperCase()
   const newUnit = data.units.find((unit) => unit.assetId === normalizedNewId)
   const candidates = data.units.filter(
-    (unit) => unit.itemId === 'KB_USB' && unit.inventoryStatus === 'IN_STOCK',
+    (unit) =>
+      unit.itemId === 'KB_USB' &&
+      unit.inventoryStatus === 'IN_STOCK' &&
+      !unit.issuedEver,
   )
 
-  const ruleOld = oldVerified && oldUnit.inventoryStatus === 'RETIRED'
+  const ruleOld =
+    oldVerified &&
+    (oldUnit.inventoryStatus === 'RETIRED' || oldUnit.healthState === 'UNDER_REPAIR')
   const submitted = phase !== 'edit'
   const ruleStock =
     submitted || (Boolean(newUnit) && newUnit?.inventoryStatus === 'IN_STOCK')
+  const ruleIssued = submitted || (Boolean(newUnit) && !newUnit?.issuedEver)
   const ruleDate =
     submitted || (Boolean(newUnit) && (newUnit?.deliveryDate ?? '') > requestDate)
   const ruleDifferent =
     submitted || (Boolean(normalizedNewId) && normalizedNewId !== oldAssetId)
-  const allValid = Boolean(newUnit) && ruleStock && ruleDate && ruleDifferent
+  const allValid =
+    Boolean(newUnit) && ruleStock && ruleIssued && ruleDate && ruleDifferent
   const failed = Boolean(normalizedNewId) && !allValid && phase === 'edit'
   const missing: string[] = []
   if (!normalizedNewId) missing.push('choose the new unit')
@@ -106,7 +125,7 @@ export function VerifiedReplacement() {
       severity: 'HIGH',
       title: `Replacement rejected: ${normalizedNewId || 'unknown unit'}`,
       entityId: normalizedNewId || oldAssetId,
-      meta: `${normalizedNewId || '—'} · ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · Property Custodian account`,
+      meta: `${normalizedNewId || '—'} · ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ${user?.name ?? 'Property Custodian'}`,
       detail: `${normalizedNewId || 'The selected unit'} was offered as the new unit for ${oldAssetId}. ${reason}. The act was logged for audit.`,
       reviewed: false,
       reviewNote: null,
@@ -118,7 +137,7 @@ export function VerifiedReplacement() {
     setRejections((current) => [
       {
         id: normalizedNewId || 'Unknown',
-        when: 'Just now · Property Custodian',
+        when: `Just now · ${user?.name ?? 'Property Custodian'}`,
         reason,
       },
       ...current,
@@ -132,6 +151,32 @@ export function VerifiedReplacement() {
   }
 
   function submitForApproval() {
+    const id = replacement?.replacementId ?? 'RR-0043'
+    dispatch({
+      type: 'replacement/update',
+      id,
+      patch: {
+        status: 'PENDING_SECOND_APPROVAL',
+        newAssetId: normalizedNewId,
+        verifier: approver,
+        oldPhotoName: oldPhoto?.name ?? null,
+        newPhotoName: newPhoto?.name ?? null,
+      },
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'REPLACEMENT_SUBMITTED',
+        entityType: 'REPLACEMENT',
+        entityId: id,
+        detail: `${oldAssetId} → ${normalizedNewId} submitted for second approval by ${approver}; old photo ${oldPhoto?.name ?? 'none'}, new photo ${newPhoto?.name ?? 'none'}.`,
+      },
+    })
     setPhase('pending')
     showToast(
       'info',
@@ -141,10 +186,15 @@ export function VerifiedReplacement() {
   }
 
   function confirmAsApprover() {
+    const id = replacement?.replacementId ?? 'RR-0043'
+    const completedAt = new Date().toISOString()
     dispatch({
       type: 'unit/patch',
       id: oldAssetId,
-      patch: { inventoryStatus: 'RETIRED', healthState: 'CONDEMNED_BER' },
+      patch:
+        oldUnit!.healthState === 'UNDER_REPAIR'
+          ? { healthState: 'UNDER_REPAIR' }
+          : { inventoryStatus: 'RETIRED', healthState: 'CONDEMNED_BER' },
     })
     dispatch({
       type: 'unit/patch',
@@ -153,6 +203,31 @@ export function VerifiedReplacement() {
         inventoryStatus: 'IN_USE',
         healthState: 'OPERATIONAL',
         location: oldUnit!.location,
+        issuedEver: true,
+      },
+    })
+    dispatch({
+      type: 'replacement/update',
+      id,
+      patch: {
+        status: 'COMPLETED',
+        newAssetId: normalizedNewId,
+        completedAt,
+        verifier: approver,
+      },
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: completedAt,
+        actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'REPLACEMENT_COMPLETED',
+        entityType: 'REPLACEMENT',
+        entityId: id,
+        detail: `${oldAssetId} replaced by ${normalizedNewId}; verifier ${approver}; completed at ${completedAt}.`,
       },
     })
     setPhase('done')
@@ -171,8 +246,10 @@ export function VerifiedReplacement() {
           { label: 'Units & assets' },
           { label: 'Replacements' },
         ]}
-        title="Replacement RR-0043"
-        description="Requested by WIL Lab Assistant on Nov 17 · Reason: broken keyboard at WIL workstation 5 (photo attached)."
+        title={`Replacement ${replacement?.replacementId ?? 'RR-0043'}`}
+        description={`Requested by ${replacement?.requester ?? 'WIL Lab Assistant'} on ${formatShortDate(
+          replacement?.requestedAt ?? requestDate,
+        )} · Reason: ${replacement?.reason ?? 'Broken keyboard at WIL workstation 5'}.`}
       />
 
       <ol className="m-0 flex list-none flex-wrap gap-x-6 gap-y-1 p-0">
@@ -244,17 +321,13 @@ export function VerifiedReplacement() {
               </span>
             ) : null}
           </div>
-          <Button
-            variant={oldPhoto ? 'secondary' : 'ghost'}
-            className={cn(
-              'self-start border-dashed',
-              oldPhoto && 'border-success text-success',
-            )}
-            onClick={() => setOldPhoto((current) => !current)}
-          >
-            {oldPhoto ? <Check className="h-4 w-4" /> : <Camera className="h-4 w-4" />}
-            {oldPhoto ? 'Condition photo attached' : 'Attach condition photo (required)'}
-          </Button>
+          <PhotoAttachment
+            id="replacement-old-photo"
+            label="Old unit condition photo"
+            required
+            value={oldPhoto}
+            onChange={setOldPhoto}
+          />
         </Card>
 
         <Card className="flex flex-col gap-3 p-5">
@@ -347,17 +420,13 @@ export function VerifiedReplacement() {
                 : 'No unit with this ID exists in the ledger.'}
           </span>
 
-          <Button
-            variant={newPhoto ? 'secondary' : 'ghost'}
-            className={cn(
-              'self-start border-dashed',
-              newPhoto && 'border-success text-success',
-            )}
-            onClick={() => setNewPhoto((current) => !current)}
-          >
-            {newPhoto ? <Check className="h-4 w-4" /> : <Camera className="h-4 w-4" />}
-            {newPhoto ? 'New unit photo attached' : 'Attach new unit photo (required)'}
-          </Button>
+          <PhotoAttachment
+            id="replacement-new-photo"
+            label="New unit condition photo"
+            required
+            value={newPhoto}
+            onChange={setNewPhoto}
+          />
         </Card>
       </div>
 
@@ -370,11 +439,13 @@ export function VerifiedReplacement() {
                 ok: ruleOld,
                 text: 'Old unit set to RETIRED (or sent to repair)',
                 note: oldVerified
-                  ? `${oldAssetId} inspected: not repairable → RETIRED`
+                  ? oldUnit.healthState === 'UNDER_REPAIR'
+                    ? `${oldAssetId} stays UNDER_REPAIR`
+                    : `${oldAssetId} inspected: not repairable → RETIRED`
                   : `Scan ${oldAssetId} to verify the old unit`,
               },
               {
-                ok: ruleStock,
+                ok: ruleStock && ruleIssued,
                 text: 'New unit is IN_STOCK with no issue or usage history',
                 note: submitted
                   ? 'Never issued'
@@ -384,7 +455,9 @@ export function VerifiedReplacement() {
                       ? `${normalizedNewId} is not in the ledger`
                       : newUnit.inventoryStatus !== 'IN_STOCK'
                         ? `${newUnit.assetId} was previously issued (${newUnit.inventoryStatus})`
-                        : 'Never issued',
+                        : newUnit.issuedEver
+                          ? `${newUnit.assetId} has an issuance history`
+                          : 'Never issued',
               },
               {
                 ok: ruleDate,

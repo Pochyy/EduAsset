@@ -15,6 +15,8 @@ import type {
   SeedItem,
   SeedLot,
   SeedMachineSlot,
+  SeedRepair,
+  SeedReplacement,
   SeedRequisition,
   SeedTurnover,
   SeedUnit,
@@ -28,6 +30,8 @@ export interface AppData {
   machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
+  replacements: SeedReplacement[]
+  repairs: SeedRepair[]
   lots: SeedLot[]
   condemnations: SeedCondemnation[]
   workOrders: SeedWorkOrder[]
@@ -49,6 +53,13 @@ export type AppDataAction =
       reviewer: string
     }
   | { type: 'turnover/add'; turnover: SeedTurnover }
+  | { type: 'replacement/update'; id: string; patch: Partial<SeedReplacement> }
+  | { type: 'repair/add'; repair: SeedRepair }
+  | {
+      type: 'repair/decide'
+      id: string
+      decision: 'APPROVED' | 'PENDING_DECISION'
+    }
   | {
       type: 'turnover/status'
       id: string
@@ -96,6 +107,8 @@ const initialData: AppData = {
   machineSlots: seed.machineSlots,
   requisitions: seed.requisitions,
   turnovers: seed.turnovers,
+  replacements: seed.replacements,
+  repairs: seed.repairs,
   lots: seed.lots,
   condemnations: seed.condemnations,
   workOrders: seed.workOrders,
@@ -142,6 +155,27 @@ function reducer(state: AppData, action: AppDataAction): AppData {
         ...state,
         turnovers: [action.turnover, ...state.turnovers],
       }
+    case 'replacement/update':
+      return {
+        ...state,
+        replacements: state.replacements.map((replacement) =>
+          replacement.replacementId === action.id
+            ? { ...replacement, ...action.patch }
+            : replacement,
+        ),
+      }
+    case 'repair/add':
+      return {
+        ...state,
+        repairs: [...state.repairs, action.repair],
+      }
+    case 'repair/decide':
+      return {
+        ...state,
+        repairs: state.repairs.map((repair) =>
+          repair.repairId === action.id ? { ...repair, decision: action.decision } : repair,
+        ),
+      }
     case 'turnover/status':
       return {
         ...state,
@@ -179,6 +213,16 @@ function reducer(state: AppData, action: AppDataAction): AppData {
             : turnover,
         ),
         units,
+        forecast: state.forecast.map((row) =>
+          row.itemId === action.newUnit.itemId
+            ? {
+                ...row,
+                stock: Math.max(0, row.stock - 1),
+                issues14: row.issues14 + 1,
+                issues42: row.issues42 + 1,
+              }
+            : row,
+        ),
       }
     }
     case 'work-order/add':
@@ -227,11 +271,43 @@ function reducer(state: AppData, action: AppDataAction): AppData {
           unit.assetId === action.id ? { ...unit, ...action.patch } : unit,
         ),
       }
-    case 'units/add':
+    case 'units/add': {
+      const consumable = action.units.filter((unit) => unit.category === 'CONSUMABLE')
+      const counts = new Map<string, number>()
+      for (const unit of consumable) {
+        counts.set(unit.itemId, (counts.get(unit.itemId) ?? 0) + 1)
+      }
+      const existingItemIds = new Set(state.forecast.map((row) => row.itemId))
+      const newRows = [...counts.entries()]
+        .filter(([itemId]) => !existingItemIds.has(itemId))
+        .map(([itemId, count]) => {
+          const unit = consumable.find((entry) => entry.itemId === itemId)!
+          return {
+            id: `item-${itemId.toLowerCase()}`,
+            itemId,
+            name: unit.itemName,
+            code: itemId,
+            stock: count,
+            issues14: 0,
+            issues42: 0,
+            lastTermIssues: null,
+            lead: 21,
+            buffer: 7,
+            prNumber: '',
+          }
+        })
       return {
         ...state,
         units: [...action.units, ...state.units],
+        forecast: [
+          ...state.forecast.map((row) => {
+            const count = counts.get(row.itemId) ?? 0
+            return count > 0 ? { ...row, stock: row.stock + count } : row
+          }),
+          ...newRows,
+        ],
       }
+    }
     case 'item/patch':
       return {
         ...state,
@@ -286,8 +362,13 @@ function reducer(state: AppData, action: AppDataAction): AppData {
             : entry,
         ),
         forecast: state.forecast.map((row) =>
-          row.lotItemId === lot.itemId
-            ? { ...row, stock: Math.max(0, row.stock - action.quantity) }
+          row.lotItemId === lot.itemId || row.itemId === lot.itemId
+            ? {
+                ...row,
+                stock: Math.max(0, row.stock - action.quantity),
+                issues14: row.issues14 + action.quantity,
+                issues42: row.issues42 + action.quantity,
+              }
             : row,
         ),
       }

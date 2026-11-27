@@ -27,10 +27,10 @@ type QueueTab = 'locked' | 'justified' | 'auto' | 'decided'
 type Decision = 'approve' | 'reject'
 
 const queueFor = (requisition: SeedRequisition): QueueTab => {
-  if (requisition.status === 'LOCKED_REVIEW') return 'locked'
+  if (requisition.status === 'LOCKED') return 'locked'
   if (requisition.status === 'REJECTED' || requisition.reviewedAt) return 'decided'
-  if (requisition.status === 'APPROVED' && requisition.justification) return 'justified'
-  if (requisition.status === 'AUTO_PROCESSED') return 'auto'
+  if (requisition.status === 'PROCESSED' && requisition.justification) return 'justified'
+  if (requisition.status === 'PROCESSED') return 'auto'
   return 'auto'
 }
 
@@ -65,7 +65,7 @@ const statusFor = (
     }
   }
   if (queue === 'auto') {
-    return { label: 'AUTO-PROCESSED', tone: 'success', note: 'Within standard quota' }
+    return { label: 'PROCESSED', tone: 'success', note: 'Within standard quota' }
   }
   return {
     label:
@@ -130,7 +130,7 @@ export function RequisitionReview() {
     flagged: flagged.length,
     confirmed: flagged.filter((requisition) => requisition.status === 'APPROVED').length,
     rejected: flagged.filter((requisition) => requisition.status === 'REJECTED').length,
-    pending: flagged.filter((requisition) => requisition.status === 'LOCKED_REVIEW').length,
+    pending: flagged.filter((requisition) => requisition.status === 'LOCKED').length,
   }
 
   const reviewing = data.requisitions.find(
@@ -169,6 +169,8 @@ export function RequisitionReview() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: reviewer,
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action: 'REQUISITION_DECIDED',
         entityType: 'REQUISITION',
         entityId: reviewing.requisitionId,

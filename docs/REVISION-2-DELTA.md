@@ -3,7 +3,7 @@
 **Date:** 27 November 2026
 **Branch:** `feat/srs-v2-update`
 **Sources:** `EduAsset_SRS_Revised.docx` (SRS v2), `EduAsset_SDD_Revised.docx`
-**Status:** Passes 1–5 complete. Backend integration and the external CIT form data remain.
+**Status:** Passes 1–6 complete. Backend integration, scheduled integrity checks and the external CIT form data remain.
 
 This file records what changed, why it changed, and which parts are UI placement choices rather than SRS requirements. It is the audit trail for the revision-2 work.
 
@@ -247,7 +247,7 @@ The recheck against FR-2.01–FR-2.11 found two gaps:
 
 - **FR-2.03 normal replacement request:** Turnover Scan could only act on seeded turnover requests.
   Added a **Request replacement** form for a slot with an active unit and no open turnover. It lists
-  eligible `IN_STOCK`, never-issued units of the same item, creates an `AWAITING_SPENT_SCAN` turnover,
+  eligible `IN_STOCK`, never-issued units of the same item, creates an `AWAITING_SCAN` turnover,
   and then exposes the scan step. A spare `TNR-WIL-2026-003` was added so the full flow is
   demonstrable after the initial toner release.
 - **FR-2.04 / 2.08 release guards:** Turnover Approval now refuses to release if the old unit is not
@@ -262,8 +262,8 @@ Re-tested:
 - The release guard did not block the valid flow; no console errors.
 - `npm run build` passes.
 
-Status-token note: the app uses `AWAITING_SPENT_SCAN`; the SDD names the same state `AWAITING_SCAN`.
-This is a naming map, not a behavioural difference.
+Status-token note: Pass 6 normalised the internal tokens to the SDD names (`AWAITING_SCAN`,
+`PROCESSED`, `LOCKED`); no mapping remains.
 
 ---
 
@@ -374,6 +374,83 @@ Known limits at the end of Pass 5:
 - Browser print depends on the user’s print dialog; server-generated PDFs remain future backend work.
 - The AI analysis, database, authentication, server-side audit and external CIT form fields remain outside this frontend-only branch.
 
+---
+
+## Pass 6: Compliance fixes after full audit
+
+### QR and labels
+
+- Replaced the decorative `qrPath` drawing with a real QR encoder (`qrcode-generator`, error
+  correction M). Payload is `/items/{assetId}` per the SDD; the scanner also normalises a raw asset ID.
+- Added a reusable `QrLabel`; Receive New Items and the Master Ledger now render scannable codes.
+- **Reprint QR label** now calls browser print and prints one label; the print sheet uses a 4-column,
+  24-label-per-page layout in print media.
+- Verified the app’s own QR label (`KB-0031`) decodes with the in-app camera scanner and normalises
+  `/items/KB-0031` to `KB-0031`.
+
+### Forecast and issuance
+
+- Added `itemId` to every forecast row and `issuedEver` to every unit.
+- Receiving consumable units increments forecast stock; turnover release decrements stock and
+  increments the 14/42-day issuance counts; lot issue does the same by quantity.
+- New consumable items without a forecast row get one.
+- New abnormal requisitions now create a `VARIANCE` audit flag, not just an audit-log entry.
+
+### Replacement, photos and audit
+
+- Added a seeded `SeedReplacement` record and `replacement/update` action. Submit stores the new unit,
+  verifier and photo names; completion stores completion time and writes `REPLACEMENT_COMPLETED`.
+- Incident and replacement photos now use a real image input and local preview (`PhotoAttachment`);
+  incident submission writes `INCIDENT_REPORTED` with the photo name and work-order ID.
+- Replacement candidates require `IN_STOCK` **and** `issuedEver = false`; completing a replacement sets
+  the new unit’s `issuedEver`.
+- Old units under repair are accepted by the replacement rule; only non-repairable old units are
+  retired.
+- Repair quotes/invoices now live in the shared store (`SeedRepair`), so cumulative BER, repair history
+  and the condemnation form ledger survive navigation.
+- Added audit entries for serial edits, 1-to-1 flag changes, partial re-issue, reconciliation
+  completion, incident reports and replacement submit/complete.
+- Audit entries now carry `actorId` and `account` in addition to the actor name and timestamp.
+- Retired-unit scans during turnover create a `RETIRED_RESCAN` flag.
+
+### Tokens and precision
+
+- Normalised `AWAITING_SPENT_SCAN` → `AWAITING_SCAN`, `AUTO_PROCESSED` → `PROCESSED`, and
+  `LOCKED_REVIEW` → `LOCKED`; elevated requests now use `PROCESSED`.
+- Variance and BER percentages are stored with two decimals; the condemnation form displays two.
+
+### Verification for Pass 6
+
+- `npm run build` passes.
+- Real app-generated QR (`/items/KB-0031`) decoded by the scanner in Reconciliation and matched the
+  expected unit.
+- TNR turnover release reduced stock 2 → 1 and increased the 14/42-day issue counts 3/8 → 4/9.
+- A4 lot issue of 5 reduced stock 40 → 35 and increased issues 22/55 → 27/60.
+- New abnormal A4 requisition created `RQ-1024` and a new variance flag in Audit Queue.
+- Incident photo upload previewed; report created a work order and an audit entry with the photo name.
+- Replacement with two uploaded photos, `KB-0152`, and Inventory Staff A completed; `REPLACEMENT_COMPLETED`
+  appeared in the audit log and KB-0152 was removed from future candidate lists.
+- Repair approval persisted: WIL-PRN-02 cumulative moved ₱3,800 → ₱8,800 after navigating away/back.
+- Reprint QR called `window.print()` and exposed one printed label.
+- Requisition queues still show 1 justified, 2 auto-processed and the locked queue after token
+  normalisation.
+- All 17 routes re-swept at 390, 598 and 1440 px: one `h1`, no page-level overflow, no console errors.
+- Lighthouse **100 / 100 / 100** on all 17 screens after the fixes.
+
+### Remaining limits after Pass 6
+
+- Backend AI, database, JWT/BCrypt, server-side state machine, immutable audit log, RLS, backups and
+  server PDFs remain outside this frontend-only branch.
+- Dormancy and the duplicate/age/location pattern checks are represented by flags, but the daily
+  scheduled evaluator is backend work. The client now creates retired-rescan, variance, turnover
+  exception, rejected replacement and reconciliation flags.
+- Defective-on-arrival still records the exception reason and a good replacement unit; the SDD does not
+  define a separate defective-unit field.
+- Initial forecast stock for some seeded rows is sample data and is not derived from every unit/lot.
+  Runtime receipts and issuances now update it.
+- The approved Wildcat palette differs slightly from the SRS §3.3.1 hex values; this remains a visual
+  decision.
+
 ## Verification for Pass 1
 
 - `npm run build` passes.
@@ -386,7 +463,7 @@ Known limits at the end of Pass 5:
 - Flow checks:
   - Default TNR requisition (quantity 2) shows Hbase 8, expected 5 at week 10, current 7, V +40% (elevated).
   - Thermal paper shows no baseline, `V = —`, and routes to locked manual review.
-  - Submitting thermal paper created RQ-1024 with `NO_BASELINE` and `LOCKED_REVIEW`.
+  - Submitting thermal paper created RQ-1024 with `NO_BASELINE` and `LOCKED`.
   - Submitting TNR with a justification created RQ-1025 as processed with justification.
   - Rejecting RQ-1023 with a ≥10-character reason moved it to Decided and updated the term report to 3 flagged / 0 confirmed / 1 rejected / 2 pending.
   - Policy validation rejected normal 60 / lock 50; saving 21/60 windows changed the BR basis and forecast values.
@@ -402,9 +479,8 @@ Known limits at the end of Pass 5:
 - The full audit log is not implemented; policy changes are only described as auditable.
 - `RETURNED_PARTIAL` is recognised but no partial-return action exists until Module 2.
 - Machine slots, lots, condemnation decisions, print and camera remain in later passes.
-- Requisition status tokens remain the existing app tokens (`AUTO_PROCESSED`, `LOCKED_REVIEW`).
-  The SDD uses `PROCESSED`/`LOCKED`; the API mapping is documented and will be normalised in the final
-  pass if required. This is a token mismatch, not a behaviour change.
+- Requisition status tokens were normalised to the SDD names (`PROCESSED`, `LOCKED`, `APPROVED`,
+  `REJECTED`) in Pass 6.
 - The SDD route table and frontend folder structure still describe a different layout. The app keeps
   its working routes; the SDD will be corrected in the docs pass.
 - No SRS/SDD source document was edited.

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowRight, Check, ShieldAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { formatShortDate } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -97,6 +98,7 @@ const actionFor = (flag: SeedAuditFlag): { to: string; label: string } => {
 export function AuditQueue() {
   usePageTitle('Central · Audit Queue')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [tab, setTab] = useState<FlagTab>('pattern')
@@ -128,11 +130,26 @@ export function AuditQueue() {
       setTried(true)
       return
     }
+    const reviewer = user?.name ?? 'Property Custodian'
     dispatch({
       type: 'audit/review',
       id: reviewingId,
       note: note.trim(),
-      reviewer: 'Property Custodian',
+      reviewer,
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: reviewer,
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'AUDIT_FLAG_REVIEWED',
+        entityType: 'AUDIT_FLAG',
+        entityId: reviewingId,
+        detail: note.trim(),
+      },
     })
     setReviewingId(null)
     showToast('success', 'Flag reviewed', 'Your note is saved in the audit trail.')

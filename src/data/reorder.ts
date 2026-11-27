@@ -2,6 +2,7 @@ import type { PolicySettings } from '../types'
 
 export interface ForecastRow {
   id: string
+  itemId: string
   name: string
   code: string
   stock: number
@@ -21,6 +22,7 @@ export interface ForecastRow {
 export const initialForecast: ForecastRow[] = [
   {
     id: 'tnr',
+    itemId: 'TNR',
     name: 'HP LaserJet Toner',
     code: 'W9004MC',
     stock: 2,
@@ -33,6 +35,7 @@ export const initialForecast: ForecastRow[] = [
   },
   {
     id: 'a4',
+    itemId: 'A4',
     name: 'Bond paper A4 (ream)',
     code: 'BP-A4',
     stock: 40,
@@ -46,6 +49,7 @@ export const initialForecast: ForecastRow[] = [
   },
   {
     id: 'ctn',
+    itemId: 'CTN',
     name: 'Color toner (cyan)',
     code: 'W9001MC',
     stock: 4,
@@ -58,6 +62,7 @@ export const initialForecast: ForecastRow[] = [
   },
   {
     id: 'pla',
+    itemId: 'PLA',
     name: 'PLA filament spool 1 kg',
     code: 'FIL-PLA',
     stock: 12,
@@ -70,6 +75,7 @@ export const initialForecast: ForecastRow[] = [
   },
   {
     id: 'drm',
+    itemId: 'DRM',
     name: 'Imaging drum unit',
     code: 'W1104A',
     stock: 3,
@@ -82,6 +88,7 @@ export const initialForecast: ForecastRow[] = [
   },
   {
     id: 'thrm',
+    itemId: 'THRM',
     name: 'Thermal paper roll',
     code: 'THRM',
     stock: 10,

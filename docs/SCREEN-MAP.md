@@ -6,9 +6,10 @@ with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 **React implementation:** all 17 screens are ported. The app shell, both dashboards, demand and
 turnover decisions, ledger/audit tools, repair/BER, verified replacement, intake and the complete Lab
 portal are live routes. The static reference remains under `design/` for visual comparison. Revision 2
-is being applied module by module; passes 1–5 cover the foundation, forecasting/variance, turnover,
-unit lifecycle, AI intake, the phone shell and camera/PR-print actions. See
-`docs/REVISION-2-DELTA.md` and `docs/HANDOFF.md`.
+is being applied module by module; passes 1–6 cover the foundation, forecasting/variance, turnover,
+unit lifecycle, AI intake, the phone shell, camera/PR-print actions and the compliance fixes for QR,
+issuance, photos, replacement records and repair persistence. See `docs/REVISION-2-DELTA.md` and
+`docs/HANDOFF.md`.
 
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|
@@ -37,8 +38,9 @@ unit lifecycle, AI intake, the phone shell and camera/PR-print actions. See
 - 7 machine slots for 1-to-1 consumables (Black/Drum/Spool).
 - 2 low-value consumable lots (A4 paper, thermal paper) issued by quantity.
 - 1 seeded condemnation recommendation for WIL-3DP-002.
+- 1 seeded replacement request (RR-0043) and 4 repair records.
 - 10 audit flags: 8 reviewable + 2 variance anomalies routed to Requisition Review.
-- 6 audit-log entries plus live turnover/requisition/repair/policy events.
+- 6 audit-log entries plus live turnover/requisition/intake/repair/policy/replacement events.
 - 6 requisitions, 3 turnovers and 3 work orders.
 - 15 item definitions with lead time, safety buffer, replacement value and 1-to-1 policy.
 - Term calendar week 10 of 16 and revision-2 policy defaults (25/50 bands, 14/42-day windows).

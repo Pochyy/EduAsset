@@ -17,7 +17,7 @@ export function useQueueCounts(): QueueCounts {
   return {
     alerts: data.forecast.filter((row) => isAlert(row, data.policy)).length,
     requisitions: data.requisitions.filter(
-      (requisition) => requisition.status === 'LOCKED_REVIEW',
+      (requisition) => requisition.status === 'LOCKED',
     ).length,
     turnover: data.turnovers.filter(
       (turnover) => turnover.status === 'READY_TO_APPROVE',

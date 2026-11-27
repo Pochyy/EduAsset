@@ -78,7 +78,7 @@ export function LabTurnoverScan() {
   )
   const requestedNewId = openTurnover?.newAssetId ?? null
   const canScan = Boolean(
-    activeUnit && openTurnover?.status === 'AWAITING_SPENT_SCAN',
+    activeUnit && openTurnover?.status === 'AWAITING_SCAN',
   )
 
   const suggestedUnit = slotConfig.suggestedNewUnitId
@@ -189,6 +189,8 @@ export function LabTurnoverScan() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Lab user',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action,
         entityType: 'UNIT',
         entityId,
@@ -274,6 +276,25 @@ export function LabTurnoverScan() {
         id,
         `${id} scan mismatch in ${slotConfig.machineId}/${slotLabel}; issuance stayed locked.`,
       )
+      const scannedUnit = data.units.find((unit) => unit.assetId === id)
+      if (scannedUnit?.inventoryStatus === 'RETIRED') {
+        dispatch({
+          type: 'audit/add',
+          flag: {
+            id: nextFlagId(data.auditFlags),
+            type: 'RETIRED_RESCAN',
+            severity: 'HIGH',
+            title: `Retired unit scanned: ${id}`,
+            entityId: id,
+            meta: `${slotConfig.machineId}/${slotLabel} · ${id}`,
+            detail: `${id} is RETIRED but was scanned during a spent-unit turnover for ${slotConfig.machineId}/${slotLabel}. Issuance stayed locked and the attempt was logged.`,
+            reviewed: false,
+            reviewNote: null,
+            reviewedBy: null,
+            reviewedAt: null,
+          },
+        })
+      }
       showToast(
         'error',
         'Scan does not match',
@@ -304,7 +325,7 @@ export function LabTurnoverScan() {
       oldAssetId: activeUnit.assetId,
       oldStatus: null,
       newAssetId: selectedRequestUnit.assetId,
-      status: 'AWAITING_SPENT_SCAN',
+      status: 'AWAITING_SCAN',
       requestedAt: new Date().toISOString(),
       exceptionType: null,
       exceptionReason: null,

@@ -1,6 +1,6 @@
 import { ArrowRight, ScanLine, Plus, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { actions, health, healthTotal, kpis } from '../data/dashboard'
+import { actions, kpis } from '../data/dashboard'
 import { useQueueCounts } from '../data/counts'
 import { burnRate, daysLeft, isAlert, isNoRecentUse, triggerDays } from '../data/reorder'
 import { useAppData } from '../context/AppDataContext'
@@ -27,7 +27,7 @@ export function CentralDashboard() {
   const { data } = useAppData()
 
   const lockedRequisitions = data.requisitions.filter(
-    (requisition) => requisition.status === 'LOCKED_REVIEW',
+    (requisition) => requisition.status === 'LOCKED',
   )
   const unreviewedFlags = data.auditFlags.filter((flag) => !flag.reviewed)
   const countFlagTypes = (types: string[]) =>
@@ -41,6 +41,31 @@ export function CentralDashboard() {
   const rejectedCount = countFlagTypes(['REJECTED_REPLACEMENT'])
   const dormantCount = countFlagTypes(['DORMANT'])
   const reconCount = countFlagTypes(['RECONCILIATION'])
+
+  const durableUnits = data.units.filter((unit) => unit.category === 'DURABLE')
+  const health = [
+    {
+      label: 'Operational',
+      value: durableUnits.filter((unit) => unit.healthState === 'OPERATIONAL').length,
+      tone: 'success' as const,
+    },
+    {
+      label: 'Needs maintenance',
+      value: durableUnits.filter((unit) => unit.healthState === 'NEEDS_MAINTENANCE').length,
+      tone: 'warning' as const,
+    },
+    {
+      label: 'Under repair',
+      value: durableUnits.filter((unit) => unit.healthState === 'UNDER_REPAIR').length,
+      tone: 'danger' as const,
+    },
+    {
+      label: 'Condemned / BER',
+      value: durableUnits.filter((unit) => unit.healthState === 'CONDEMNED_BER').length,
+      tone: 'neutral' as const,
+    },
+  ]
+  const healthTotal = Math.max(1, durableUnits.length)
 
   const dashboardActions = actions.flatMap((task) => {
     if (task.id === 'a1') {
@@ -73,6 +98,19 @@ export function CentralDashboard() {
         {
           ...task,
           title: `${counts.turnover} turnover${counts.turnover === 1 ? '' : 's'} awaiting disbursement`,
+        },
+      ]
+    }
+    if (task.id === 'a4') {
+      const recommendation = [...data.condemnations]
+        .filter((entry) => entry.status === 'RECOMMENDED')
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]
+      if (!recommendation) return []
+      return [
+        {
+          ...task,
+          title: `Repair quote pushes ${recommendation.assetId} to ${recommendation.berPct.toFixed(2)}% BER`,
+          detail: `Maintenance is blocked; condemnation ${recommendation.id} is ready`,
         },
       ]
     }

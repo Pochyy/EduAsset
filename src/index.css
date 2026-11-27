@@ -155,13 +155,29 @@
     width: auto;
   }
 
+  /* One-label reprint from the Master Ledger drawer. */
+  .ea-print-area.ea-single-label {
+    position: static;
+    inset: auto;
+    width: 90mm;
+    margin: 0 auto;
+    padding: 8mm;
+    border: 0;
+  }
+
   .ea-print-only {
     display: block;
+  }
+
+  .ea-qr-sheet .ea-qr-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
   }
 
   .ea-qr-label {
     break-inside: avoid;
     page-break-inside: avoid;
+    min-height: 38mm;
     border: 1px solid #b8afa0;
     background: #fff;
   }

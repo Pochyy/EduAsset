@@ -49,6 +49,8 @@ export interface SeedUnit {
   linkedMachineId: string | null
   /** Machine slot for a 1-to-1 consumable; null when not installed. */
   slotId?: string | null
+  /** True once the unit has been issued at least once. */
+  issuedEver: boolean
   pendingDisbursement: boolean
 }
 
@@ -119,6 +121,30 @@ export interface SeedTurnover {
   exceptionReason: string | null
 }
 
+export interface SeedRepair {
+  repairId: string
+  assetId: string
+  when: string
+  what: string
+  cost: number
+  decision: 'APPROVED' | 'PENDING_DECISION'
+  createdAt: string
+}
+
+export interface SeedReplacement {
+  replacementId: string
+  requester: string
+  reason: string
+  status: 'REQUESTED' | 'PENDING_SECOND_APPROVAL' | 'COMPLETED' | 'REJECTED'
+  oldAssetId: string
+  newAssetId: string | null
+  requestedAt: string
+  completedAt: string | null
+  verifier: string | null
+  oldPhotoName?: string | null
+  newPhotoName?: string | null
+}
+
 export interface SeedLot {
   lotId: string
   itemId: string
@@ -153,6 +179,8 @@ export interface SeedWorkOrder {
   quoteAmount: number | null
   berPercent: number | null
   closedAt: string | null
+  /** Local photo reference captured with the incident in the prototype. */
+  photoName?: string | null
 }
 
 export interface SeedAuditFlag {
@@ -173,6 +201,8 @@ export interface SeedAuditEntry {
   id: string
   at: string
   actor: string
+  actorId?: string
+  account?: string
   action: string
   entityType: string
   entityId: string
@@ -189,6 +219,8 @@ export interface SeedData {
   machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
+  replacements: SeedReplacement[]
+  repairs: SeedRepair[]
   lots: SeedLot[]
   condemnations: SeedCondemnation[]
   workOrders: SeedWorkOrder[]

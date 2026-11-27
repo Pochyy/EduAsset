@@ -8,7 +8,7 @@ export const unreviewedFlags = seed.auditFlags.filter(
 ).length
 
 export const lockedRequisitions = seed.requisitions.filter(
-  (req) => req.status === 'LOCKED_REVIEW',
+  (req) => req.status === 'LOCKED',
 ).length
 
 export const readyTurnovers = seed.turnovers.filter(

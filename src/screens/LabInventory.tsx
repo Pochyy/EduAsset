@@ -183,6 +183,8 @@ export function LabInventory() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Lab user',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action: 'LOT_ISSUED',
         entityType: 'LOT',
         entityId: issuingLot.lotId,
@@ -222,7 +224,21 @@ export function LabInventory() {
     dispatch({
       type: 'unit/patch',
       id: unit.assetId,
-      patch: { inventoryStatus: 'IN_USE', slotId: emptySlot.id },
+      patch: { inventoryStatus: 'IN_USE', slotId: emptySlot.id, issuedEver: true },
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Lab user',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'PARTIAL_REISSUED',
+        entityType: 'UNIT',
+        entityId: unit.assetId,
+        detail: `${unit.assetId} returned as RETURNED_PARTIAL and re-issued into ${unit.linkedMachineId}/${emptySlot.slotName}; it does not count as a new unit.`,
+      },
     })
     showToast(
       'success',

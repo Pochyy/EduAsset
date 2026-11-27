@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { QrCode } from 'lucide-react'
+import { normalizeQrPayload } from '../lib/qr'
 import { cn } from '../lib/utils'
 import { Button } from './ui/Button'
 import { Dialog } from './ui/Dialog'
@@ -118,7 +119,7 @@ export function QrScannerDialog({
             if (value) {
               scannedRef.current = true
               stop()
-              scanCallback.current(value.toUpperCase())
+              scanCallback.current(normalizeQrPayload(value))
               closeCallback.current()
               return
             }

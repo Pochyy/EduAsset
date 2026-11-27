@@ -3,7 +3,6 @@ import { Camera, Check, Printer, QrCode, Sparkles } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import { qrPath } from '../lib/qr'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
 import type { SeedItem, SeedLot, SeedUnit } from '../types'
@@ -12,6 +11,7 @@ import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Field, Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { QrLabel } from '../components/QrLabel'
 
 const deliveryRecords = [
   { id: 'DR-118', label: 'DR-118 · Nov 18 · Peripherals supplier' },
@@ -172,6 +172,8 @@ export function ReceiveItems() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action,
         entityType,
         entityId,
@@ -263,6 +265,7 @@ export function ReceiveItems() {
           type: 'forecast/add',
           row: {
             id: `lot-${itemId.toLowerCase()}`,
+            itemId,
             name: resolvedName,
             code: itemId,
             stock: number,
@@ -311,6 +314,7 @@ export function ReceiveItems() {
       deliveryRecordId: delivery,
       deliveryDate: new Date().toISOString().slice(0, 10),
       serialNumber: null,
+      issuedEver: false,
       linkedMachineId: null,
       pendingDisbursement: false,
     }))
@@ -847,20 +851,13 @@ export function ReceiveItems() {
                   {name}
                 </span>
               </div>
-              <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+              <div className="ea-qr-grid grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
                 {createdUnits.map((unit) => (
                   <div
                     key={unit.assetId}
                     className="ea-qr-label flex flex-col items-center gap-2 rounded-control border border-dashed border-[#B8AFA0] bg-surface p-3"
                   >
-                    <svg
-                      viewBox="0 0 25 25"
-                      role="img"
-                      aria-label={`QR code for ${unit.assetId}`}
-                      className="h-24 w-24 text-ink"
-                    >
-                      <path d={qrPath(unit.assetId)} fill="currentColor" />
-                    </svg>
+                    <QrLabel assetId={unit.assetId} className="h-24 w-24 text-ink" />
                     <strong className="font-mono text-[13px] font-bold">{unit.assetId}</strong>
                     <span className="text-[11px] text-muted">
                       IN_STOCK · {unit.deliveryRecordId}

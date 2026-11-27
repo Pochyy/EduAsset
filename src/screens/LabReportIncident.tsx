@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
-import { ArrowRight, Camera, Check, QrCode } from 'lucide-react'
+import { ArrowRight, Check, QrCode } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { assetSummary } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -12,6 +13,7 @@ import { Card } from '../components/ui/Card'
 import { Dialog } from '../components/ui/Dialog'
 import { Field, Input, Textarea } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { PhotoAttachment, type PhotoValue } from '../components/PhotoAttachment'
 import { QrScannerDialog } from '../components/QrScannerDialog'
 
 const incidentTypes = [
@@ -28,13 +30,14 @@ const typeLabel = (type: IncidentType) =>
 export function LabReportIncident() {
   usePageTitle('Lab · Report Incident')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [asset, setAsset] = useState('')
   const [type, setType] = useState<IncidentType | ''>('')
   const [recurring, setRecurring] = useState(false)
   const [description, setDescription] = useState('')
-  const [photo, setPhoto] = useState(false)
+  const [photo, setPhoto] = useState<PhotoValue | null>(null)
   const [tried, setTried] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [scannerOpen, setScannerOpen] = useState(false)
@@ -62,7 +65,7 @@ export function LabReportIncident() {
     Boolean(knownUnit) &&
     Boolean(type) &&
     description.trim().length >= 10 &&
-    photo
+    Boolean(photo)
 
   const outcome = recurring
     ? 'NEEDS_MAINTENANCE + service ticket'
@@ -73,7 +76,7 @@ export function LabReportIncident() {
   const summary = [
     { k: 'Asset', v: normalizedAsset },
     { k: 'Type', v: type ? `${typeLabel(type)}${recurring ? ' (recurring)' : ''}` : '—' },
-    { k: 'Photo', v: photo ? 'Attached' : '—' },
+    { k: 'Photo', v: photo?.name ?? '—' },
     { k: 'Expected outcome', v: outcome },
   ]
 
@@ -105,6 +108,7 @@ export function LabReportIncident() {
       quoteAmount: null,
       berPercent: null,
       closedAt: null,
+      photoName: photo?.name ?? null,
     }
 
     dispatch({ type: 'work-order/add', workOrder })
@@ -115,13 +119,27 @@ export function LabReportIncident() {
         patch: { healthState: 'NEEDS_MAINTENANCE' },
       })
     }
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Lab user',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
+        action: 'INCIDENT_REPORTED',
+        entityType: 'UNIT',
+        entityId: knownUnit.assetId,
+        detail: `${typeLabel(type)}${recurring ? ' (recurring)' : ''} reported; work order ${workOrderId} created. Photo: ${photo?.name ?? 'none'}. ${description.trim()}`,
+      },
+    })
 
     setConfirm(false)
     setAsset('')
     setType('')
     setRecurring(false)
     setDescription('')
-    setPhoto(false)
+    setPhoto(null)
     setTried(false)
 
     if (recurring) {
@@ -248,33 +266,14 @@ export function LabReportIncident() {
               />
             </Field>
 
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted">
-                Photo of the item’s condition (required)
-              </span>
-              <button
-                type="button"
-                onClick={() => setPhoto((current) => !current)}
-                className={cn(
-                  'inline-flex min-h-[52px] items-center gap-2.5 self-start rounded-control border px-4 text-sm font-semibold transition-colors',
-                  photo
-                    ? 'border-success bg-success-bg text-success'
-                    : 'border-dashed border-rust bg-surface text-rust hover:bg-butter-soft',
-                )}
-              >
-                {photo ? (
-                  <Check className="h-5 w-5" aria-hidden="true" />
-                ) : (
-                  <Camera className="h-5 w-5" aria-hidden="true" />
-                )}
-                {photo ? 'Photo attached · tap to remove' : 'Take or upload a photo'}
-              </button>
-              {photoError ? (
-                <span role="alert" className="text-xs font-medium text-danger">
-                  {photoError}
-                </span>
-              ) : null}
-            </div>
+            <PhotoAttachment
+              id="incident-photo"
+              label="Photo of the item’s condition"
+              required
+              value={photo}
+              onChange={setPhoto}
+              error={photoError}
+            />
 
             <div className="flex flex-wrap items-center justify-end gap-2">
               <Button type="submit">Submit report</Button>

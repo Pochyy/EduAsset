@@ -59,8 +59,8 @@ Store these as canonical tokens.
 | `HealthState` | `OPERATIONAL`, `NEEDS_MAINTENANCE`, `UNDER_REPAIR`, `CONDEMNED_BER`, `NOT_APPLICABLE` |
 | `ItemCategory` | `DURABLE`, `CONSUMABLE` |
 | `VarianceBand` | `NORMAL`, `ELEVATED`, `ABNORMAL`, `NO_BASELINE` |
-| `RequisitionStatus` | `AUTO_PROCESSED`, `LOCKED_REVIEW`, `APPROVED`, `REJECTED` |
-| `TurnoverStatus` | `AWAITING_SPENT_SCAN`, `READY_TO_APPROVE`, `AWAITING_APPROVAL`, `RELEASED` |
+| `RequisitionStatus` | `PROCESSED`, `LOCKED`, `APPROVED`, `REJECTED` |
+| `TurnoverStatus` | `AWAITING_SCAN`, `READY_TO_APPROVE`, `AWAITING_APPROVAL`, `RELEASED` |
 | `TurnoverExceptionType` | `FIRST_INSTALL`, `DEFECTIVE_ON_ARRIVAL` |
 | `RepairDecision` | `REPAIR_APPROVED`, `UNDER_REPAIR`, `RETURNED_TO_SERVICE`, `RECOMMENDED`, `CONDEMNED`, `OVERRIDDEN` |
 | `CondemnationStatus` | `RECOMMENDED`, `APPROVED`, `OVERRIDDEN` |
@@ -74,7 +74,7 @@ Store these as canonical tokens.
 - `IN_STOCK → IN_USE → RETURNED_EMPTY | RETURNED_PARTIAL | RETIRED`
 - `IN_USE ↔ RETURNED_PARTIAL` for filament spools (FR-2.11)
 - `CONDEMNED_BER → RETIRED` (terminal; can never be issued)
-- `AWAITING_SPENT_SCAN → READY_TO_APPROVE → RELEASED`
+- `AWAITING_SCAN → READY_TO_APPROVE → RELEASED`
 - `DRAFT → OLD_UNIT_VERIFIED → PENDING_SECOND_APPROVAL → COMPLETED | REJECTED`
 - Repair: `NEEDS_MAINTENANCE → UNDER_REPAIR → OPERATIONAL | CONDEMNED_BER`
 
@@ -175,6 +175,8 @@ Query: `tab=ALL|ALERT|OK`. Returns the forecast rows plus `purchaseRequisitionId
 
 ### `POST /reorder-alerts/recalculate`
 Recomputes forecasts; returns the updated list. This is the dashboard's **Recalculate** action.
+In the prototype, receiving a consumable adds to stock, and turnover release / lot issue decrement
+stock and increment the 14-day and 42-day issuance counts.
 
 ### `GET /items/{itemId}/purchase-requisition`
 Returns the pre-generated PR: `prNumber`, item, requesting unit, current stock, `brWindow`,
@@ -205,10 +207,10 @@ Bands and status:
 
 | Condition | Band | Status |
 |---|---|---|
-| `E == null` | `NO_BASELINE` | `LOCKED_REVIEW` — manual review, collect-baseline mode |
-| `V <= varianceNormalPct` (including V < 0) | `NORMAL` | `AUTO_PROCESSED` |
+| `E == null` | `NO_BASELINE` | `LOCKED` — manual review, collect-baseline mode |
+| `V <= varianceNormalPct` (including V < 0) | `NORMAL` | `PROCESSED` |
 | `varianceNormalPct < V < varianceLockPct` | `ELEVATED` | `APPROVED` after a justification is supplied |
-| `V >= varianceLockPct` | `ABNORMAL` | `LOCKED_REVIEW` — write `VARIANCE` audit flag |
+| `V >= varianceLockPct` | `ABNORMAL` | `LOCKED` — write `VARIANCE` audit flag |
 
 Response: the requisition with `baselineVolume`, `expectedVolume`, `currentTermVolume`,
 `variancePercent` (nullable), `band`, `weeksElapsed`, `weeksInTerm` and `status`.
@@ -222,8 +224,7 @@ Response: the requisition with `baselineVolume`, `expectedVolume`, `currentTermV
 ## 6. Module 2 — 1-to-1 turnover and machine slots
 
 A machine slot is the 1-to-1 consumable position on a machine (for example `WIL-PRN-01/Black`).
-At most one `IN_USE` unit may occupy a slot. The app token `AWAITING_SPENT_SCAN` maps to the SDD’s
-`AWAITING_SCAN`; it is the same state.
+At most one `IN_USE` unit may occupy a slot.
 
 ### `GET /turnovers?status=`
 Returns turnover requests with `machineId`, `slotId`, `itemId`, `oldAssetId` (nullable),
@@ -232,7 +233,7 @@ Returns turnover requests with `machineId`, `slotId`, `itemId`, `oldAssetId` (nu
 ### `POST /turnovers`
 `LAB_ASSISTANT` / `LAB_MANAGER`. Body: `{ "slotId": "PRN01-BLK", "newAssetId": "TNR-WIL-2026-002" }`.
 Requires an `IN_USE` unit in the slot; otherwise return `409 EMPTY_SLOT` and direct the user to the
-exception endpoint. Creates `AWAITING_SPENT_SCAN`.
+exception endpoint. Creates `AWAITING_SCAN`.
 
 ### `POST /turnovers/exceptions`
 `LAB_ASSISTANT` / `LAB_MANAGER`.
@@ -282,7 +283,8 @@ Returns the unit record + history. History entries are `{ event, actor, at }`, a
 `serialNumber` is optional and may be cleared. Writes a history entry.
 
 ### `POST /units/{assetId}/reprint-qr`
-Returns/queues a printable label. QR payload must contain **only** the asset ID (or item URL); status is
+Returns/queues a printable label. QR payload is `/items/{assetId}` per the SDD; the scanner also
+accepts a raw asset ID. Status is
 never encoded.
 
 ### `POST /incidents`
@@ -442,8 +444,9 @@ Returns `[]` for a lot intake because lots have no per-unit QR codes.
 - **Status:** invalid transitions return `409 INVALID_STATUS_TRANSITION` and are never stored
   (NFR-R3).
 - **AI:** the backend alone talks to the vision service; timeout ≤ 10 s then fallback (NFR-P3/S4).
-- **QR:** payload is the asset ID only; the database decides status (FR-3.03). The browser decodes
-  camera frames locally (`jsqr`) and never uploads them; typed entry remains the fallback.
+- **QR:** payload is `/items/{assetId}` per the SDD, with a raw asset ID accepted as a fallback; the
+  database decides status (FR-3.03). The browser decodes camera frames locally (`jsqr`) and never
+  uploads them; typed entry remains the fallback.
 - **Photos:** incident and replacement photos are required; store a URL/reference, not a blob.
 - **Two-person replacement:** the second approver must be a different authenticated user.
 - **Validation:** rejection/review notes ≥ 10 chars; requisition quantity 1–100; intake quantity 1–500;

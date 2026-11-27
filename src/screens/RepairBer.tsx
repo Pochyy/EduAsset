@@ -15,24 +15,9 @@ import { Field, Input, Textarea } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TableWrap, TBody, TD, TH, THead, TR } from '../components/ui/Table'
 
-interface RepairEntry {
-  when: string
-  what: string
-  cost: number
-}
-
 const assetIds = ['WIL-3DP-002', 'WIL-PRN-02', 'WIL-PRN-01']
 
-const baseRepairs: Record<string, RepairEntry[]> = {
-  'WIL-3DP-002': [
-    { when: 'Month 4', what: 'Replaced extruder assembly', cost: 4500 },
-    { when: 'Month 9', what: 'Replaced mainboard and motor', cost: 6000 },
-  ],
-  'WIL-PRN-02': [{ when: 'Jun 2026', what: 'Fuser replacement', cost: 3800 }],
-  'WIL-PRN-01': [{ when: 'Feb 2026', what: 'Pickup roller kit', cost: 1500 }],
-}
-
-const percent = (value: number) => `${(Math.floor(value * 10 + 1e-9) / 10).toFixed(1)}%`
+const percent = (value: number) => `${(Math.round(value * 100) / 100).toFixed(2)}%`
 
 const recommendationTone = (status: SeedCondemnation['status']): BadgeTone =>
   status === 'APPROVED' ? 'danger' : status === 'OVERRIDDEN' ? 'success' : 'warning'
@@ -56,7 +41,6 @@ export function RepairBer() {
   const [quote, setQuote] = useState('5000')
   const [repairable, setRepairable] = useState(true)
   const [tried, setTried] = useState(false)
-  const [extraRepairs, setExtraRepairs] = useState<Record<string, RepairEntry[]>>({})
   const [showForm, setShowForm] = useState(false)
   const [confirmApproveOpen, setConfirmApproveOpen] = useState(false)
   const [overrideOpen, setOverrideOpen] = useState(false)
@@ -72,8 +56,10 @@ export function RepairBer() {
 
   const item = data.items.find((entry) => entry.itemId === selected.itemId)
   const replacementValue = item?.replacementValue ?? 0
-  const repairs = [...(baseRepairs[selected.assetId] ?? []), ...(extraRepairs[selected.assetId] ?? [])]
-  const cumulative = repairs.reduce((total, repair) => total + repair.cost, 0)
+  const repairs = data.repairs.filter((repair) => repair.assetId === selected.assetId)
+  const cumulative = repairs
+    .filter((repair) => repair.decision === 'APPROVED')
+    .reduce((total, repair) => total + repair.cost, 0)
   const quoteNumber = Number(quote)
   const quoteValid = quote.trim() !== '' && Number.isFinite(quoteNumber) && quoteNumber > 0
   const ber = quoteValid
@@ -101,10 +87,9 @@ export function RepairBer() {
       : undefined
 
   const assetCards = assetUnits.map((unit) => {
-    const unitRepairs = [
-      ...(baseRepairs[unit.assetId] ?? []),
-      ...(extraRepairs[unit.assetId] ?? []),
-    ]
+    const unitRepairs = data.repairs.filter(
+      (repair) => repair.assetId === unit.assetId && repair.decision === 'APPROVED',
+    )
     const unitCumulative = unitRepairs.reduce((total, repair) => total + repair.cost, 0)
     const unitItem = data.items.find((entry) => entry.itemId === unit.itemId)
     const unitValue = unitItem?.replacementValue ?? 0
@@ -120,6 +105,8 @@ export function RepairBer() {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Property Custodian',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action,
         entityType: 'UNIT',
         entityId,
@@ -148,13 +135,18 @@ export function RepairBer() {
       id: selected.assetId,
       patch: { healthState: 'UNDER_REPAIR' },
     })
-    setExtraRepairs((current) => ({
-      ...current,
-      [selected.assetId]: [
-        ...(current[selected.assetId] ?? []),
-        { when: 'Now', what: 'Approved repair (quote)', cost: quoteNumber },
-      ],
-    }))
+    dispatch({
+      type: 'repair/add',
+      repair: {
+        repairId: `RP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+        assetId: selected.assetId,
+        when: 'Just now',
+        what: 'Approved repair (quote)',
+        cost: quoteNumber,
+        decision: 'APPROVED',
+        createdAt: new Date().toISOString(),
+      },
+    })
     logAudit(
       'REPAIR_APPROVED',
       selected.assetId,
@@ -210,7 +202,7 @@ export function RepairBer() {
     const condemnation: SeedCondemnation = {
       id,
       assetId: selected.assetId,
-      berPct: Math.round(ber * 10) / 10,
+      berPct: Math.round(ber * 100) / 100,
       status: 'RECOMMENDED',
       decidedBy: null,
       decisionReason: null,
@@ -219,6 +211,27 @@ export function RepairBer() {
       createdAt: new Date().toISOString(),
     }
     dispatch({ type: 'condemnation/recommend', condemnation })
+    if (quoteValid) {
+      const pending = data.repairs.some(
+        (repair) =>
+          repair.assetId === selected.assetId &&
+          repair.decision === 'PENDING_DECISION',
+      )
+      if (!pending) {
+        dispatch({
+          type: 'repair/add',
+          repair: {
+            repairId: `RP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+            assetId: selected.assetId,
+            when: 'Just now',
+            what: 'Pending repair quote',
+            cost: quoteNumber,
+            decision: 'PENDING_DECISION',
+            createdAt: new Date().toISOString(),
+          },
+        })
+      }
+    }
     logAudit(
       'CONDEMNATION_RECOMMENDED',
       selected.assetId,
@@ -272,6 +285,19 @@ export function RepairBer() {
       decidedBy: user?.name ?? 'Property Custodian',
       reason: overrideReason.trim(),
     })
+    data.repairs
+      .filter(
+        (repair) =>
+          repair.assetId === selected.assetId &&
+          repair.decision === 'PENDING_DECISION',
+      )
+      .forEach((repair) =>
+        dispatch({
+          type: 'repair/decide',
+          id: repair.repairId,
+          decision: 'APPROVED',
+        }),
+      )
     dispatch({
       type: 'unit/patch',
       id: selected.assetId,

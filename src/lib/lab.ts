@@ -159,10 +159,10 @@ export const inventoryStatus = (value: string): StatusDisplay => {
 
 export const requisitionStatus = (value: string): StatusDisplay => {
   switch (value) {
-    case 'LOCKED_REVIEW':
+    case 'LOCKED':
       return { label: 'WAITING FOR CUSTODIAN', tone: 'warning' }
     case 'APPROVED':
-    case 'AUTO_PROCESSED':
+    case 'PROCESSED':
       return { label: 'PROCESSED', tone: 'success' }
     case 'REJECTED':
       return { label: 'REJECTED', tone: 'danger' }
@@ -203,7 +203,7 @@ export const requisitionNote = (requisition: SeedRequisition) => {
   if (requisition.band === 'NO_BASELINE') {
     return 'No baseline · manual review (collect-baseline mode)'
   }
-  if (requisition.status === 'LOCKED_REVIEW') return `V ${variance} · auto-approval locked`
+  if (requisition.status === 'LOCKED') return `V ${variance} · auto-approval locked`
   if (requisition.justification) return `Justified: ${requisition.justification}`
   return `V ${variance} · within quota`
 }

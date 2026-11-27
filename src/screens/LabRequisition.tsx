@@ -11,7 +11,7 @@ import {
 } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn, nextNumericId } from '../lib/utils'
-import type { SeedRequisition } from '../types'
+import type { SeedAuditFlag, SeedRequisition } from '../types'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
@@ -19,6 +19,14 @@ import { Field, Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 
 type Band = 'none' | 'normal' | 'elevated' | 'abnormal' | 'no-baseline'
+
+const nextFlagId = (flags: SeedAuditFlag[]) => {
+  const highest = flags.reduce((max, flag) => {
+    const value = Number(flag.id.replace(/\D/g, ''))
+    return Number.isFinite(value) ? Math.max(value, max) : max
+  }, 0)
+  return `f${highest + 1}`
+}
 
 const bandStyles: Record<Band, string> = {
   none: 'border-line bg-paper',
@@ -117,11 +125,7 @@ export function LabRequisition() {
       data.requisitions.map((requisition) => requisition.requisitionId),
     )
     const status =
-      band === 'abnormal' || band === 'no-baseline'
-        ? 'LOCKED_REVIEW'
-        : band === 'elevated'
-          ? 'APPROVED'
-          : 'AUTO_PROCESSED'
+      band === 'abnormal' || band === 'no-baseline' ? 'LOCKED' : 'PROCESSED'
     const requisition: SeedRequisition = {
       requisitionId: id,
       labId: 'WIL-LAB-3',
@@ -131,7 +135,7 @@ export function LabRequisition() {
       baselineVolume: selected.baseline,
       expectedVolume,
       currentTermVolume: currentVolume,
-      variancePercent: variance === null ? null : Math.round(variance * 10) / 10,
+      variancePercent: variance === null ? null : Math.round(variance * 100) / 100,
       band:
         band === 'no-baseline'
           ? 'NO_BASELINE'
@@ -148,12 +152,32 @@ export function LabRequisition() {
     }
 
     dispatch({ type: 'requisition/add', requisition })
+    if (band === 'abnormal') {
+      const flag: SeedAuditFlag = {
+        id: nextFlagId(data.auditFlags),
+        type: 'VARIANCE',
+        severity: 'HIGH',
+        title: `Abnormal surge: ${itemNameOf(data.items, selected.itemId)} ${formatVariance(variance)}`,
+        entityId: id,
+        meta: `${id} · V ${formatVariance(variance)} · auto-approval locked`,
+        detail: `${id} requested ${quantityNumber} ${selected.unit} against an expected volume of ${
+          expectedVolume === null ? '—' : Math.round(expectedVolume * 100) / 100
+        } (H_base ${selected.baseline}, week ${data.term.weeksElapsed} of ${data.term.weeksInTerm}). Decide it in Requisition Review.`,
+        reviewed: false,
+        reviewNote: null,
+        reviewedBy: null,
+        reviewedAt: null,
+      }
+      dispatch({ type: 'audit/add', flag })
+    }
     dispatch({
       type: 'audit/log',
       entry: {
         id: crypto.randomUUID(),
         at: new Date().toISOString(),
         actor: user?.name ?? 'Lab user',
+        actorId: user?.id ?? 'demo-user',
+        account: user?.email ?? 'demo@eduasset.local',
         action: 'REQUISITION_SUBMITTED',
         entityType: 'REQUISITION',
         entityId: id,
