@@ -11,6 +11,7 @@ import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Input, Select } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { QrScannerDialog } from '../components/QrScannerDialog'
 
 const oldAssetId = 'KB-0007'
 const requestDate = '2026-11-17'
@@ -43,6 +44,7 @@ export function VerifiedReplacement() {
   const [approver, setApprover] = useState('')
   const [phase, setPhase] = useState<'edit' | 'pending' | 'done'>('edit')
   const [rejections, setRejections] = useState<Rejection[]>([])
+  const [scanTarget, setScanTarget] = useState<'old' | 'new' | null>(null)
 
   const oldUnit = data.units.find((unit) => unit.assetId === oldAssetId)
   if (!oldUnit) return null
@@ -79,8 +81,8 @@ export function VerifiedReplacement() {
     { label: 'Second person confirmed', done: phase === 'done' },
   ]
 
-  function verifyOld() {
-    const scanned = oldScan.trim().toUpperCase()
+  function verifyOld(value = oldScan) {
+    const scanned = value.trim().toUpperCase()
     const ok = scanned === oldAssetId
     setOldVerified(ok)
     setOldError(ok ? '' : `That is not the unit being replaced. Scan ${oldAssetId}.`)
@@ -207,9 +209,19 @@ export function VerifiedReplacement() {
             repairable)
           </span>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="replacement-old" className="text-xs font-medium text-muted">
-              Scan or type the old unit’s asset ID
-            </label>
+            <div className="flex items-center justify-between gap-2">
+              <label htmlFor="replacement-old" className="text-xs font-medium text-muted">
+                Scan or type the old unit’s asset ID
+              </label>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Scan the old unit with the camera"
+                onClick={() => setScanTarget('old')}
+              >
+                <QrCode className="h-5 w-5" aria-hidden="true" />
+              </Button>
+            </div>
             <div className="flex gap-2">
               <Input
                 id="replacement-old"
@@ -222,7 +234,7 @@ export function VerifiedReplacement() {
                 placeholder={`e.g. ${oldAssetId}`}
                 className="font-mono"
               />
-              <Button variant="secondary" onClick={verifyOld}>
+              <Button variant="secondary" onClick={() => verifyOld()}>
                 Verify scan
               </Button>
             </div>
@@ -269,9 +281,19 @@ export function VerifiedReplacement() {
             </Badge>
           </div>
 
-          <label htmlFor="replacement-new" className="text-xs font-medium text-muted">
-            Scan or type the new unit’s asset ID
-          </label>
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor="replacement-new" className="text-xs font-medium text-muted">
+              Scan or type the new unit’s asset ID
+            </label>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Scan the new unit with the camera"
+              onClick={() => setScanTarget('new')}
+            >
+              <QrCode className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          </div>
           <div className="flex gap-2">
             <Input
               id="replacement-new"
@@ -283,20 +305,6 @@ export function VerifiedReplacement() {
               placeholder="e.g. KB-0152"
               className="font-mono"
             />
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label="Scan QR with camera"
-              onClick={() =>
-                showToast(
-                  'info',
-                  'Camera scanner',
-                  'Opens the phone camera or webcam QR reader in the build. Type or pick an ID here.',
-                )
-              }
-            >
-              <QrCode className="h-5 w-5" aria-hidden="true" />
-            </Button>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -527,6 +535,21 @@ export function VerifiedReplacement() {
           </span>
         </Card>
       ) : null}
+
+      <QrScannerDialog
+        open={scanTarget !== null}
+        onClose={() => setScanTarget(null)}
+        onScan={(value) => {
+          if (scanTarget === 'old') {
+            setOldScan(value)
+            verifyOld(value)
+          } else {
+            setNewId(value)
+            if (phase !== 'edit') setPhase('edit')
+          }
+        }}
+        title={scanTarget === 'old' ? 'Scan the old unit' : 'Scan the new unit'}
+      />
     </>
   )
 }

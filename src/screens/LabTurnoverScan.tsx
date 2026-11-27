@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Info, QrCode } from 'lucide-react'
+import { Camera, Info, QrCode } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
@@ -18,6 +18,7 @@ import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Field, Input, Select, Textarea } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { QrScannerDialog } from '../components/QrScannerDialog'
 
 interface ScanResult {
   id: string
@@ -64,6 +65,7 @@ export function LabTurnoverScan() {
   const [exceptionReason, setExceptionReason] = useState('')
   const [exceptionTried, setExceptionTried] = useState(false)
   const [requestNewId, setRequestNewId] = useState('')
+  const [scannerOpen, setScannerOpen] = useState(false)
 
   const slotConfig =
     turnoverSlots.find((entry) => entry.key === slotKey) ?? turnoverSlots[0]
@@ -455,7 +457,7 @@ export function LabTurnoverScan() {
               <QrCode className="h-9 w-9" aria-hidden="true" />
               <span className="text-[13px]">
                 {canScan
-                  ? `Point the camera at ${activeUnit?.assetId}`
+                  ? `Scan ${activeUnit?.assetId} with the camera`
                   : 'Select a slot with an open turnover'}
               </span>
             </span>
@@ -463,9 +465,23 @@ export function LabTurnoverScan() {
 
           {canScan ? (
             <>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setScannerOpen(true)}
+                >
+                  <Camera className="h-4 w-4" aria-hidden="true" />
+                  Scan with camera
+                </Button>
+                <span className="text-xs text-muted">
+                  Or type the asset ID below if the camera is unavailable.
+                </span>
+              </div>
+
               <form onSubmit={scan} noValidate className="flex flex-wrap items-end gap-2.5">
                 <Field
-                  label="Or type the asset ID"
+                  label="Type the asset ID"
                   htmlFor="turnover-input"
                   className="min-w-[220px] flex-1"
                 >
@@ -756,6 +772,13 @@ export function LabTurnoverScan() {
           </span>
         </Card>
       ) : null}
+
+      <QrScannerDialog
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onScan={(value) => checkScan(value)}
+        title={`Scan ${activeUnit?.assetId ?? 'the spent unit'}`}
+      />
     </>
   )
 }

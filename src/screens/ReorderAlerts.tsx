@@ -3,6 +3,7 @@ import {
   CircleCheck,
   FileText,
   Info,
+  Printer,
   RefreshCw,
   Settings,
   SlidersHorizontal,
@@ -371,28 +372,40 @@ export function ReorderAlerts() {
             <Button variant="secondary" onClick={() => setPrId(null)}>
               Close
             </Button>
+            <Button variant="secondary" onClick={() => window.print()}>
+              <Printer className="h-4 w-4" aria-hidden="true" />
+              Print PR
+            </Button>
             <Button onClick={downloadPr}>Download PR</Button>
           </>
         }
       >
-        <dl className="m-0 divide-y divide-line-soft overflow-hidden rounded-control border border-line">
-          {prFields.map((field) => (
-            <div
-              key={field.k}
-              className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 odd:bg-paper"
-            >
-              <dt className="text-xs font-medium text-muted">{field.k}</dt>
-              <dd className="m-0 text-[13px] font-medium text-ink">{field.v}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="ea-print-area">
+          <div className="ea-print-only mb-3">
+            <strong className="block text-sm text-ink">EduAsset · Purchase Requisition</strong>
+            <span className="text-xs text-neutral-text">
+              {prRow?.prNumber} · WildCat Innovation Labs
+            </span>
+          </div>
+          <dl className="m-0 divide-y divide-line-soft overflow-hidden rounded-control border border-line">
+            {prFields.map((field) => (
+              <div
+                key={field.k}
+                className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 odd:bg-paper"
+              >
+                <dt className="text-xs font-medium text-muted">{field.k}</dt>
+                <dd className="m-0 text-[13px] font-medium text-ink">{field.v}</dd>
+              </div>
+            ))}
+          </dl>
 
-        <div className="mt-4 flex items-start gap-3 rounded-control border border-butter-line bg-butter-soft p-4">
-          <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
-          <span className="text-[13px] leading-relaxed text-ink">
-            Requested quantity covers lead time + safety buffer at the current burn rate. The form
-            follows the normal CIT purchasing approval route (14–21 days).
-          </span>
+          <div className="mt-4 flex items-start gap-3 rounded-control border border-butter-line bg-butter-soft p-4">
+            <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
+            <span className="text-[13px] leading-relaxed text-ink">
+              Requested quantity covers lead time + safety buffer at the current burn rate. The form
+              follows the normal CIT purchasing approval route (14–21 days).
+            </span>
+          </div>
         </div>
       </Dialog>
 

@@ -12,6 +12,7 @@ import { Card } from '../components/ui/Card'
 import { Dialog } from '../components/ui/Dialog'
 import { Field, Input, Textarea } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
+import { QrScannerDialog } from '../components/QrScannerDialog'
 
 const incidentTypes = [
   { id: 'defect', label: 'Defect' },
@@ -36,6 +37,7 @@ export function LabReportIncident() {
   const [photo, setPhoto] = useState(false)
   const [tried, setTried] = useState(false)
   const [confirm, setConfirm] = useState(false)
+  const [scannerOpen, setScannerOpen] = useState(false)
 
   const normalizedAsset = asset.trim().toUpperCase()
   const knownUnit = data.units.find(
@@ -176,11 +178,8 @@ export function LabReportIncident() {
                   type="button"
                   variant="secondary"
                   size="icon"
-                  aria-label="Scan QR code"
-                  onClick={() => {
-                    setAsset('WIL-PRN-02')
-                    setTried(false)
-                  }}
+                  aria-label="Scan QR code with camera"
+                  onClick={() => setScannerOpen(true)}
                 >
                   <QrCode className="h-5 w-5" aria-hidden="true" />
                 </Button>
@@ -337,6 +336,16 @@ export function LabReportIncident() {
           ))}
         </dl>
       </Dialog>
+
+      <QrScannerDialog
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onScan={(value) => {
+          setAsset(value)
+          setTried(false)
+        }}
+        title="Scan the item’s QR code"
+      />
     </>
   )
 }

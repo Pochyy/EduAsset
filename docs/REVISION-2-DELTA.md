@@ -3,7 +3,7 @@
 **Date:** 27 November 2026
 **Branch:** `feat/srs-v2-update`
 **Sources:** `EduAsset_SRS_Revised.docx` (SRS v2), `EduAsset_SDD_Revised.docx`
-**Status:** Passes 1–4 complete. Real QR-camera decoding, PR printing and backend integration remain.
+**Status:** Passes 1–5 complete. Backend integration and the external CIT form data remain.
 
 This file records what changed, why it changed, and which parts are UI placement choices rather than SRS requirements. It is the audit trail for the revision-2 work.
 
@@ -329,9 +329,50 @@ recorded as lots with a quantity. The app resolves this by branching on the poli
 Known limits at the end of Pass 4:
 
 - The AI response is still simulated; no image is analysed or uploaded.
-- QR scanning in Turnover Scan / Report Incident still uses typed IDs and demo scans, not the camera.
-- PR printing is not added yet.
 - All state, policy and audit entries reset on reload; there is no backend.
+- Camera scanning and PR printing were added in Pass 5.
+
+---
+
+## Pass 5: Final frontend pass — camera QR and PR print
+
+### Requirement mapping
+
+| Requirement | What was added | Where |
+|---|---|---|
+| **FR-3.05 / NFR-H1** — read QR codes through a phone camera or webcam | Added a shared camera dialog that requests the environment-facing camera, decodes frames locally with `jsqr`, and passes the asset ID to the screen that opened it. Camera tracks stop when the dialog closes, the code is found, or the component unmounts. | `QrScannerDialog`, Turnover Scan, Report Incident, Verified Replacement, Reconciliation |
+| **FR-3.03** — QR payload is the asset ID only | The decoder trims the payload and uppercases the ID; the screen still validates it against the ledger or expected unit. | Shared scanner + calling screens |
+| **NFR-H1** — no special hardware; typed fallback | If camera access is unavailable, denied, or unsupported, the dialog explains the failure and the existing typed/demo path stays usable. | Shared scanner |
+| **Purchase Requisition output** | The PR dialog now has **Print PR** with a print-only header and the existing `.ea-print-area` rule. Browser print is the prototype output; production PDF generation remains backend work. | Reorder Alerts |
+| **NFR-P3 / privacy** | Camera frames are decoded in the browser and are never uploaded. `jsqr` is loaded as a separate chunk only when the scanner opens. | `QrScannerDialog`, `package.json` |
+
+### UI placement choices (not specified by the SRS)
+
+1. The camera is a modal opened from an explicit **Scan with camera** or QR-icon action, rather than an always-on viewfinder. This makes camera permission user-initiated and avoids holding the camera while the screen is idle.
+2. The shared scanner decodes locally with `jsqr` instead of relying on `BarcodeDetector`, which is not available in Chrome on Windows.
+3. On scan, Turnover Scan runs the existing match/mismatch logic immediately; Verified Replacement auto-verifies the old unit; Reconciliation appends the scan to the session; Report Incident fills the asset field.
+4. The PR print header is a compact EduAsset/CIT strip above the existing pre-generated fields.
+
+### Verification for Pass 5
+
+- `npm run build` passes. `jsqr` is emitted as a separate 130 kB chunk (47.5 kB gzip); the main bundle remains the existing ~513 kB warning.
+- Camera pipeline tested end to end with a synthetic camera stream and a real QR image:
+  - `FIL-WIL-2026-014` decoded in Turnover Scan and completed the turnover as `RETURNED_EMPTY`.
+  - `WIL-PRN-02` decoded in Report Incident and filled the asset field.
+  - `KB-0152` decoded in Verified Replacement and passed the new-unit rules.
+  - `KB-0007` decoded in Verified Replacement and auto-verified the old unit.
+  - `KB-0031` decoded in Reconciliation and marked one expected unit scanned.
+- Camera failure path tested with a `NotFoundError`: the dialog shows “No camera was found on this device” and closes cleanly.
+- `Print PR` calls `window.print()` and the print area contains 10 PR fields and the print-only header; the header is hidden on screen.
+- All 17 routes re-swept at 390, 598 and 1440 px after the scanner changes; no page-level overflow or console errors.
+- Lighthouse **100 / 100 / 100** on Reorder Alerts, Verified Replacement, Reconciliation, Receive New Items, Turnover Scan and Report Incident.
+- No physical camera was available in the test environment; the decode path was exercised with a synthetic stream.
+
+Known limits at the end of Pass 5:
+
+- A physical phone/webcam still needs a manual run on the target device; permission prompts are browser-owned.
+- Browser print depends on the user’s print dialog; server-generated PDFs remain future backend work.
+- The AI analysis, database, authentication, server-side audit and external CIT form fields remain outside this frontend-only branch.
 
 ## Verification for Pass 1
 

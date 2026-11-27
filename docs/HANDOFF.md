@@ -8,6 +8,11 @@
 **Read this first, then:** `README.md`, `PRODUCT.md`, `DESIGN.md`, `docs/SCREEN-MAP.md`,
 `docs/API-CONTRACT.md`, `docs/SEED-DATA.json`.
 
+> **Revision 2 update (27 November 2026):** the current work is on `feat/srs-v2-update`, not `main`.
+> It adds the revised SRS/SDD modules, camera QR scanning, PR printing and the phone shell. See
+> `docs/REVISION-2-DELTA.md` for the authoritative pass-by-pass record. The status below describes the
+> earlier `main` slice and remains as historical context.
+
 ---
 
 ## Where the project stands

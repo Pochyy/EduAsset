@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AlertTriangle, Check, ScanLine } from 'lucide-react'
+import { AlertTriangle, Camera, Check, ScanLine } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useToast } from '../context/ToastContext'
@@ -12,6 +12,7 @@ import { Input, Select } from '../components/ui/Field'
 import { MetricStrip } from '../components/ui/MetricStrip'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TableWrap, TBody, TD, TH, THead, TR } from '../components/ui/Table'
+import { QrScannerDialog } from '../components/QrScannerDialog'
 
 type Phase = 'idle' | 'scan' | 'done'
 
@@ -39,6 +40,7 @@ export function Reconciliation() {
   const [scans, setScans] = useState<string[]>([])
   const [input, setInput] = useState('')
   const [inputError, setInputError] = useState('')
+  const [scannerOpen, setScannerOpen] = useState(false)
 
   const expectedUnits = data.units.filter(
     (unit) => unit.category === 'DURABLE' && roomOf(unit.location) === room,
@@ -63,8 +65,8 @@ export function Reconciliation() {
     setInputError('')
   }
 
-  function addScan() {
-    const id = input.trim().toUpperCase()
+  function addScan(value = input) {
+    const id = value.trim().toUpperCase()
     if (!/^[A-Z0-9]+(-[A-Z0-9]+)+$/.test(id)) {
       setInputError('Enter an asset ID such as KB-0031.')
       return
@@ -275,6 +277,14 @@ export function Reconciliation() {
             <Button type="submit" variant="secondary">
               Add scan
             </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setScannerOpen(true)}
+            >
+              <Camera className="h-4 w-4" aria-hidden="true" />
+              Scan with camera
+            </Button>
             {inputError ? (
               <span role="alert" className="w-full text-xs font-medium text-danger">
                 {inputError}
@@ -408,6 +418,13 @@ export function Reconciliation() {
           </div>
         </Card>
       ) : null}
+
+      <QrScannerDialog
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onScan={(value) => addScan(value)}
+        title="Scan the unit in this room"
+      />
     </>
   )
 }
