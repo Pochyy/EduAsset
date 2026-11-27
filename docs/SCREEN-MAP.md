@@ -31,7 +31,7 @@ and unit lifecycle. See `docs/REVISION-2-DELTA.md` and `docs/HANDOFF.md`.
 
 ## Shared data used by the screens
 
-- 27 units, including every asset referenced by the dashboard, replacement, lab-inventory and
+- 28 units, including every asset referenced by the dashboard, replacement, lab-inventory and
   reconciliation screens.
 - 7 machine slots for 1-to-1 consumables (Black/Drum/Spool).
 - 2 low-value consumable lots (A4 paper, thermal paper) issued by quantity.

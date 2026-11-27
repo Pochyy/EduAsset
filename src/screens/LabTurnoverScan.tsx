@@ -63,6 +63,7 @@ export function LabTurnoverScan() {
   const [exceptionNewId, setExceptionNewId] = useState('')
   const [exceptionReason, setExceptionReason] = useState('')
   const [exceptionTried, setExceptionTried] = useState(false)
+  const [requestNewId, setRequestNewId] = useState('')
 
   const slotConfig =
     turnoverSlots.find((entry) => entry.key === slotKey) ?? turnoverSlots[0]
@@ -97,6 +98,26 @@ export function LabTurnoverScan() {
   const selectedExceptionUnit =
     exceptionCandidates.find((unit) => unit.assetId === exceptionNewId) ??
     exceptionCandidates[0]
+
+  const requestCandidates = activeUnit
+    ? data.units.filter((unit) => {
+        const item = data.items.find((entry) => entry.itemId === unit.itemId)
+        const alreadyRequested = data.turnovers.some(
+          (turnover) =>
+            turnover.status !== 'RELEASED' && turnover.newAssetId === unit.assetId,
+        )
+        return (
+          unit.inventoryStatus === 'IN_STOCK' &&
+          !unit.slotId &&
+          unit.itemId === activeUnit.itemId &&
+          Boolean(item?.requireOneToOne) &&
+          !alreadyRequested
+        )
+      })
+    : []
+  const selectedRequestUnit =
+    requestCandidates.find((unit) => unit.assetId === requestNewId) ??
+    requestCandidates[0]
 
   const exceptionReasonError =
     exceptionTried && exceptionReason.trim().length < 5
@@ -262,6 +283,42 @@ export function LabTurnoverScan() {
   function scan(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     checkScan(input)
+  }
+
+  function requestReplacement(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!activeUnit || !selectedRequestUnit) return
+
+    const turnoverId = nextNumericId(
+      'TO',
+      data.turnovers.map((turnover) => turnover.turnoverId),
+    )
+    const turnover: SeedTurnover = {
+      turnoverId,
+      machineId: slotConfig.machineId,
+      slotId: slotConfig.slotId,
+      location: machine?.location ?? 'WIL Lab',
+      itemId: activeUnit.itemId,
+      oldAssetId: activeUnit.assetId,
+      oldStatus: null,
+      newAssetId: selectedRequestUnit.assetId,
+      status: 'AWAITING_SPENT_SCAN',
+      requestedAt: new Date().toISOString(),
+      exceptionType: null,
+      exceptionReason: null,
+    }
+    dispatch({ type: 'turnover/add', turnover })
+    logAudit(
+      'TURNOVER_REQUESTED',
+      turnoverId,
+      `${selectedRequestUnit.assetId} requested for ${slotConfig.machineId}/${slotLabel}; waiting for ${activeUnit.assetId} to be scanned.`,
+    )
+    setRequestNewId('')
+    showToast(
+      'info',
+      `${turnoverId} requested`,
+      `Scan ${activeUnit.assetId} to complete the spent-unit turnover.`,
+    )
   }
 
   function requestException(event: FormEvent<HTMLFormElement>) {
@@ -488,13 +545,53 @@ export function LabTurnoverScan() {
               <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
               <span className="text-[13px] leading-relaxed text-ink">
                 {activeUnit
-                  ? 'This slot has no open turnover waiting for a spent-unit scan. A replacement must be requested before a scan can complete.'
+                  ? openTurnover
+                    ? `No further scan is needed. ${openTurnover.newAssetId} is waiting for the Custodian’s approval.`
+                    : 'This slot has no open turnover. Request a replacement unit before scanning the spent unit.'
                   : openTurnover
                     ? `No further scan is needed. ${openTurnover.newAssetId} is waiting for the Custodian’s approval.`
                     : 'The slot is empty. Use the exception request below to install a new unit.'}
               </span>
             </div>
           )}
+
+          {activeUnit && !openTurnover ? (
+            requestCandidates.length > 0 ? (
+              <form
+                onSubmit={requestReplacement}
+                noValidate
+                className="flex flex-col gap-3 border-t border-line-soft pt-4"
+              >
+                <div className="flex flex-col gap-0.5">
+                  <h3 className="text-[13px] font-semibold text-ink">Request replacement</h3>
+                  <p className="text-xs leading-relaxed text-muted">
+                    Choose an IN_STOCK 1-to-1 unit. The spent unit must be scanned before release.
+                  </p>
+                </div>
+                <Field label="New unit" htmlFor="turnover-request-unit">
+                  <Select
+                    id="turnover-request-unit"
+                    value={selectedRequestUnit?.assetId ?? ''}
+                    onChange={(event) => setRequestNewId(event.target.value)}
+                  >
+                    {requestCandidates.map((unit) => (
+                      <option key={unit.assetId} value={unit.assetId}>
+                        {unit.assetId} · {unit.itemName}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+                <Button type="submit" variant="secondary" className="self-start">
+                  Request replacement
+                </Button>
+              </form>
+            ) : (
+              <p className="text-[13px] leading-relaxed text-muted">
+                No IN_STOCK, never-issued unit is available for this item. Receive a new unit first,
+                then request the replacement.
+              </p>
+            )
+          ) : null}
         </Card>
 
         <Card className="flex flex-col gap-4 p-5">

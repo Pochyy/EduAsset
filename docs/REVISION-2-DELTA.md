@@ -195,7 +195,8 @@ These are the design decisions made to expose required capabilities without addi
 - Added `LOT-A4-2026-001` (40 reams on hand) and `LOT-THRM-2026-001` (10 rolls on hand).
 - Added `CD-2026-0019` as a `RECOMMENDED` condemnation for `WIL-3DP-002` at 55.3% BER.
 - Added a seeded condemnation recommendation to the live audit log.
-- Unit count is now **27**; lots are **2**.
+- Unit count is now **28** (27 after the lot conversion, plus `TNR-WIL-2026-003` as a spare
+  replacement candidate added during the Module 2 recheck); lots are **2**.
 
 ### UI placement choices (not specified by the SRS)
 
@@ -230,6 +231,30 @@ These are the design decisions made to expose required capabilities without addi
   - The 500 lot cut-off is a sample placeholder.
   - Lot intake (creating a lot from Receive New Items) is Module 4.
   - Real PDF generation and server-side append-only auditing remain backend work.
+
+### Module 2 recheck (after Pass 3)
+
+The recheck against FR-2.01–FR-2.11 found two gaps:
+
+- **FR-2.03 normal replacement request:** Turnover Scan could only act on seeded turnover requests.
+  Added a **Request replacement** form for a slot with an active unit and no open turnover. It lists
+  eligible `IN_STOCK`, never-issued units of the same item, creates an `AWAITING_SPENT_SCAN` turnover,
+  and then exposes the scan step. A spare `TNR-WIL-2026-003` was added so the full flow is
+  demonstrable after the initial toner release.
+- **FR-2.04 / 2.08 release guards:** Turnover Approval now refuses to release if the old unit is not
+  `RETURNED_EMPTY`/`RETURNED_PARTIAL` (unless an approved exception exists), if another `IN_USE` unit
+  occupies the slot, or if the new unit is not `IN_STOCK` with no slot. The UI already prevented most
+  of these states, but the guard is now explicit.
+
+Re-tested:
+- Initial TNR release → TNR-002 `IN_USE` in Black.
+- Request replacement → TNR-003 requested, TNR-002 scanned `RETURNED_EMPTY`, TNR-003 approved into
+  Black.
+- The release guard did not block the valid flow; no console errors.
+- `npm run build` passes.
+
+Status-token note: the app uses `AWAITING_SPENT_SCAN`; the SDD names the same state `AWAITING_SCAN`.
+This is a naming map, not a behavioural difference.
 
 ## Verification for Pass 1
 

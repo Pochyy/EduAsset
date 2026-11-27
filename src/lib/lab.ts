@@ -18,6 +18,7 @@ export const inventoryMachineIds = [
 export const inventoryConsumableIds = [
   'TNR-WIL-2026-001',
   'TNR-WIL-2026-002',
+  'TNR-WIL-2026-003',
   'DRM-WIL-2026-004',
   'DRM-WIL-2026-005',
   'FIL-WIL-2026-014',

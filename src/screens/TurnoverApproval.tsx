@@ -4,6 +4,7 @@ import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import {
+  activeUnitForSlot,
   formatShortDate,
   itemNameOf,
   shortLocation,
@@ -138,6 +139,40 @@ export function TurnoverApproval() {
       : undefined
     const machine = data.units.find((unit) => unit.assetId === turnover.machineId)
     const existingNew = data.units.find((unit) => unit.assetId === turnover.newAssetId)
+    const activeInSlot = activeUnitForSlot(turnover.slotId ?? '', data.units)
+
+    if (activeInSlot && activeInSlot.assetId !== turnover.oldAssetId) {
+      showToast(
+        'error',
+        'Slot is occupied',
+        `${activeInSlot.assetId} is still IN_USE in this slot. Return it before releasing another unit.`,
+      )
+      return
+    }
+    if (
+      !turnover.exceptionType &&
+      (!oldUnit ||
+        !['RETURNED_EMPTY', 'RETURNED_PARTIAL'].includes(oldUnit.inventoryStatus))
+    ) {
+      showToast(
+        'error',
+        'Spent unit is not returned',
+        'The old unit must be scanned as RETURNED_EMPTY or RETURNED_PARTIAL before release.',
+      )
+      return
+    }
+    if (
+      existingNew &&
+      (existingNew.inventoryStatus !== 'IN_STOCK' || Boolean(existingNew.slotId))
+    ) {
+      showToast(
+        'error',
+        'New unit is not available',
+        `${turnover.newAssetId} is not IN_STOCK with an empty slot. Choose another candidate.`,
+      )
+      return
+    }
+
     const oldStatus = turnover.oldStatus ?? 'RETURNED_EMPTY'
     const newUnit: SeedUnit = existingNew
       ? {

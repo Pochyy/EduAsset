@@ -221,7 +221,8 @@ Response: the requisition with `baselineVolume`, `expectedVolume`, `currentTermV
 ## 6. Module 2 — 1-to-1 turnover and machine slots
 
 A machine slot is the 1-to-1 consumable position on a machine (for example `WIL-PRN-01/Black`).
-At most one `IN_USE` unit may occupy a slot.
+At most one `IN_USE` unit may occupy a slot. The app token `AWAITING_SPENT_SCAN` maps to the SDD’s
+`AWAITING_SCAN`; it is the same state.
 
 ### `GET /turnovers?status=`
 Returns turnover requests with `machineId`, `slotId`, `itemId`, `oldAssetId` (nullable),
