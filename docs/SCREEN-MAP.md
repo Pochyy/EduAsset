@@ -6,8 +6,9 @@ with `docs/API-CONTRACT.md` and `docs/SEED-DATA.json`.
 **React implementation:** all 17 screens are ported. The app shell, both dashboards, demand and
 turnover decisions, ledger/audit tools, repair/BER, verified replacement, intake and the complete Lab
 portal are live routes. The static reference remains under `design/` for visual comparison. Revision 2
-is being applied module by module; passes 1–3 cover the foundation, forecasting/variance, turnover
-and unit lifecycle. See `docs/REVISION-2-DELTA.md` and `docs/HANDOFF.md`.
+is being applied module by module; passes 1–4 cover the foundation, forecasting/variance, turnover,
+unit lifecycle, AI intake and the phone shell. See `docs/REVISION-2-DELTA.md` and
+`docs/HANDOFF.md`.
 
 | # | Screen | File | Figures | Primary requirements | Main actions |
 |---|---|---|---|---|---|
@@ -21,7 +22,7 @@ and unit lifecycle. See `docs/REVISION-2-DELTA.md` and `docs/HANDOFF.md`.
 | 8 | Verified Replacement | `design/screens/central-verified-replacement.dc.html` | 3.24, 3.25 | FR-3.18–FR-3.25, UC-3.6 | Old/new scan, four rules, photos, second approver, rejection log |
 | 9 | Reconciliation | `design/screens/central-reconciliation.dc.html` | 3.26 | FR-3.26 | Schedule, room scan, missing/unexpected, finish + queue hand-off |
 | 10 | Audit Queue | `design/screens/central-audit-queue.dc.html` | 3.27 | FR-2.10, FR-3.25, FR-3.27 | Type tabs including turnover exceptions, review note, reviewer/timestamp |
-| 11 | Receive New Items | `design/screens/central-receive-items.dc.html` | 3.30–3.34 | FR-4.01–FR-4.10, FR-3.01–FR-3.04 | DR/PO link, photo + AI, manual fallback, quantity, QR sheet |
+| 11 | Receive New Items | `design/screens/central-receive-items.dc.html` | 3.30–3.34 | FR-4.01–FR-4.10, FR-3.01–FR-3.04, FR-3.28 | DR/PO link, photo + AI, manual fallback, quantity, printable QR sheet, low-value lot intake |
 | 12 | Lab Dashboard | `design/screens/lab-dashboard.dc.html` | 3.37 | §3.3.1, FR-2.09 | Quick actions, installed consumable per machine slot, requisitions, work orders |
 | 13 | Lab Inventory | `design/screens/lab-inventory.dc.html` | 3.14 | FR-2.01, FR-2.09, FR-2.11, FR-3.28 | Machines/consumables/peripherals/lots, active unit per slot, partial-spool re-issue, lot quantity issue |
 | 14 | Report Incident | `design/screens/lab-report-incident.dc.html` | 3.19 | FR-3.10, FR-3.11 | Scan, type, recurring flag, description, required photo |

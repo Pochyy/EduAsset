@@ -3,7 +3,7 @@
 **Date:** 27 November 2026
 **Branch:** `feat/srs-v2-update`
 **Sources:** `EduAsset_SRS_Revised.docx` (SRS v2), `EduAsset_SDD_Revised.docx`
-**Status:** Passes 1–3 complete. Module 4 and the responsive/camera work remain pending.
+**Status:** Passes 1–4 complete. Real QR-camera decoding, PR printing and backend integration remain.
 
 This file records what changed, why it changed, and which parts are UI placement choices rather than SRS requirements. It is the audit trail for the revision-2 work.
 
@@ -208,8 +208,8 @@ These are the design decisions made to expose required capabilities without addi
 4. **Print form** uses browser print with an `.ea-print-area` print rule. The SDD’s production PDF
    generator remains backend work.
 5. **Lot cut-off 500** is a labelled sample because the SRS value is still bracketed.
-6. **Print** is implemented for the condemnation form only in this pass; QR/PR print can reuse the
-   same rule in a later pass.
+6. **Print** is implemented for the condemnation form in this pass; Pass 4 adds QR-sheet printing.
+   PR printing remains for the final pass.
 
 ### Verification for Pass 3
 
@@ -229,7 +229,7 @@ These are the design decisions made to expose required capabilities without addi
   - The CIT Property Office’s actual form fields are still not supplied; the current layout is the
     documented prototype format.
   - The 500 lot cut-off is a sample placeholder.
-  - Lot intake (creating a lot from Receive New Items) is Module 4.
+  - Lot intake (creating a lot from Receive New Items) was completed in Pass 4.
   - Real PDF generation and server-side append-only auditing remain backend work.
 
 ### Module 3 recheck (after Module 2 recheck)
@@ -265,6 +265,74 @@ Re-tested:
 Status-token note: the app uses `AWAITING_SPENT_SCAN`; the SDD names the same state `AWAITING_SCAN`.
 This is a naming map, not a behavioural difference.
 
+---
+
+## Pass 4: Module 4 — AI-assisted intake and shell
+
+### Requirement mapping
+
+| Requirement | What was added | Where |
+|---|---|---|
+| **FR-4.01** — delivery record required | Retained: step 1 blocks until a delivery receipt or PO is selected. | Receive New Items |
+| **FR-4.02** — accept a photo of one item type | Step 2 now uses a real image input (`accept="image/*"`, `capture="environment"` on phones) with a local preview. A **Use sample photo** action keeps the prototype demo path. The image is never uploaded in this frontend-only build. | Receive New Items |
+| **FR-4.03** — backend-only AI key | Still simulated. No AI service, API key or upload exists in the client; the future backend owns this call. | Receive New Items |
+| **FR-4.04** — AI returns name + fixed category | Retained: the simulated suggestion returns only an item name and one of the fixed categories. | Receive New Items |
+| **FR-4.05** — pre-fill, staff may edit | Retained: the suggestion populates the form and every field stays editable. | Receive New Items |
+| **FR-4.06** — quantity typed, never inferred | Retained: quantity is a staff-entered number; the AI panel states it does not count units. | Receive New Items |
+| **FR-4.07** — explicit confirmation | Retained: save is blocked without the confirmation checkbox. | Receive New Items |
+| **FR-4.08** — one IN_STOCK record and QR per unit; printable sheet | Unit intake still creates one record per unit with asset ID and QR. **Print all labels** now calls browser print against a print-only QR sheet with a delivery/item header; labels flow across pages instead of being clipped to one. | Receive New Items, `src/index.css` |
+| **FR-4.09** — manual fallback | Retained: manual registration works with no photo and when the simulated AI fails. | Receive New Items |
+| **FR-4.10** — AI never counts, reads serials or judges newness | Retained: serials stay manual and the AI never receives count or serial fields. | Receive New Items |
+| **FR-3.28** — low-value consumables as lots | Receive New Items branches to a **lot record** when the item is a consumable, is not flagged 1-to-1, and its unit cost is at or below `lotUnitCostCutoff`. One record stores quantity received/on hand; no asset IDs or QR codes are generated. Additional deliveries add stock to the matching forecast row. New lot items get a `NO RECENT USE` forecast row. | Receive New Items, `AppDataContext` |
+| **SRS §3.3.1** — sidebar becomes a horizontal menu on phones | Below `lg`, the drawer was replaced with a horizontally scrollable menu under the top bar. The active item scrolls into view; touch targets stay 44 px. The desktop sidebar is unchanged. | `Sidebar.tsx`, `TopBar.tsx`, `AppShell.tsx` |
+
+### Direct-requirement reconciliation
+
+`FR-4.08` says one record per unit, while `FR-3.28` says low-value, non-returned consumables are
+recorded as lots with a quantity. The app resolves this by branching on the policy cut-off and the
+1-to-1 flag:
+
+- Normal units and 1-to-1 consumables follow FR-4.08: one `IN_STOCK` record and QR per unit.
+- Low-value, non-1-to-1 consumables follow FR-3.28: one lot record, issued by quantity.
+- The step guide and step 4 change to **Lot record** for the lot branch; the QR grid and print action
+  are hidden because no per-unit codes exist.
+
+### UI placement choices (not specified by the SRS)
+
+1. The fourth step label switches between **Printable QR sheet** and **Lot record** based on the live
+   policy/1-to-1 decision.
+2. Lot details are shown as a definition list (ID, item, quantity on hand, delivery, location, date)
+   after saving.
+3. Printing uses the browser print dialog and the existing `.ea-print-area` convention; production
+   PDF generation remains backend work.
+4. The sample-photo action is a demo aid; it is not part of the SRS flow.
+5. The horizontal phone menu scrolls the active route into view; group headings are omitted at that
+   width to keep the row compact.
+6. On phone width the signed-in user collapses to initials, with an accessible “Signed in as …”
+   label; alerts and sign out stay visible.
+
+### Verification for Pass 4
+
+- `npm run build` passes.
+- Lot intake: A4 paper received against `DR-119` (25 reams) created `LOT-A4-2026-002`, updated the
+  A4 forecast stock, and produced no QR labels.
+- New lot item: Thermal receipt paper (12 reams at ₱60) created a lot and a forecast row showing
+  **NO RECENT USE**.
+- Unit intake: USB-C dock (2 units) created `KB-0155` and `KB-0156`, each with a QR label; the print
+  area contains both labels and the print-only header is hidden on screen.
+- Photo path: sample photo → simulated AI suggestion → pre-filled, editable step 3.
+- 17 routes re-swept at 390 and 598 px: one `h1` each, no page-level overflow, no hamburger button,
+  phone menu visible, active item in view. The 982 px tablet shell and the 1440 px desktop sidebar
+  were checked separately; both are clean.
+- No console errors in the tested intake and shell flows.
+
+Known limits at the end of Pass 4:
+
+- The AI response is still simulated; no image is analysed or uploaded.
+- QR scanning in Turnover Scan / Report Incident still uses typed IDs and demo scans, not the camera.
+- PR printing is not added yet.
+- All state, policy and audit entries reset on reload; there is no backend.
+
 ## Verification for Pass 1
 
 - `npm run build` passes.
@@ -287,7 +355,7 @@ This is a naming map, not a behavioural difference.
   - PR dialog shows BR basis, BR_w/BR_season, days to depletion and requested quantity.
   - The Central Dashboard depletion outlook updated when the policy/forecast changed.
 
-## Known limits
+## Known limits at the end of Pass 1 (historical)
 
 - The mock policy values reset on a page reload; there is no persistence yet.
 - The full audit log is not implemented; policy changes are only described as auditable.

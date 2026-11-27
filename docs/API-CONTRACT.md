@@ -414,12 +414,23 @@ On timeout/error return `503 AI_UNAVAILABLE`; the client offers manual registrat
 }
 ```
 
-`quantity` 1–500 and must be staff-typed (never AI-derived). On save: create one `IN_STOCK` unit per
-quantity, generate asset IDs + QR values, link each to the delivery record, return the printable label
-sheet. `serials` are optional and per unit (FR-3.02/4.08).
+`quantity` 1–500 and must be staff-typed (never AI-derived). `serials` are optional and per unit
+(FR-3.02/4.08).
+
+The save branch follows FR-3.28 as well as FR-4.08:
+
+- If the item is a consumable, is **not** flagged 1-to-1, and `unitCost <= policy.lotUnitCostCutoff`,
+  create one `consumable_lot` with `qty_received` and `qty_on_hand`; update the item's forecast stock.
+  Do not generate asset IDs or QR codes. Return `{ "lot": { ... }, "labels": [] }`.
+- Otherwise create one `IN_STOCK` unit per quantity, generate asset IDs + QR values, link each to the
+  delivery record, and return the printable label sheet.
+
+A new lot item gets a forecast row with zero issuance history and a `NO_RECENT_USE` status until it
+is issued. The client mirrors both branches.
 
 ### `GET /intake/{id}/labels`
 Returns `[{ "assetId": "KB-0155", "qrPayload": "KB-0155", "deliveryRecordId": "DR-118" }]` for printing.
+Returns `[]` for a lot intake because lots have no per-unit QR codes.
 
 ---
 

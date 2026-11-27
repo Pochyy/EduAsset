@@ -72,7 +72,9 @@ export type AppDataAction =
   | { type: 'item/patch'; id: string; patch: Partial<SeedItem> }
   | { type: 'item/add'; item: SeedItem }
   | { type: 'forecast/update'; id: string; patch: Partial<ForecastRow> }
+  | { type: 'forecast/add'; row: ForecastRow }
   | { type: 'policy/update'; patch: Partial<PolicySettings> }
+  | { type: 'lot/add'; lot: SeedLot }
   | { type: 'lot/issue'; lotId: string; quantity: number }
   | { type: 'condemnation/recommend'; condemnation: SeedCondemnation }
   | {
@@ -251,10 +253,27 @@ function reducer(state: AppData, action: AppDataAction): AppData {
           row.id === action.id ? { ...row, ...action.patch } : row,
         ),
       }
+    case 'forecast/add':
+      return {
+        ...state,
+        forecast: state.forecast.some((row) => row.id === action.row.id)
+          ? state.forecast
+          : [...state.forecast, action.row],
+      }
     case 'policy/update':
       return {
         ...state,
         policy: { ...state.policy, ...action.patch },
+      }
+    case 'lot/add':
+      return {
+        ...state,
+        lots: [action.lot, ...state.lots],
+        forecast: state.forecast.map((row) =>
+          row.lotItemId === action.lot.itemId
+            ? { ...row, stock: row.stock + action.lot.qtyReceived }
+            : row,
+        ),
       }
     case 'lot/issue': {
       const lot = state.lots.find((entry) => entry.lotId === action.lotId)

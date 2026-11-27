@@ -1,4 +1,4 @@
-import { Bell, LogOut, Menu } from 'lucide-react'
+import { Bell, LogOut } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import type { Portal } from '../../types'
@@ -8,10 +8,9 @@ import { alertsCount, alertsHref } from './nav'
 
 interface TopBarProps {
   portal: Portal
-  onMenu: () => void
 }
 
-export function TopBar({ portal, onMenu }: TopBarProps) {
+export function TopBar({ portal }: TopBarProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const alerts = alertsCount(portal)
@@ -20,14 +19,6 @@ export function TopBar({ portal, onMenu }: TopBarProps) {
   return (
     <header className="sticky top-0 z-30 flex min-h-[72px] items-center justify-between gap-3 border-b border-line bg-paper px-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-2">
-        <button
-          type="button"
-          onClick={onMenu}
-          aria-label="Open navigation"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-ink transition-colors hover:bg-butter-soft lg:hidden"
-        >
-          <Menu className="h-5 w-5" aria-hidden="true" />
-        </button>
         <Link
           to={portalHome(portal)}
           className="flex min-h-11 min-w-0 items-center gap-3 rounded-control"
@@ -57,14 +48,18 @@ export function TopBar({ portal, onMenu }: TopBarProps) {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-2.5 rounded-control bg-butter py-1.5 pl-1.5 pr-3.5 md:flex">
+        <div
+          className="flex items-center gap-2.5 rounded-control bg-butter py-1.5 pl-1.5 pr-1.5 md:pr-3.5"
+          role="group"
+          aria-label={`Signed in as ${user?.name ?? 'EduAsset'}`}
+        >
           <span
             aria-hidden="true"
             className="flex h-8 w-8 items-center justify-center rounded-full bg-amber text-[13px] font-semibold text-ink"
           >
             {initialsOf(user?.name ?? 'EduAsset')}
           </span>
-          <span className="flex flex-col leading-tight">
+          <span className="hidden flex-col leading-tight md:flex">
             <span className="max-w-[180px] truncate text-[13px] font-medium text-ink">
               {user?.name}
             </span>
