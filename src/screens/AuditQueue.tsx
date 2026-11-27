@@ -160,6 +160,13 @@ export function AuditQueue() {
         tabs={tabs}
       />
 
+      {tab === 'dormant' ? (
+        <p className="text-[13px] text-muted">
+          Current dormancy threshold: <strong>{data.policy.dormantDays} days</strong>. The
+          Property Office can change it in Policy settings.
+        </p>
+      ) : null}
+
       <section className="flex flex-col gap-4">
         {flags.length === 0 ? (
           <Card>

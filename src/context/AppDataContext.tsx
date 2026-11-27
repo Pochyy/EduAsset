@@ -11,7 +11,9 @@ import type {
   PolicySettings,
   SeedAuditEntry,
   SeedAuditFlag,
+  SeedCondemnation,
   SeedItem,
+  SeedLot,
   SeedMachineSlot,
   SeedRequisition,
   SeedTurnover,
@@ -26,6 +28,8 @@ export interface AppData {
   machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
+  lots: SeedLot[]
+  condemnations: SeedCondemnation[]
   workOrders: SeedWorkOrder[]
   auditFlags: SeedAuditFlag[]
   auditLog: SeedAuditEntry[]
@@ -69,6 +73,15 @@ export type AppDataAction =
   | { type: 'item/add'; item: SeedItem }
   | { type: 'forecast/update'; id: string; patch: Partial<ForecastRow> }
   | { type: 'policy/update'; patch: Partial<PolicySettings> }
+  | { type: 'lot/issue'; lotId: string; quantity: number }
+  | { type: 'condemnation/recommend'; condemnation: SeedCondemnation }
+  | {
+      type: 'condemnation/decide'
+      id: string
+      status: 'APPROVED' | 'OVERRIDDEN'
+      decidedBy: string
+      reason: string | null
+    }
 
 interface AppDataContextValue {
   data: AppData
@@ -81,6 +94,8 @@ const initialData: AppData = {
   machineSlots: seed.machineSlots,
   requisitions: seed.requisitions,
   turnovers: seed.turnovers,
+  lots: seed.lots,
+  condemnations: seed.condemnations,
   workOrders: seed.workOrders,
   auditFlags: seed.auditFlags,
   auditLog: seed.auditLog,
@@ -240,6 +255,43 @@ function reducer(state: AppData, action: AppDataAction): AppData {
       return {
         ...state,
         policy: { ...state.policy, ...action.patch },
+      }
+    case 'lot/issue': {
+      const lot = state.lots.find((entry) => entry.lotId === action.lotId)
+      if (!lot) return state
+      return {
+        ...state,
+        lots: state.lots.map((entry) =>
+          entry.lotId === action.lotId
+            ? { ...entry, qtyOnHand: Math.max(0, entry.qtyOnHand - action.quantity) }
+            : entry,
+        ),
+        forecast: state.forecast.map((row) =>
+          row.lotItemId === lot.itemId
+            ? { ...row, stock: Math.max(0, row.stock - action.quantity) }
+            : row,
+        ),
+      }
+    }
+    case 'condemnation/recommend':
+      return {
+        ...state,
+        condemnations: [action.condemnation, ...state.condemnations],
+      }
+    case 'condemnation/decide':
+      return {
+        ...state,
+        condemnations: state.condemnations.map((condemnation) =>
+          condemnation.id === action.id
+            ? {
+                ...condemnation,
+                status: action.status,
+                decidedBy: action.decidedBy,
+                decisionReason: action.reason,
+                decidedAt: new Date().toISOString(),
+              }
+            : condemnation,
+        ),
       }
     default:
       return state

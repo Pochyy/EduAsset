@@ -3,7 +3,7 @@ import { ArrowRight, Plus, QrCode, Search, Wrench, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useToast } from '../context/ToastContext'
-import { healthStatus, inventoryStatus, slotNameFor } from '../lib/lab'
+import { formatShortDate, healthStatus, inventoryStatus, itemNameOf, slotNameFor } from '../lib/lab'
 import { qrPath } from '../lib/qr'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
@@ -254,6 +254,7 @@ export function MasterLedger() {
             <option value="IN_STOCK">IN_STOCK</option>
             <option value="IN_USE">IN_USE</option>
             <option value="RETURNED_EMPTY">RETURNED_EMPTY</option>
+            <option value="RETURNED_PARTIAL">RETURNED_PARTIAL</option>
             <option value="RETIRED">RETIRED</option>
           </Select>
         </div>
@@ -341,6 +342,57 @@ export function MasterLedger() {
           </TableWrap>
         )}
       </section>
+
+      <Card className="flex flex-col gap-3 p-5">
+        <div className="flex flex-col gap-0.5">
+          <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
+            Low-value consumable lots
+          </h2>
+          <p className="text-[13px] leading-relaxed text-muted">
+            Lot-tracked items below the ₱{data.policy.lotUnitCostCutoff} cut-off are issued by
+            quantity and do not receive per-unit QR codes.
+          </p>
+        </div>
+        {data.lots.length === 0 ? (
+          <EmptyState
+            icon={Search}
+            title="No lot records"
+            description="Low-value consumables appear here when received as lots."
+          />
+        ) : (
+          <TableWrap>
+            <Table className="min-w-[560px]">
+              <THead>
+                <tr>
+                  <TH>Lot ID</TH>
+                  <TH>Item</TH>
+                  <TH>Location</TH>
+                  <TH numeric>Received</TH>
+                  <TH numeric>On hand</TH>
+                </tr>
+              </THead>
+              <TBody>
+                {data.lots.map((lot) => {
+                  const item = data.items.find((entry) => entry.itemId === lot.itemId)
+                  return (
+                    <TR key={lot.lotId}>
+                      <TD className="whitespace-nowrap font-mono text-xs font-bold">
+                        {lot.lotId}
+                      </TD>
+                      <TD>{itemNameOf(data.items, lot.itemId)}</TD>
+                      <TD className="whitespace-nowrap">{lot.location}</TD>
+                      <TD numeric>{formatShortDate(lot.receivedAt)}</TD>
+                      <TD numeric className="font-semibold">
+                        {lot.qtyOnHand} {item?.unit ?? 'units'}
+                      </TD>
+                    </TR>
+                  )
+                })}
+              </TBody>
+            </Table>
+          </TableWrap>
+        )}
+      </Card>
 
       {openUnit ? (
         <div

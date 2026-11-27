@@ -162,7 +162,7 @@ export function LabWorkOrders() {
                 <WorkOrderProgress workOrder={workOrder} />
 
                 <p className="text-[13px] leading-relaxed text-muted">
-                  {workOrderNote(workOrder)}
+                  {workOrderNote(workOrder, data.policy.berThresholdPct)}
                 </p>
               </Card>
             )

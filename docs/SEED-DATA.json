@@ -9,7 +9,10 @@
       "CONDEMNED_BER is displayed as 'CONDEMNED / BER' in the UI.",
       "NOT_APPLICABLE is displayed as '-' for consumable health.",
       "Variance data uses a pro-rated term: week 10 of 16.",
-      "Forecast data uses sample 14-day, 42-day and last-term issuance history."
+      "Forecast data uses sample 14-day, 42-day and last-term issuance history.",
+      "A4 paper and thermal paper are lot-tracked; they do not use per-unit QR codes.",
+      "CD-2026-0019 is a Custodian recommendation; the system does not condemn automatically.",
+      "The lot unit-cost cut-off (500) is a sample SRS placeholder."
     ]
   },
   "term": { "weeksInTerm": 16, "weeksElapsed": 10 },
@@ -18,7 +21,10 @@
     "varianceLockPct": 50,
     "forecastWindowDays": 14,
     "lowVolumeWindowDays": 42,
-    "lowVolumeIssueThreshold": 3
+    "lowVolumeIssueThreshold": 3,
+    "berThresholdPct": 50,
+    "dormantDays": 60,
+    "lotUnitCostCutoff": 500
   },
   "users": [
     { "id": "usr_01", "name": "Property Custodian", "email": "custodian@cit.edu", "role": "CENTRAL_CUSTODIAN", "portal": "CENTRAL" },
@@ -28,21 +34,21 @@
     { "id": "usr_05", "name": "Campus Technician", "email": "technician@cit.edu", "role": "TECHNICIAN", "portal": null }
   ],
   "items": [
-    { "itemId": "TNR", "name": "HP LaserJet Toner W9004MC", "category": "CONSUMABLE", "unit": "cartridge", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": true },
-    { "itemId": "A4", "name": "Bond paper A4 (ream)", "category": "CONSUMABLE", "unit": "ream", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": false },
-    { "itemId": "CTN", "name": "Color toner (cyan) W9001MC", "category": "CONSUMABLE", "unit": "cartridge", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": false },
-    { "itemId": "PLA", "name": "PLA filament spool 1 kg", "category": "CONSUMABLE", "unit": "spool", "leadTimeDays": 14, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": true },
-    { "itemId": "DRM", "name": "Imaging drum unit W1104A", "category": "CONSUMABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": true },
-    { "itemId": "KB_USB", "name": "Keyboard (USB)", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 1200, "requireOneToOne": false },
-    { "itemId": "3DP_ENDER", "name": "Creality Ender-3 V3 Plus", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 28000, "requireOneToOne": false },
-    { "itemId": "PRN_MFP", "name": "HP LaserJet MFP", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 45000, "requireOneToOne": false },
-    { "itemId": "PRN_PRO", "name": "HP LaserJet Pro", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 32000, "requireOneToOne": false },
-    { "itemId": "SHR", "name": "Document shredder", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 18000, "requireOneToOne": false },
-    { "itemId": "WS", "name": "Lab workstation", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 35000, "requireOneToOne": false },
-    { "itemId": "MS", "name": "Mouse", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 800, "requireOneToOne": false },
-    { "itemId": "MON", "name": "Testing monitor", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 12000, "requireOneToOne": false },
-    { "itemId": "LAM", "name": "Heavy laminator", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 25000, "requireOneToOne": false },
-    { "itemId": "THRM", "name": "Thermal paper roll", "category": "CONSUMABLE", "unit": "roll", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": false }
+    { "itemId": "TNR", "name": "HP LaserJet Toner W9004MC", "category": "CONSUMABLE", "unit": "cartridge", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 4500, "requireOneToOne": true },
+    { "itemId": "A4", "name": "Bond paper A4 (ream)", "category": "CONSUMABLE", "unit": "ream", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 250, "requireOneToOne": false },
+    { "itemId": "CTN", "name": "Color toner (cyan) W9001MC", "category": "CONSUMABLE", "unit": "cartridge", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 4200, "requireOneToOne": false },
+    { "itemId": "PLA", "name": "PLA filament spool 1 kg", "category": "CONSUMABLE", "unit": "spool", "leadTimeDays": 14, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 1200, "requireOneToOne": true },
+    { "itemId": "DRM", "name": "Imaging drum unit W1104A", "category": "CONSUMABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 3800, "requireOneToOne": true },
+    { "itemId": "KB_USB", "name": "Keyboard (USB)", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 1200, "unitCost": 1200, "requireOneToOne": false },
+    { "itemId": "3DP_ENDER", "name": "Creality Ender-3 V3 Plus", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 28000, "unitCost": 28000, "requireOneToOne": false },
+    { "itemId": "PRN_MFP", "name": "HP LaserJet MFP", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 45000, "unitCost": 45000, "requireOneToOne": false },
+    { "itemId": "PRN_PRO", "name": "HP LaserJet Pro", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 32000, "unitCost": 32000, "requireOneToOne": false },
+    { "itemId": "SHR", "name": "Document shredder", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 18000, "unitCost": 18000, "requireOneToOne": false },
+    { "itemId": "WS", "name": "Lab workstation", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 35000, "unitCost": 35000, "requireOneToOne": false },
+    { "itemId": "MS", "name": "Mouse", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 800, "unitCost": 800, "requireOneToOne": false },
+    { "itemId": "MON", "name": "Testing monitor", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 12000, "unitCost": 12000, "requireOneToOne": false },
+    { "itemId": "LAM", "name": "Heavy laminator", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 25000, "unitCost": 25000, "requireOneToOne": false },
+    { "itemId": "THRM", "name": "Thermal paper roll", "category": "CONSUMABLE", "unit": "roll", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "unitCost": 80, "requireOneToOne": false }
   ],
   "machineSlots": [
     { "id": "PRN01-BLK", "machineId": "WIL-PRN-01", "slotName": "Black" },
@@ -63,7 +69,6 @@
     { "assetId": "WIL-PRN-02", "itemId": "PRN_PRO", "itemName": "HP LaserJet Pro", "category": "DURABLE", "location": "WIL Lab 2", "inventoryStatus": "IN_USE", "healthState": "NEEDS_MAINTENANCE", "deliveryRecordId": "DR-013", "deliveryDate": "2026-01-19", "serialNumber": "HPX-552944", "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "TNR-WIL-2026-001", "itemId": "TNR", "itemName": "HP LaserJet Toner W9004MC", "category": "CONSUMABLE", "location": "WIL Lab 3", "inventoryStatus": "RETURNED_EMPTY", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": "WIL-PRN-01", "pendingDisbursement": false },
     { "assetId": "TNR-WIL-2026-002", "itemId": "TNR", "itemName": "HP LaserJet Toner W9004MC", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": "WIL-PRN-01", "pendingDisbursement": true },
-    { "assetId": "BP-A4-0031", "itemId": "A4", "itemName": "Bond paper A4 (ream)", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-110", "deliveryDate": "2026-11-05", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "KB-0151", "itemId": "KB_USB", "itemName": "Keyboard (USB)", "category": "DURABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-118", "deliveryDate": "2026-11-18", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "KB-0153", "itemId": "KB_USB", "itemName": "Keyboard (USB)", "category": "DURABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-118", "deliveryDate": "2026-11-18", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "KB-0154", "itemId": "KB_USB", "itemName": "Keyboard (USB)", "category": "DURABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-118", "deliveryDate": "2026-11-18", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
@@ -81,8 +86,7 @@
     { "assetId": "DRM-WIL-2026-004", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "WIL Lab 2", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": "WIL-PRN-02", "slotId": "PRN02-DRM", "pendingDisbursement": false },
     { "assetId": "DRM-WIL-2026-005", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": null, "slotId": null, "pendingDisbursement": false },
     { "assetId": "FIL-WIL-2026-014", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "WIL Lab 1", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "slotId": "3DP1-SPL1", "pendingDisbursement": false },
-    { "assetId": "FIL-WIL-2026-015", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "slotId": null, "pendingDisbursement": true },
-    { "assetId": "BP-A4-0028", "itemId": "A4", "itemName": "Bond paper A4 (ream)", "category": "CONSUMABLE", "location": "WIL Lab 3", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-110", "deliveryDate": "2026-11-05", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false }
+    { "assetId": "FIL-WIL-2026-015", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "slotId": null, "pendingDisbursement": true }
   ],
   "requisitions": [
     { "requisitionId": "RQ-1021", "labId": "WIL-LAB-3", "itemId": "A4", "quantity": 10, "unit": "reams", "baselineVolume": 2, "expectedVolume": 1.25, "currentTermVolume": 10, "variancePercent": 700.0, "band": "ABNORMAL", "weeksElapsed": 10, "weeksInTerm": 16, "status": "LOCKED_REVIEW", "requestedAt": "2026-11-19T08:40:00+08:00", "justification": null },
@@ -97,6 +101,13 @@
     { "turnoverId": "TO-002", "machineId": "WIL-3DP-001", "slotId": "3DP1-SPL1", "location": "WIL Lab 1", "itemId": "PLA", "oldAssetId": "FIL-WIL-2026-014", "oldStatus": null, "newAssetId": "FIL-WIL-2026-015", "status": "AWAITING_SPENT_SCAN", "requestedAt": "2026-11-19T09:12:00+08:00", "exceptionType": null, "exceptionReason": null },
     { "turnoverId": "TO-003", "machineId": "WIL-PRN-02", "slotId": "PRN02-DRM", "location": "WIL Lab 2", "itemId": "DRM", "oldAssetId": "DRM-WIL-2026-003", "oldStatus": "RETURNED_EMPTY", "newAssetId": "DRM-WIL-2026-004", "status": "RELEASED", "requestedAt": "2026-11-18T16:30:00+08:00", "exceptionType": null, "exceptionReason": null }
   ],
+  "lots": [
+    { "lotId": "LOT-A4-2026-001", "itemId": "A4", "deliveryRecordId": "DR-110", "qtyReceived": 50, "qtyOnHand": 40, "location": "Property storeroom", "receivedAt": "2026-11-05" },
+    { "lotId": "LOT-THRM-2026-001", "itemId": "THRM", "deliveryRecordId": "PO-2026-0031", "qtyReceived": 20, "qtyOnHand": 10, "location": "Property storeroom", "receivedAt": "2026-11-20" }
+  ],
+  "condemnations": [
+    { "id": "CD-2026-0019", "assetId": "WIL-3DP-002", "berPct": 55.3, "status": "RECOMMENDED", "decidedBy": null, "decisionReason": null, "decidedAt": null, "formNo": "CD-2026-0019", "createdAt": "2026-11-20T09:00:00+08:00" }
+  ],
   "workOrders": [
     { "workOrderId": "WO-0031", "assetId": "WIL-PRN-02", "title": "Recurring paper jam", "description": "Paper jams at tray 2 every 20 pages.", "reportedAt": "2026-11-18T10:20:00+08:00", "status": "TICKET_DISPATCHED", "quoteAmount": null, "berPercent": null, "closedAt": null },
     { "workOrderId": "WO-0029", "assetId": "WIL-3DP-002", "title": "Power blowout", "description": "Mainboard and motor damage after a power surge.", "reportedAt": "2026-11-12T13:05:00+08:00", "status": "AWAITING_DECISION", "quoteAmount": 5000, "berPercent": 55.3, "closedAt": null },
@@ -105,16 +116,25 @@
   "auditFlags": [
     { "id": "f1", "type": "DUPLICATE_REPLACEMENT", "severity": "HIGH", "title": "Same asset ID in two replacements", "entityId": "KB-0152", "meta": "Detected Nov 19 · KB-0152", "detail": "KB-0152 is the new unit in RR-0043 and was also entered in draft request RR-0044 for WIL workstation 8. A unit can only replace one other unit.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f2", "type": "REJECTED_REPLACEMENT", "severity": "HIGH", "title": "Replacement rejected: previously issued unit", "entityId": "KB-0099", "meta": "Nov 19 · Property Custodian account", "detail": "KB-0099 (IN_USE at WIL workstation 2) was offered as the new unit for KB-0007. Rule failed: the new unit must be IN_STOCK with no issue history.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
-    { "id": "f3", "type": "DORMANT", "severity": "MEDIUM", "title": "WIL-3DP-001 dormant for 74 days", "entityId": "WIL-3DP-001", "meta": "OPERATIONAL · zero usage since Sep 6", "detail": "An operational asset with zero usage for more than 60 days. A reallocation advisory was sent to the Property Custodian.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
-    { "id": "f4", "type": "DORMANT", "severity": "MEDIUM", "title": "LAM-0001 dormant for 63 days", "entityId": "LAM-0001", "meta": "OPERATIONAL · zero usage since Sep 17", "detail": "Heavy laminator in WIL Lab 1 has not been used for more than 60 days. Consider reallocating it to a unit that needs it.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
+    { "id": "f3", "type": "DORMANT", "severity": "MEDIUM", "title": "WIL-3DP-001 dormant for 74 days", "entityId": "WIL-3DP-001", "meta": "OPERATIONAL · zero usage since Sep 6", "detail": "An operational asset with zero usage for more than the configured dormancy threshold. A reallocation advisory was sent to the Property Custodian.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
+    { "id": "f4", "type": "DORMANT", "severity": "MEDIUM", "title": "LAM-0001 dormant for 63 days", "entityId": "LAM-0001", "meta": "OPERATIONAL · zero usage since Sep 17", "detail": "Heavy laminator in WIL Lab 1 has not been used for more than the configured dormancy threshold. Consider reallocating it to a unit that needs it.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f5", "type": "VARIANCE", "severity": "MEDIUM", "title": "Abnormal surge: WIL Lab 3 bond paper +700%", "entityId": "RQ-1021", "meta": "RQ-1021 · V +700% · auto-approval locked", "detail": "Requested 10 reams against a pro-rated expected volume of 1.25 (H_base 2, week 10 of 16). Decide it in Requisition Review.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f6", "type": "VARIANCE", "severity": "MEDIUM", "title": "Abnormal surge: WIL Lab 1 PLA filament +160%", "entityId": "RQ-1022", "meta": "RQ-1022 · V +160% · auto-approval locked", "detail": "Requested volume of 13 against a pro-rated expected volume of 5 (H_base 8, week 10 of 16). Decide it in Requisition Review.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f7", "type": "RETIRED_RESCAN", "severity": "HIGH", "title": "Retired unit scanned again", "entityId": "KB-0007", "meta": "KB-0007 · WIL workstation 5 · Nov 19", "detail": "KB-0007 is RETIRED / CONDEMNED, but its QR code was scanned during a turnover at WIL workstation 5. A retired unit can never be issued again.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f8", "type": "UNIT_AGE", "severity": "HIGH", "title": "'New' unit older than the unit it replaces", "entityId": "KB-0151", "meta": "KB-0151 (2023) → KB-0007 (2025)", "detail": "The proposed replacement was registered in 2023, two years before the unit it replaces. Check the manufacture and registration dates before the second approver confirms.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f9", "type": "LOCATION_RATE", "severity": "MEDIUM", "title": "Replacement rate far above peer locations", "entityId": "WIL-LAB-3", "meta": "WIL Lab 3 · 12 replacements in 30 days", "detail": "WIL Lab 3 replaced consumables about 4x as often as the peer labs over the same period (Lab 1: 3, Lab 2: 2). Review for possible misuse or a recurring machine fault.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
-    { "id": "f10", "type": "RECONCILIATION", "severity": "MEDIUM", "title": "Reconciliation: 2 asset IDs missing from WIL Lab 3", "entityId": "WIL-LAB-3", "meta": "Session Nov 19 · 6 of 8 scanned", "detail": "MS-0031 and MON-0031 were expected in WIL Lab 3 but were not scanned. The session flagged both as missing; confirm their location.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null }
+    { "id": "f10", "type": "RECONCILIATION", "severity": "MEDIUM", "title": "Reconciliation: 2 asset IDs missing from WIL Lab 3", "entityId": "WIL-LAB-3", "meta": "Session Nov 19 · 7 of 9 scanned", "detail": "MS-0031 and MON-0031 were expected in WIL Lab 3 but were not scanned. The session flagged both as missing; confirm their location.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null }
   ],
   "auditLog": [
+      {
+          "id": "a6",
+          "at": "2026-11-20T09:00:00+08:00",
+          "actor": "System",
+          "action": "CONDEMNATION_RECOMMENDED",
+          "entityType": "UNIT",
+          "entityId": "WIL-3DP-002",
+          "detail": "Condemnation recommendation CD-2026-0019 created for WIL-3DP-002 at 55.3% BER."
+      },
       {
           "id": "a1",
           "at": "2026-11-19T10:42:00+08:00",

@@ -167,6 +167,7 @@ export function ReceiveItems() {
       leadTimeDays: 21,
       safetyBufferDays: 7,
       replacementValue,
+      unitCost: replacementValue,
       requireOneToOne: oneToOne,
     }
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Boxes, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import {
   activeUnitForSlot,
@@ -21,13 +22,14 @@ import type { BadgeTone } from '../components/ui/Badge'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
+import { Dialog } from '../components/ui/Dialog'
 import { EmptyState } from '../components/ui/EmptyState'
-import { Input } from '../components/ui/Field'
+import { Field, Input } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TableWrap, TBody, TD, TH, THead, TR } from '../components/ui/Table'
 import { Tabs } from '../components/ui/Tabs'
 
-type InventoryTab = 'machines' | 'consumables' | 'peripherals'
+type InventoryTab = 'machines' | 'consumables' | 'peripherals' | 'lots'
 
 interface InventoryRow {
   id: string
@@ -38,20 +40,27 @@ interface InventoryRow {
   status: string
   tone: BadgeTone
   partial?: boolean
+  lotId?: string
+  qtyOnHand?: number
 }
 
 const columnFourLabel: Record<InventoryTab, string> = {
   machines: 'Installed consumables',
   consumables: 'Installed on / location',
   peripherals: 'Assigned to',
+  lots: 'On hand',
 }
 
 export function LabInventory() {
   usePageTitle('Lab · Inventory')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
   const [tab, setTab] = useState<InventoryTab>('machines')
   const [query, setQuery] = useState('')
+  const [issuingLotId, setIssuingLotId] = useState<string | null>(null)
+  const [issueQty, setIssueQty] = useState('1')
+  const [issueTried, setIssueTried] = useState(false)
 
   const machineRows: InventoryRow[] = inventoryMachineIds
     .map((id) => data.units.find((unit) => unit.assetId === id))
@@ -96,6 +105,20 @@ export function LabInventory() {
       }
     })
 
+  const lotRows: InventoryRow[] = data.lots.map((lot) => {
+    const item = data.items.find((entry) => entry.itemId === lot.itemId)
+    return {
+      id: lot.lotId,
+      item: item?.name ?? lot.itemId,
+      location: shortLocation(lot.location),
+      extra: `${lot.qtyOnHand} ${item?.unit ?? 'units'} on hand`,
+      status: 'LOT',
+      tone: 'neutral',
+      lotId: lot.lotId,
+      qtyOnHand: lot.qtyOnHand,
+    }
+  })
+
   const peripheralRows: InventoryRow[] = inventoryPeripheralIds
     .map((id) => data.units.find((unit) => unit.assetId === id))
     .filter((unit): unit is SeedUnit => Boolean(unit))
@@ -115,6 +138,7 @@ export function LabInventory() {
     machines: machineRows,
     consumables: consumableRows,
     peripherals: peripheralRows,
+    lots: lotRows,
   }
 
   const needle = query.trim().toLowerCase()
@@ -124,6 +148,56 @@ export function LabInventory() {
       row.id.toLowerCase().includes(needle) ||
       row.item.toLowerCase().includes(needle),
   )
+
+  const issuingLot = data.lots.find((lot) => lot.lotId === issuingLotId) ?? null
+  const issueNumber = Number(issueQty)
+  const issueValid =
+    Boolean(issuingLot) &&
+    Number.isInteger(issueNumber) &&
+    issueNumber >= 1 &&
+    issueNumber <= (issuingLot?.qtyOnHand ?? 0)
+  const issueError =
+    issueTried && !issueValid
+      ? `Enter a whole number from 1 to ${issuingLot?.qtyOnHand ?? 0}.`
+      : undefined
+
+  function openIssue(lotId: string) {
+    setIssuingLotId(lotId)
+    setIssueQty('1')
+    setIssueTried(false)
+  }
+
+  function issueLot() {
+    if (!issuingLot) return
+    setIssueTried(true)
+    if (!issueValid) return
+
+    dispatch({
+      type: 'lot/issue',
+      lotId: issuingLot.lotId,
+      quantity: issueNumber,
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Lab user',
+        action: 'LOT_ISSUED',
+        entityType: 'LOT',
+        entityId: issuingLot.lotId,
+        detail: `${issueNumber} ${issuingLot.itemId} issued from ${issuingLot.lotId}; no per-unit QR created.`,
+      },
+    })
+    showToast(
+      'success',
+      `${issueNumber} issued`,
+      `${issuingLot.lotId} quantity reduced; the lot is issued without a per-unit QR code.`,
+    )
+    setIssuingLotId(null)
+    setIssueQty('1')
+    setIssueTried(false)
+  }
 
   function reissuePartial(unit: SeedUnit) {
     if (!unit.linkedMachineId) {
@@ -166,7 +240,7 @@ export function LabInventory() {
           { label: 'Lab Inventory' },
         ]}
         title="Lab inventory & equipment status"
-        description="Every unit registered to your lab, which consumable is active on which machine, and each machine’s health."
+        description="Every unit registered to your lab, which consumable is active in each machine slot, low-value lots and each machine’s health."
       />
 
       <Card className="flex flex-col gap-4 p-5">
@@ -179,6 +253,7 @@ export function LabInventory() {
               { id: 'machines', label: 'Machines' },
               { id: 'consumables', label: 'Consumables' },
               { id: 'peripherals', label: 'Peripherals' },
+              { id: 'lots', label: 'Lots', count: data.lots.length },
             ]}
           />
 
@@ -195,7 +270,7 @@ export function LabInventory() {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search asset ID or item"
+              placeholder="Search asset ID, lot ID or item"
               className="pl-9"
             />
           </div>
@@ -204,15 +279,15 @@ export function LabInventory() {
         {rows.length === 0 ? (
           <EmptyState
             icon={Boxes}
-            title="No matching units in your lab"
-            description="Try another asset ID, or switch views."
+            title="No matching records in your lab"
+            description="Try another asset ID, lot ID or item, or switch views."
           />
         ) : (
           <TableWrap>
             <Table className="min-w-[900px]">
               <THead>
                 <tr>
-                  <TH>Asset ID</TH>
+                  <TH>{tab === 'lots' ? 'Lot ID' : 'Asset ID'}</TH>
                   <TH>Item</TH>
                   <TH>Location</TH>
                   <TH>{columnFourLabel[tab]}</TH>
@@ -247,7 +322,15 @@ export function LabInventory() {
                         <Badge tone={row.tone}>{row.status}</Badge>
                       </TD>
                       <TD className="text-right">
-                        {row.partial && unit ? (
+                        {row.lotId ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => openIssue(row.lotId!)}
+                          >
+                            Issue
+                          </Button>
+                        ) : row.partial && unit ? (
                           <Button
                             variant="secondary"
                             size="sm"
@@ -283,6 +366,52 @@ export function LabInventory() {
           .
         </p>
       </Card>
+
+      <Dialog
+        open={Boolean(issuingLot)}
+        onClose={() => setIssuingLotId(null)}
+        title={issuingLot ? `Issue from ${issuingLot.lotId}` : 'Issue lot quantity'}
+        className="max-w-lg"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setIssuingLotId(null)}>
+              Cancel
+            </Button>
+            <Button onClick={issueLot}>Issue quantity</Button>
+          </>
+        }
+      >
+        {issuingLot ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm leading-relaxed text-muted">
+              {itemNameOf(data.items, issuingLot.itemId)} is tracked as a lot. Issuing reduces the
+              quantity on hand and does not create a per-unit QR code.
+            </p>
+            <div className="rounded-control border border-line bg-paper p-3 text-[13px] text-ink">
+              Available: <strong>{issuingLot.qtyOnHand}</strong>{' '}
+              {data.items.find((item) => item.itemId === issuingLot.itemId)?.unit ?? 'units'}
+            </div>
+            <Field
+              label="Quantity to issue"
+              htmlFor="lot-issue-qty"
+              error={issueError}
+              hint="Whole units only."
+            >
+              <Input
+                id="lot-issue-qty"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={issuingLot.qtyOnHand}
+                step={1}
+                value={issueQty}
+                onChange={(event) => setIssueQty(event.target.value)}
+                aria-invalid={Boolean(issueError)}
+              />
+            </Field>
+          </div>
+        ) : null}
+      </Dialog>
     </>
   )
 }

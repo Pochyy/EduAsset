@@ -14,6 +14,8 @@ export interface ForecastRow {
   lead: number
   buffer: number
   prNumber: string
+  /** Set when stock is held as a consumable lot rather than individual units. */
+  lotItemId?: string | null
 }
 
 export const initialForecast: ForecastRow[] = [
@@ -40,6 +42,7 @@ export const initialForecast: ForecastRow[] = [
     lead: 21,
     buffer: 7,
     prNumber: 'PR-2026-0413',
+    lotItemId: 'A4',
   },
   {
     id: 'ctn',
@@ -88,6 +91,7 @@ export const initialForecast: ForecastRow[] = [
     lead: 21,
     buffer: 7,
     prNumber: 'PR-2026-0417',
+    lotItemId: 'THRM',
   },
 ]
 

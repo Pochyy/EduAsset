@@ -1,8 +1,8 @@
 # EduAsset API Contract (draft)
 
-**Status:** revision-2 draft. The foundation and Module 1 sections are updated from
-`EduAsset_SRS_Revised.docx` and the SDD; Modules 2–4 still describe the old design and will be updated
-in their passes.
+**Status:** revision-2 draft. The foundation and Modules 1–3 are updated from
+`EduAsset_SRS_Revised.docx` and the SDD; Module 4 still describes the old design and will be updated
+in its pass.
 **Audience:** backend implementation (Spring Boot + PostgreSQL on Supabase, per SDD v2).
 **Base URL:** `/api` — JSON over HTTPS.
 
@@ -62,7 +62,8 @@ Store these as canonical tokens.
 | `RequisitionStatus` | `AUTO_PROCESSED`, `LOCKED_REVIEW`, `APPROVED`, `REJECTED` |
 | `TurnoverStatus` | `AWAITING_SPENT_SCAN`, `READY_TO_APPROVE`, `AWAITING_APPROVAL`, `RELEASED` |
 | `TurnoverExceptionType` | `FIRST_INSTALL`, `DEFECTIVE_ON_ARRIVAL` |
-| `RepairDecision` | `REPAIR_APPROVED`, `UNDER_REPAIR`, `RETURNED_TO_SERVICE`, `CONDEMNED` |
+| `RepairDecision` | `REPAIR_APPROVED`, `UNDER_REPAIR`, `RETURNED_TO_SERVICE`, `RECOMMENDED`, `CONDEMNED`, `OVERRIDDEN` |
+| `CondemnationStatus` | `RECOMMENDED`, `APPROVED`, `OVERRIDDEN` |
 | `ReplacementStatus` | `DRAFT`, `OLD_UNIT_VERIFIED`, `PENDING_SECOND_APPROVAL`, `COMPLETED`, `REJECTED` |
 | `AuditFlagType` | `DUPLICATE_REPLACEMENT`, `RETIRED_RESCAN`, `UNIT_AGE`, `LOCATION_RATE`, `REJECTED_REPLACEMENT`, `DORMANT`, `VARIANCE`, `RECONCILIATION` |
 | `IncidentType` | `DEFECT`, `JAM`, `BROKEN` |
@@ -157,11 +158,16 @@ policy values and are changed through `/settings/policy`, not per item.
   "varianceLockPct": 50,
   "forecastWindowDays": 14,
   "lowVolumeWindowDays": 42,
-  "lowVolumeIssueThreshold": 3
+  "lowVolumeIssueThreshold": 3,
+  "berThresholdPct": 50,
+  "dormantDays": 60,
+  "lotUnitCostCutoff": 500
 }
 ```
 
-Validate `0 <= varianceNormalPct < varianceLockPct <= 100`; window days 1–180; threshold 1–20.
+Validate `0 <= varianceNormalPct < varianceLockPct <= 100`; window days 1–180; low-volume
+threshold 1–20; BER 1–100; dormancy 1–365; lot cut-off > 0. The SRS leaves the lot cut-off
+bracketed; 500 is a sample value until the Property Office supplies the actual amount.
 Every change is audited with the actor and timestamp.
 
 ### `GET /reorder-alerts`
@@ -265,6 +271,7 @@ unit record.
 ## 7. Module 3 — Units, repairs, replacements, integrity
 
 ### `GET /units?q=&category=&inventoryStatus=&page=&size=`
+Unit-tracked records only; lot items are returned by `/lots`.
 ### `GET /units/{assetId}`
 Returns the unit record + history. History entries are `{ event, actor, at }`, append-only.
 
@@ -282,25 +289,45 @@ never encoded.
 If `recurring = true`: set `NEEDS_MAINTENANCE` and create a work order (`TICKET_DISPATCHED`), per FR-3.11.
 
 ### `GET /work-orders?status=`
-### `POST /repairs/{assetId}/quotes`
+### `POST /units/{assetId}/repairs`
 Body: `{ "quoteAmount": 5000, "repairable": true }`. Stores the pending quote and computes
-`BER = ((cumulativeRepairCost + pendingQuote) / replacementValue) * 100`.
+`BER = ((cumulativeRepairCost + pendingQuote) / replacementValue) * 100` against
+`policy.berThresholdPct`.
 
-### `POST /repairs/{assetId}/approve`
-Allowed only when `BER < 50` and `repairable = true`. Sets `UNDER_REPAIR`, appends the invoice to the
-repair history.
+- Repairable and below threshold: approve the repair, append the invoice, set `UNDER_REPAIR`.
+- Not repairable or at/above threshold: return a **recommendation**, not a condemnation. The system
+  never condemns an asset by itself. Response includes `condemnationId`, `berPct`, `status =
+  RECOMMENDED` and the pre-filled form number.
 
 ### `POST /repairs/{assetId}/return-to-service`
-Allowed only when `UNDER_REPAIR` and no pending quote at/above 50% BER. Sets `OPERATIONAL`, keeps the
-same asset ID/QR/history.
+Allowed only when `UNDER_REPAIR` and no pending quote at/above the configured threshold. Sets
+`OPERATIONAL`, keeps the same asset ID/QR/history.
 
-### `POST /repairs/{assetId}/condemn`
-Allowed when `BER >= 50` or `repairable = false`. Sets `CONDEMNED_BER` and `RETIRED`, blocks future
-issue, creates the PAR/ICS form payload.
+### `PUT /condemnations/{id}/decision`
+`CENTRAL_CUSTODIAN`.
 
-### `GET /condemnation-forms/{assetId}`
-Returns the pre-filled fields: property tag, description, serial (if any), location/custodian,
-replacement value, BER %, maintenance expense ledger.
+```json
+{ "decision": "APPROVE" | "OVERRIDE", "reason": "Required when overriding" }
+```
+
+- `APPROVE`: condemnation status `APPROVED`; unit becomes `CONDEMNED_BER` and inventory `RETIRED`;
+  the unit can never be issued again.
+- `OVERRIDE`: reason required; condemnation status `OVERRIDDEN`; unit returns to `UNDER_REPAIR` and
+  repair is approved. `decidedBy`, `decisionReason` and `decidedAt` are stored and audited.
+
+### `GET /condemnations/{id}/pdf`
+Returns the pre-filled CIT Property Office condemnation/disposal form with property tag,
+description, serial (if any), location/custodian, replacement value, BER %, maintenance expense
+ledger and decision status.
+
+### `GET /lots?itemId=`
+Returns lot records for low-value non-returned consumables below the policy cut-off:
+`lotId`, `itemId`, `deliveryRecordId`, `qtyReceived`, `qtyOnHand`, `location`, `receivedAt`.
+
+### `POST /lots/{lotId}/issue`
+`LAB_ASSISTANT` / `LAB_MANAGER`. Body: `{ "quantity": 5 }`. Reduces `qtyOnHand`; writes an issuance
+row and audit entry; never creates a per-unit QR code. Forecast stock for a lot item includes
+`qtyOnHand`. Quantity must be a whole number from 1 to `qtyOnHand`.
 
 ### `GET /replacements/candidates?requestId=`
 Only `IN_STOCK` units with no issue/usage history and a delivery record dated after the request.

@@ -31,6 +31,7 @@ export interface SeedItem {
   leadTimeDays: number
   safetyBufferDays: number
   replacementValue: number | null
+  unitCost: number | null
   requireOneToOne: boolean
 }
 
@@ -67,6 +68,10 @@ export interface PolicySettings {
   forecastWindowDays: number
   lowVolumeWindowDays: number
   lowVolumeIssueThreshold: number
+  berThresholdPct: number
+  dormantDays: number
+  /** Sample SRS value until the Property Office supplies the real lot cut-off. */
+  lotUnitCostCutoff: number
 }
 
 export interface TermCalendar {
@@ -112,6 +117,30 @@ export interface SeedTurnover {
   requestedAt: string
   exceptionType: TurnoverExceptionType | null
   exceptionReason: string | null
+}
+
+export interface SeedLot {
+  lotId: string
+  itemId: string
+  deliveryRecordId: string
+  qtyReceived: number
+  qtyOnHand: number
+  location: string
+  receivedAt: string
+}
+
+export type CondemnationStatus = 'RECOMMENDED' | 'APPROVED' | 'OVERRIDDEN'
+
+export interface SeedCondemnation {
+  id: string
+  assetId: string
+  berPct: number
+  status: CondemnationStatus
+  decidedBy: string | null
+  decisionReason: string | null
+  decidedAt: string | null
+  formNo: string
+  createdAt: string
 }
 
 export interface SeedWorkOrder {
@@ -160,6 +189,8 @@ export interface SeedData {
   machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
+  lots: SeedLot[]
+  condemnations: SeedCondemnation[]
   workOrders: SeedWorkOrder[]
   auditFlags: SeedAuditFlag[]
   auditLog: SeedAuditEntry[]

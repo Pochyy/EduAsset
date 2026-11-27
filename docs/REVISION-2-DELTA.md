@@ -3,13 +3,13 @@
 **Date:** 27 November 2026
 **Branch:** `feat/srs-v2-update`
 **Sources:** `EduAsset_SRS_Revised.docx` (SRS v2), `EduAsset_SDD_Revised.docx`
-**Status:** Pass 1 and Pass 2 complete. Modules 3–4 and the responsive/print/camera work remain pending.
+**Status:** Passes 1–3 complete. Module 4 and the responsive/camera work remain pending.
 
 This file records what changed, why it changed, and which parts are UI placement choices rather than SRS requirements. It is the audit trail for the revision-2 work.
 
 ---
 
-## Scope of this pass
+## Scope of Pass 1
 
 - Canonical inventory-status foundation (`IN_USE`; `RETURNED_PARTIAL` recognised).
 - Term calendar and policy settings foundation.
@@ -18,9 +18,9 @@ This file records what changed, why it changed, and which parts are UI placement
 - Shared live audit-log foundation for turnover, requisition and policy events.
 - No new routes or screens. All additions are in existing screens, cards and dialogs.
 
-Not in this pass: lots, condemnation recommendation/override, BER threshold UI, dormancy policy,
+Not in Pass 1: lots, condemnation recommendation/override, BER threshold UI, dormancy policy,
 lot intake, print/camera implementation, phone navigation. Those belong to Modules 3–4 and the shell
-pass.
+pass. Pass 2 adds turnover; Pass 3 adds repair/lots/dormancy.
 
 ---
 
@@ -171,6 +171,65 @@ These are the design decisions made to expose required capabilities without addi
   **100/100/100**; Lab Dashboard, Turnover Scan and Lab Inventory scored **100/100/100**.
 - The live audit log showed the partial scan, release, exception request and release alongside the
   seeded entries.
+
+## Pass 3 — Module 3
+
+### Requirement mapping
+
+| Requirement | What was added | Where |
+|---|---|---|
+| **FR-3.13 / 3.15** — repair log, approval, return to service | Repair quote and history remain; approval/return now use the configured threshold and write live audit entries. | RepairBer |
+| **FR-3.14** — configurable BER threshold | `berThresholdPct` policy (default 50) drives every BER calculation, bar, label, form and work-order note. | PolicySettingsDialog, RepairBer, lib/lab |
+| **FR-3.16** — recommendation, never auto-condemn | At/above threshold or not repairable, the system creates a `RECOMMENDED` condemnation record. It does not change the unit until the Custodian decides. | RepairBer, AppDataContext, seed |
+| **FR-3.17** — pre-filled CIT form | The form uses the CIT Property Office label, form number, property tag, serial, location, replacement value, BER, threshold, decision and maintenance ledger. The placeholder PAR/ICS wording was removed. | RepairBer |
+| **FR-3.29** — Custodian approve/override | Approve has a confirmation and sets `CONDEMNED_BER` + `RETIRED`. Override requires a ≥10-character reason, records it and sets `UNDER_REPAIR`. Both write the decision user/time and a live audit entry. | RepairBer, AppDataContext |
+| **FR-3.28** — low-value lots | Added `SeedLot`, two seeded lots (A4 paper, thermal paper), `unitCost` on items, a policy cut-off, a Lots inventory tab, a lot card in Master Ledger, and an Issue-quantity dialog. Lot issues reduce `qtyOnHand` and forecast stock without creating per-unit QR records. | types, seed, AppDataContext, LabInventory, MasterLedger, Reorder |
+| **FR-3.27** — configurable dormancy | Added `dormantDays` policy and a current-threshold note in the Audit Queue dormant tab. Seed wording no longer hardcodes 60 days. | PolicySettingsDialog, AuditQueue, seed |
+| **FR-3.24 / NFR-S2** — audit attribution | Repair approval, return to service, recommendation, condemnation approval/override and lot issue now append live audit entries. | RepairBer, LabInventory, AppDataContext, CentralDashboard |
+
+### Data and seed changes
+
+- Added policy values: `berThresholdPct: 50`, `dormantDays: 60`, `lotUnitCostCutoff: 500`.
+- Added `unitCost` to every item.
+- Removed the two A4 per-unit records (`BP-A4-0028`, `BP-A4-0031`); A4 is now a lot.
+- Added `LOT-A4-2026-001` (40 reams on hand) and `LOT-THRM-2026-001` (10 rolls on hand).
+- Added `CD-2026-0019` as a `RECOMMENDED` condemnation for `WIL-3DP-002` at 55.3% BER.
+- Added a seeded condemnation recommendation to the live audit log.
+- Unit count is now **27**; lots are **2**.
+
+### UI placement choices (not specified by the SRS)
+
+1. **Lots** is a fourth tab in Lab Inventory; the lot card is appended to Master Ledger. The SRS
+   requires lot records and quantity issue, not a specific tab.
+2. **Issue quantity** uses a dialog with a 1..qtyOnHand validation.
+3. **Condemnation recommendation** appears as a card above the quote form; approving uses a
+   confirmation dialog, overriding uses a reason dialog.
+4. **Print form** uses browser print with an `.ea-print-area` print rule. The SDD’s production PDF
+   generator remains backend work.
+5. **Lot cut-off 500** is a labelled sample because the SRS value is still bracketed.
+6. **Print** is implemented for the condemnation form only in this pass; QR/PR print can reuse the
+   same rule in a later pass.
+
+### Verification for Pass 3
+
+- `npm run build` passes.
+- 17 routes re-swept at 598 and 390: one `h1` each, no page-level overflow, no console errors.
+- Lighthouse after Module 3:
+  - Repair & BER, Master Ledger, Central Dashboard, Audit Queue: **100/100/100**
+  - Lab Inventory: **100/100/100**
+- Flow checks:
+  - A4 lot issue reduced on-hand from 40 to 35; forecast stock and the live audit log updated.
+  - Seeded `CD-2026-0019` displayed as `RECOMMENDED · AWAITING CUSTODIAN`; the system did not
+    condemn the unit automatically.
+  - Override required a ≥10-character reason, recorded it and left the unit `UNDER_REPAIR`.
+  - Approval confirmation sets the unit `CONDEMNED_BER` + `RETIRED`; the form is ready to print.
+  - Threshold labels/bars track the policy value.
+- Known limits:
+  - The CIT Property Office’s actual form fields are still not supplied; the current layout is the
+    documented prototype format.
+  - The 500 lot cut-off is a sample placeholder.
+  - Lot intake (creating a lot from Receive New Items) is Module 4.
+  - Real PDF generation and server-side append-only auditing remain backend work.
 
 ## Verification for Pass 1
 

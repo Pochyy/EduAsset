@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { AlertTriangle, FileText, Lock, Wrench } from 'lucide-react'
+import { AlertTriangle, Check, FileText, Lock, RotateCcw, Wrench } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { formatPeso, healthStatus } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
-import { Badge } from '../components/ui/Badge'
+import type { SeedCondemnation } from '../types'
+import { Badge, type BadgeTone } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Dialog } from '../components/ui/Dialog'
-import { Field, Input } from '../components/ui/Field'
+import { Field, Input, Textarea } from '../components/ui/Field'
 import { PageHeader } from '../components/ui/PageHeader'
 import { Table, TableWrap, TBody, TD, TH, THead, TR } from '../components/ui/Table'
 
@@ -32,18 +34,34 @@ const baseRepairs: Record<string, RepairEntry[]> = {
 
 const percent = (value: number) => `${(Math.floor(value * 10 + 1e-9) / 10).toFixed(1)}%`
 
+const recommendationTone = (status: SeedCondemnation['status']): BadgeTone =>
+  status === 'APPROVED' ? 'danger' : status === 'OVERRIDDEN' ? 'success' : 'warning'
+
+const recommendationLabel = (status: SeedCondemnation['status']) =>
+  status === 'APPROVED'
+    ? 'APPROVED · CONDEMNED'
+    : status === 'OVERRIDDEN'
+      ? 'OVERRIDDEN · REPAIR'
+      : 'RECOMMENDED · AWAITING CUSTODIAN'
+
 export function RepairBer() {
   usePageTitle('Central · Repair & BER')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
+  const policy = data.policy
+  const threshold = policy.berThresholdPct
   const [selectedId, setSelectedId] = useState('WIL-3DP-002')
   const [quote, setQuote] = useState('5000')
   const [repairable, setRepairable] = useState(true)
   const [tried, setTried] = useState(false)
   const [extraRepairs, setExtraRepairs] = useState<Record<string, RepairEntry[]>>({})
-  const [confirmCondemn, setConfirmCondemn] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [confirmApproveOpen, setConfirmApproveOpen] = useState(false)
+  const [overrideOpen, setOverrideOpen] = useState(false)
+  const [overrideReason, setOverrideReason] = useState('')
+  const [overrideTried, setOverrideTried] = useState(false)
 
   const assetUnits = assetIds
     .map((id) => data.units.find((unit) => unit.assetId === id))
@@ -61,12 +79,24 @@ export function RepairBer() {
   const ber = quoteValid
     ? ((cumulative + quoteNumber) / replacementValue) * 100
     : (cumulative / replacementValue) * 100
-  const blocked = quoteValid && (ber >= 50 || !repairable)
-  const canRepair = quoteValid && ber < 50 && repairable
+  const blocked = quoteValid && (ber >= threshold || !repairable)
+  const canRepair = quoteValid && ber < threshold && repairable
   const condemned = selected.healthState === 'CONDEMNED_BER'
   const underRepair = selected.healthState === 'UNDER_REPAIR'
   const quoteError =
     tried && !quoteValid ? 'Enter the technician quote as an amount above ₱0.' : undefined
+
+  const recommendation = data.condemnations
+    .filter((entry) => entry.assetId === selected.assetId)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0]
+  const recommendationPending = recommendation?.status === 'RECOMMENDED'
+  const recommendationOverridden = recommendation?.status === 'OVERRIDDEN'
+  const formNo = recommendation?.formNo ?? 'CD-2026-00XX'
+  const formBer = recommendation?.berPct ?? ber
+  const overrideError =
+    overrideTried && overrideReason.trim().length < 10
+      ? 'Give a reason of at least 10 characters for overriding the recommendation.'
+      : undefined
 
   const assetCards = assetUnits.map((unit) => {
     const unitRepairs = [
@@ -81,11 +111,29 @@ export function RepairBer() {
     return { unit, unitCumulative, unitPercent, unitValue, health }
   })
 
+  function logAudit(action: string, entityId: string, detail: string) {
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        action,
+        entityType: 'UNIT',
+        entityId,
+        detail,
+      },
+    })
+  }
+
   function selectAsset(id: string) {
     setSelectedId(id)
     setQuote('')
     setRepairable(true)
     setTried(false)
+    setOverrideOpen(false)
+    setOverrideTried(false)
+    setOverrideReason('')
   }
 
   function approveRepair() {
@@ -105,6 +153,11 @@ export function RepairBer() {
         { when: 'Now', what: 'Approved repair (quote)', cost: quoteNumber },
       ],
     }))
+    logAudit(
+      'REPAIR_APPROVED',
+      selected.assetId,
+      `${selected.assetId} repair approved at ${percent(ber)} BER, below the ${threshold}% threshold.`,
+    )
     setQuote('')
     setTried(false)
     showToast(
@@ -119,7 +172,7 @@ export function RepairBer() {
       showToast(
         'error',
         'Cannot return to service',
-        'The pending quote still puts this asset at or above the 50% BER limit. Clear or reduce the quote first.',
+        `The pending quote still puts this asset at or above the ${threshold}% BER limit. Clear or reduce the quote first.`,
       )
       return
     }
@@ -128,6 +181,11 @@ export function RepairBer() {
       id: selected.assetId,
       patch: { healthState: 'OPERATIONAL' },
     })
+    logAudit(
+      'RETURNED_TO_SERVICE',
+      selected.assetId,
+      `${selected.assetId} returned to OPERATIONAL with the same asset ID, QR code and repair history.`,
+    )
     setQuote('')
     showToast(
       'success',
@@ -136,22 +194,99 @@ export function RepairBer() {
     )
   }
 
-  function condemn() {
+  function recommendCondemnation() {
     if (!quoteValid) {
       setTried(true)
       return
     }
-    setConfirmCondemn(false)
+    const nextNumber =
+      data.condemnations.reduce((max, entry) => {
+        const value = Number(entry.id.match(/(\d+)$/)?.[1] ?? 0)
+        return Number.isFinite(value) ? Math.max(max, value) : max
+      }, 0) + 1
+    const id = `CD-2026-${String(nextNumber).padStart(4, '0')}`
+    const condemnation: SeedCondemnation = {
+      id,
+      assetId: selected.assetId,
+      berPct: Math.round(ber * 10) / 10,
+      status: 'RECOMMENDED',
+      decidedBy: null,
+      decisionReason: null,
+      decidedAt: null,
+      formNo: id,
+      createdAt: new Date().toISOString(),
+    }
+    dispatch({ type: 'condemnation/recommend', condemnation })
+    logAudit(
+      'CONDEMNATION_RECOMMENDED',
+      selected.assetId,
+      `Condemnation recommendation ${id} created for ${selected.assetId} at ${percent(ber)} BER (threshold ${threshold}%). The system did not condemn the unit.`,
+    )
+    setShowForm(true)
+    showToast(
+      'info',
+      'Recommendation sent to the Custodian',
+      `${selected.assetId} is not condemned automatically. Approve the recommendation or override it with a reason.`,
+    )
+  }
+
+  function approveCondemnation() {
+    if (!recommendation || recommendation.status !== 'RECOMMENDED') return
+    dispatch({
+      type: 'condemnation/decide',
+      id: recommendation.id,
+      status: 'APPROVED',
+      decidedBy: user?.name ?? 'Property Custodian',
+      reason: null,
+    })
     dispatch({
       type: 'unit/patch',
       id: selected.assetId,
       patch: { healthState: 'CONDEMNED_BER', inventoryStatus: 'RETIRED' },
     })
+    logAudit(
+      'CONDEMNATION_APPROVED',
+      selected.assetId,
+      `${selected.assetId} condemned via ${recommendation.id}; inventory status RETIRED and the unit can never be issued again.`,
+    )
+    setConfirmApproveOpen(false)
     setShowForm(true)
     showToast(
       'success',
       `${selected.assetId} condemned`,
-      'Repair invoice blocked; form CD-2026-0019 pre-filled.',
+      `${recommendation.id} approved; the unit is RETIRED and the form is ready to print.`,
+    )
+  }
+
+  function overrideCondemnation() {
+    if (!recommendation || recommendation.status !== 'RECOMMENDED') return
+    setOverrideTried(true)
+    if (overrideReason.trim().length < 10) return
+
+    dispatch({
+      type: 'condemnation/decide',
+      id: recommendation.id,
+      status: 'OVERRIDDEN',
+      decidedBy: user?.name ?? 'Property Custodian',
+      reason: overrideReason.trim(),
+    })
+    dispatch({
+      type: 'unit/patch',
+      id: selected.assetId,
+      patch: { healthState: 'UNDER_REPAIR' },
+    })
+    logAudit(
+      'CONDEMNATION_OVERRIDDEN',
+      selected.assetId,
+      `${selected.assetId} condemnation ${recommendation.id} overridden: ${overrideReason.trim()}. Repair approved and unit set UNDER_REPAIR.`,
+    )
+    setOverrideOpen(false)
+    setOverrideTried(false)
+    setOverrideReason('')
+    showToast(
+      'success',
+      'Condemnation overridden',
+      `${selected.assetId} stays in repair and the override reason is recorded.`,
     )
   }
 
@@ -161,7 +296,12 @@ export function RepairBer() {
     { k: 'Serial number', v: selected.serialNumber ?? '—' },
     { k: 'Location / custodian', v: `${selected.location} · WIL Lab Manager` },
     { k: 'Replacement value', v: formatPeso(replacementValue) },
-    { k: 'Calculated BER', v: percent(ber) },
+    { k: 'Calculated BER', v: percent(formBer) },
+    { k: 'Threshold', v: `${threshold}%` },
+    {
+      k: 'Decision',
+      v: recommendation ? recommendationLabel(recommendation.status) : 'Not decided',
+    },
   ]
 
   return (
@@ -173,7 +313,7 @@ export function RepairBer() {
           { label: 'Repair & BER' },
         ]}
         title="Repair & Beyond Economic Repair"
-        description="BER = ((cumulative repair costs + pending quote) ÷ current replacement cost) × 100 · below 50% repair is approved · 50% or higher maintenance is blocked."
+        description={`BER = ((cumulative repair costs + pending quote) ÷ current replacement cost) × 100 · below ${threshold}% repair is approved · ${threshold}% or higher requires a Custodian condemnation decision.`}
       />
 
       <div className="grid gap-5 xl:grid-cols-[1fr_2fr] xl:items-start">
@@ -185,7 +325,11 @@ export function RepairBer() {
             {assetCards.map(({ unit, unitCumulative, unitPercent, unitValue, health }) => {
               const active = selected.assetId === unit.assetId
               const barColor =
-                unitPercent >= 50 ? 'bg-danger' : unitPercent >= 35 ? 'bg-amber' : 'bg-success'
+                unitPercent >= threshold
+                  ? 'bg-danger'
+                  : unitPercent >= threshold * 0.7
+                    ? 'bg-amber'
+                    : 'bg-success'
               return (
                 <button
                   key={unit.assetId}
@@ -240,7 +384,7 @@ export function RepairBer() {
               {[
                 { k: 'Replacement value', v: formatPeso(replacementValue) },
                 { k: 'Repairs to date', v: formatPeso(cumulative) },
-                { k: '50% limit', v: formatPeso(replacementValue / 2) },
+                { k: `${threshold}% limit`, v: formatPeso((replacementValue * threshold) / 100) },
               ].map((metric) => (
                 <div key={metric.k} className="bg-surface p-3">
                   <span className="text-xs font-medium text-muted">{metric.k}</span>
@@ -283,7 +427,67 @@ export function RepairBer() {
             </TableWrap>
           </Card>
 
-          {!condemned ? (
+          {recommendation ? (
+            <Card className="flex flex-col gap-4 p-5">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="flex flex-col gap-0.5">
+                  <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
+                    Condemnation recommendation
+                  </h2>
+                  <span className="text-[13px] text-muted">
+                    {recommendation.id} · {percent(recommendation.berPct)} BER
+                  </span>
+                </div>
+                <Badge tone={recommendationTone(recommendation.status)}>
+                  {recommendationLabel(recommendation.status)}
+                </Badge>
+              </div>
+
+              <p className="text-[13px] leading-relaxed text-ink">
+                The system only recommends condemnation. The Property Custodian decides whether to
+                condemn the asset or override the recommendation and keep it in repair.
+              </p>
+
+              {recommendation.status === 'RECOMMENDED' ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button variant="danger" onClick={() => setConfirmApproveOpen(true)}>
+                    <Check className="h-4 w-4" aria-hidden="true" />
+                    Approve condemnation
+                  </Button>
+                  <Button variant="secondary" onClick={() => setOverrideOpen(true)}>
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    Override — repair
+                  </Button>
+                </div>
+              ) : (
+                <div className="rounded-control border border-line bg-paper p-3 text-[13px] leading-relaxed text-ink">
+                  <strong>{recommendationLabel(recommendation.status)}</strong>
+                  {recommendation.decidedBy ? ` · ${recommendation.decidedBy}` : ''}
+                  {recommendation.decidedAt
+                    ? ` · ${new Date(recommendation.decidedAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}`
+                    : ''}
+                  {recommendation.decisionReason
+                    ? ` · Reason: ${recommendation.decisionReason}`
+                    : ''}
+                </div>
+              )}
+
+              <Button
+                variant="secondary"
+                className="self-start"
+                onClick={() => setShowForm(true)}
+              >
+                <FileText className="h-4 w-4" aria-hidden="true" />
+                View condemnation form
+              </Button>
+            </Card>
+          ) : null}
+
+          {!condemned && !recommendation ? (
             <Card className="flex flex-col gap-4 p-5">
               <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
                 Log repair quote
@@ -370,9 +574,9 @@ export function RepairBer() {
                       ? 'Enter a quote to see the decision'
                       : blocked
                         ? repairable
-                          ? 'BER is 50% or higher: maintenance blocked'
-                          : 'Not repairable: retire the unit'
-                        : 'Below 50%: repair approved'}
+                          ? `BER is ${threshold}% or higher: recommendation required`
+                          : 'Not repairable: recommendation required'
+                        : `Below ${threshold}%: repair approved`}
                   </strong>
                   <span className="text-[13px] text-neutral-text">
                     {!quoteValid
@@ -390,17 +594,18 @@ export function RepairBer() {
                   </Button>
                 ) : null}
                 {blocked ? (
-                  <Button variant="danger" onClick={() => setConfirmCondemn(true)}>
-                    Block maintenance &amp; condemn
+                  <Button variant="danger" onClick={recommendCondemnation}>
+                    <FileText className="h-4 w-4" aria-hidden="true" />
+                    Send condemnation recommendation
                   </Button>
                 ) : null}
               </div>
 
-              {underRepair ? (
+              {underRepair && !recommendationPending ? (
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line-soft pt-3.5">
                   <span className="max-w-md text-[13px] leading-relaxed text-muted">
                     {blocked
-                      ? 'The pending quote is at or above the 50% BER limit. Clear or reduce it before returning the asset to service.'
+                      ? `The pending quote is at or above the ${threshold}% BER limit. Clear or reduce it before returning the asset to service.`
                       : 'Repair completed? Return this asset to service with the same asset ID, QR code and history.'}
                   </span>
                   <Button onClick={returnToService} disabled={blocked}>
@@ -409,7 +614,25 @@ export function RepairBer() {
                 </div>
               ) : null}
             </Card>
-          ) : (
+          ) : null}
+
+          {recommendationOverridden ? (
+            <Card className="flex flex-col gap-3 p-5">
+              <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
+                Repair after override
+              </h2>
+              <p className="text-[13px] leading-relaxed text-muted">
+                The Custodian overrode the recommendation and approved repair. Return the asset to
+                service when the repair is complete; the same asset ID, QR code and history remain.
+              </p>
+              <Button onClick={returnToService} disabled={blocked} className="self-start">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Mark repaired · return to service
+              </Button>
+            </Card>
+          ) : null}
+
+          {condemned ? (
             <div className="flex items-start gap-3 rounded-control border border-danger-line bg-danger-bg p-4">
               <Lock className="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true" />
               <span className="flex flex-col gap-1.5">
@@ -417,8 +640,8 @@ export function RepairBer() {
                   {selected.assetId} is CONDEMNED / BER and RETIRED
                 </strong>
                 <span className="text-[13px] leading-relaxed text-ink">
-                  It can never be issued again. The pre-filled Condemnation and Disposal form is
-                  ready for the Property Office.
+                  It can never be issued again. The CIT Property Office condemnation and disposal
+                  form is ready for printing.
                 </span>
                 <Button
                   variant="secondary"
@@ -430,22 +653,22 @@ export function RepairBer() {
                 </Button>
               </span>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
       <Dialog
-        open={confirmCondemn}
-        onClose={() => setConfirmCondemn(false)}
-        title={`Condemn ${selected.assetId}?`}
+        open={confirmApproveOpen}
+        onClose={() => setConfirmApproveOpen(false)}
+        title={recommendation ? `Approve ${recommendation.id}?` : 'Approve condemnation?'}
         className="max-w-lg"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setConfirmCondemn(false)}>
+            <Button variant="secondary" onClick={() => setConfirmApproveOpen(false)}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={condemn}>
-              Condemn and generate form
+            <Button variant="danger" onClick={approveCondemnation}>
+              Approve &amp; retire unit
             </Button>
           </>
         }
@@ -455,10 +678,52 @@ export function RepairBer() {
             <AlertTriangle className="h-6 w-6" aria-hidden="true" />
           </span>
           <p className="text-sm leading-relaxed text-neutral-text">
-            The repair invoice will be blocked, the health state becomes CONDEMNED / BER and the
-            inventory status RETIRED. A retired unit can never be issued again. This cannot be
-            undone from the app.
+            Approving the recommendation sets {selected.assetId} to CONDEMNED / BER and RETIRED.
+            The unit can never be issued again. The CIT Property Office form will be ready to print.
           </p>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={overrideOpen}
+        onClose={() => setOverrideOpen(false)}
+        title={
+          recommendation
+            ? `Override ${recommendation.id}?`
+            : 'Override condemnation recommendation'
+        }
+        className="max-w-lg"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setOverrideOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={overrideCondemnation}>Override &amp; approve repair</Button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start gap-3 rounded-control border border-warning-line bg-warning-bg p-3">
+            <AlertTriangle className="mt-0.5 h-[18px] w-[18px] shrink-0 text-warning" aria-hidden="true" />
+            <span className="text-[13px] leading-relaxed text-ink">
+              This overrides the system recommendation, approves repair and sets the unit to
+              UNDER_REPAIR. The reason is required and recorded in the audit log.
+            </span>
+          </div>
+          <Field
+            label="Reason for overriding (required)"
+            htmlFor="override-reason"
+            error={overrideError}
+            hint="At least 10 characters."
+          >
+            <Textarea
+              id="override-reason"
+              value={overrideReason}
+              onChange={(event) => setOverrideReason(event.target.value)}
+              placeholder="e.g. The quote covers a damaged housing that can be repaired in-house."
+              aria-invalid={Boolean(overrideError)}
+            />
+          </Field>
         </div>
       </Dialog>
 
@@ -466,12 +731,15 @@ export function RepairBer() {
         open={showForm}
         onClose={() => setShowForm(false)}
         title="Condemnation & Disposal Form"
-        eyebrow="Pre-filled · PAR/ICS-compliant"
+        eyebrow="Pre-filled · CIT Property Office format"
         className="max-w-2xl"
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowForm(false)}>
               Close
+            </Button>
+            <Button variant="secondary" onClick={() => window.print()}>
+              Print form
             </Button>
             <Button
               onClick={() => {
@@ -488,10 +756,10 @@ export function RepairBer() {
           </>
         }
       >
-        <div className="overflow-hidden rounded-card border border-line">
+        <div className="ea-print-area overflow-hidden rounded-card border border-line">
           <div className="flex items-center justify-between bg-amber px-4 py-3 text-[13px] text-ink">
             <strong>CIT Property Office</strong>
-            <span>CD-2026-0019</span>
+            <span>{formNo}</span>
           </div>
           <dl className="m-0 grid grid-cols-2">
             {formFields.map((field) => (

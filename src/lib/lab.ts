@@ -22,7 +22,6 @@ export const inventoryConsumableIds = [
   'DRM-WIL-2026-005',
   'FIL-WIL-2026-014',
   'FIL-WIL-2026-015',
-  'BP-A4-0028',
 ] as const
 export const inventoryPeripheralIds = ['KB-0031', 'KB-0032', 'MS-0031', 'MON-0031'] as const
 export const dashboardRequisitionIds = ['RQ-1021', 'RQ-1019', 'RQ-1016'] as const
@@ -260,18 +259,18 @@ export const machineNote = (
   return 'In service · no active ticket'
 }
 
-export const workOrderNote = (workOrder: SeedWorkOrder) => {
+export const workOrderNote = (workOrder: SeedWorkOrder, thresholdPct = 50) => {
   switch (workOrder.status) {
     case 'TICKET_DISPATCHED':
       return 'Asset set to NEEDS_MAINTENANCE. The campus technician will inspect it and send a repair quote.'
     case 'AWAITING_DECISION':
       return workOrder.quoteAmount !== null && workOrder.berPercent !== null
-        ? `Quote ${formatPeso(workOrder.quoteAmount)} pushes BER to ${workOrder.berPercent}%. Maintenance is blocked; the custodian is finalizing condemnation.`
-        : 'A repair quote is under review against the 50% BER threshold.'
+        ? `Quote ${formatPeso(workOrder.quoteAmount)} pushes BER to ${workOrder.berPercent}%. Maintenance is blocked at the ${thresholdPct}% threshold; the custodian is deciding the condemnation recommendation.`
+        : `A repair quote is under review against the ${thresholdPct}% BER threshold.`
     case 'CLOSED_REPAIRED':
-      return 'Repaired below the 50% BER limit and returned to service with the same asset ID and history.'
+      return `Repaired below the ${thresholdPct}% BER limit and returned to service with the same asset ID and history.`
     case 'CLOSED_CONDEMNED':
-      return 'BER exceeded the 50% threshold; the unit was condemned and requires a verified replacement.'
+      return `BER reached the ${thresholdPct}% threshold; the unit was condemned and requires a verified replacement.`
     default:
       return workOrder.description
   }
