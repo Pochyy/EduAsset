@@ -1,5 +1,11 @@
 import type { BadgeTone } from '../components/ui/Badge'
-import type { SeedItem, SeedRequisition, SeedUnit, SeedWorkOrder } from '../types'
+import type {
+  SeedItem,
+  SeedMachineSlot,
+  SeedRequisition,
+  SeedUnit,
+  SeedWorkOrder,
+} from '../types'
 
 export const dashboardMachineIds = ['WIL-PRN-01', 'WIL-PRN-02', 'WIL-3DP-002'] as const
 export const inventoryMachineIds = [
@@ -11,8 +17,11 @@ export const inventoryMachineIds = [
 ] as const
 export const inventoryConsumableIds = [
   'TNR-WIL-2026-001',
+  'TNR-WIL-2026-002',
   'DRM-WIL-2026-004',
+  'DRM-WIL-2026-005',
   'FIL-WIL-2026-014',
+  'FIL-WIL-2026-015',
   'BP-A4-0028',
 ] as const
 export const inventoryPeripheralIds = ['KB-0031', 'KB-0032', 'MS-0031', 'MON-0031'] as const
@@ -26,46 +35,86 @@ export const labRequisitionCatalog = [
   { itemId: 'THRM', baseline: 0, used: 0, unit: 'rolls' },
 ] as const
 
-export const turnoverMachines = [
+export interface TurnoverSlotDemo {
+  key: string
+  machineId: string
+  slotId: string
+  slotName: string
+  partialAllowed: boolean
+  suggestedNewUnitId: string | null
+  wrongUnitId: string | null
+}
+
+export const turnoverSlots: TurnoverSlotDemo[] = [
   {
-    key: 'prn',
+    key: '3dp-spool1',
+    machineId: 'WIL-3DP-001',
+    slotId: '3DP1-SPL1',
+    slotName: 'Spool-1',
+    partialAllowed: true,
+    suggestedNewUnitId: 'FIL-WIL-2026-015',
+    wrongUnitId: 'FIL-WIL-2026-009',
+  },
+  {
+    key: 'prn-black',
     machineId: 'WIL-PRN-01',
-    activeUnitId: 'TNR-WIL-2026-001',
-    newUnitId: 'TNR-WIL-2026-002',
+    slotId: 'PRN01-BLK',
+    slotName: 'Black',
+    partialAllowed: false,
+    suggestedNewUnitId: 'TNR-WIL-2026-002',
     wrongUnitId: 'TNR-WIL-2026-003',
   },
   {
-    key: '3dp',
-    machineId: 'WIL-3DP-001',
-    activeUnitId: 'FIL-WIL-2026-014',
-    newUnitId: 'FIL-WIL-2026-015',
-    wrongUnitId: 'FIL-WIL-2026-009',
-  },
-] as const
-
-export const turnoverDetails: Record<
-  string,
-  { machineId: string; itemId: string; oldUnitId: string; newUnitId: string }
-> = {
-  'TO-001': {
+    key: 'prn-drum',
     machineId: 'WIL-PRN-01',
-    itemId: 'TNR',
-    oldUnitId: 'TNR-WIL-2026-001',
-    newUnitId: 'TNR-WIL-2026-002',
+    slotId: 'PRN01-DRM',
+    slotName: 'Drum',
+    partialAllowed: false,
+    suggestedNewUnitId: 'DRM-WIL-2026-005',
+    wrongUnitId: 'DRM-WIL-2026-003',
   },
-  'TO-002': {
-    machineId: 'WIL-3DP-001',
-    itemId: 'PLA',
-    oldUnitId: 'FIL-WIL-2026-014',
-    newUnitId: 'FIL-WIL-2026-015',
-  },
-  'TO-003': {
+  {
+    key: 'prn2-drum',
     machineId: 'WIL-PRN-02',
-    itemId: 'DRM',
-    oldUnitId: 'DRM-WIL-2026-003',
-    newUnitId: 'DRM-WIL-2026-004',
+    slotId: 'PRN02-DRM',
+    slotName: 'Drum',
+    partialAllowed: false,
+    suggestedNewUnitId: null,
+    wrongUnitId: 'DRM-WIL-2026-003',
   },
-}
+  {
+    key: '3dp-spool2',
+    machineId: 'WIL-3DP-001',
+    slotId: '3DP1-SPL2',
+    slotName: 'Spool-2',
+    partialAllowed: true,
+    suggestedNewUnitId: null,
+    wrongUnitId: null,
+  },
+]
+
+export const activeUnitForSlot = (slotId: string, units: SeedUnit[]) =>
+  units.find(
+    (unit) => unit.slotId === slotId && unit.inventoryStatus === 'IN_USE',
+  )
+
+export const slotsForMachine = (machineId: string, slots: SeedMachineSlot[]) =>
+  slots.filter((slot) => slot.machineId === machineId)
+
+export const slotNameFor = (slots: SeedMachineSlot[], slotId: string | null) =>
+  slotId ? (slots.find((slot) => slot.id === slotId)?.slotName ?? slotId) : '—'
+
+export const slotSummary = (
+  machineId: string,
+  slots: SeedMachineSlot[],
+  units: SeedUnit[],
+) =>
+  slotsForMachine(machineId, slots)
+    .map((slot) => {
+      const active = activeUnitForSlot(slot.id, units)
+      return `${slot.slotName}: ${active?.assetId ?? 'empty'}`
+    })
+    .join(' · ')
 
 export const labLabel = (labId: string) => labId.replace('WIL-LAB-', 'WIL Lab ')
 
@@ -202,7 +251,10 @@ export const machineNote = (
       ? `${workOrder.title} · ${workOrder.workOrderId} dispatched`
       : 'Needs maintenance · ticket pending'
   }
-  if (active?.inventoryStatus === 'RETURNED_EMPTY') {
+  if (
+    active?.inventoryStatus === 'RETURNED_EMPTY' ||
+    active?.inventoryStatus === 'RETURNED_PARTIAL'
+  ) {
     return 'Spent unit returned · replacement awaiting custodian approval'
   }
   return 'In service · no active ticket'

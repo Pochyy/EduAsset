@@ -1,6 +1,6 @@
 import { ArrowRight, ScanLine, Plus, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { actions, activity, health, healthTotal, kpis } from '../data/dashboard'
+import { actions, health, healthTotal, kpis } from '../data/dashboard'
 import { useQueueCounts } from '../data/counts'
 import { burnRate, daysLeft, isAlert, isNoRecentUse, triggerDays } from '../data/reorder'
 import { useAppData } from '../context/AppDataContext'
@@ -114,6 +114,18 @@ export function CentralDashboard() {
   const attentionCount = health
     .filter((entry) => entry.tone === 'warning' || entry.tone === 'danger')
     .reduce((total, entry) => total + entry.value, 0)
+
+  const recentActivity = [...data.auditLog]
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .slice(0, 5)
+  const formatAuditTime = (iso: string) =>
+    new Date(iso).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'Asia/Manila',
+    })
 
   const outlookRows = data.forecast.map((row) => {
     const days = daysLeft(row, data.policy)
@@ -313,9 +325,9 @@ export function CentralDashboard() {
             Recent activity (audit log)
           </h2>
           <ol className="m-0 flex list-none flex-col p-0">
-            {activity.map((entry) => (
+            {recentActivity.map((entry) => (
               <li
-                key={entry.text}
+                key={entry.id}
                 className="flex gap-3 border-t border-line-soft py-2.5 first:border-t-0 first:pt-0"
               >
                 <span
@@ -323,8 +335,10 @@ export function CentralDashboard() {
                   className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-rust/40"
                 />
                 <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <span className="text-[13px] leading-snug text-ink">{entry.text}</span>
-                  <span className="text-xs text-muted">{entry.meta}</span>
+                  <span className="text-[13px] leading-snug text-ink">{entry.detail}</span>
+                  <span className="text-xs text-muted">
+                    {entry.actor} · {formatAuditTime(entry.at)}
+                  </span>
                 </span>
               </li>
             ))}

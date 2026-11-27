@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import {
   formatVariance,
@@ -38,6 +39,7 @@ const varianceColors: Record<Band, string> = {
 export function LabRequisition() {
   usePageTitle('Lab · Supply Requisition')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [itemId, setItemId] = useState('TNR')
@@ -146,6 +148,18 @@ export function LabRequisition() {
     }
 
     dispatch({ type: 'requisition/add', requisition })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Lab user',
+        action: 'REQUISITION_SUBMITTED',
+        entityType: 'REQUISITION',
+        entityId: id,
+        detail: `${id} submitted for ${itemNameOf(data.items, selected.itemId)} (${quantityNumber} ${selected.unit}); band ${requisition.band}.`,
+      },
+    })
     setQuantity('')
     setJustification('')
     setTried(false)

@@ -44,6 +44,15 @@
     { "itemId": "LAM", "name": "Heavy laminator", "category": "DURABLE", "unit": "unit", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": 25000, "requireOneToOne": false },
     { "itemId": "THRM", "name": "Thermal paper roll", "category": "CONSUMABLE", "unit": "roll", "leadTimeDays": 21, "safetyBufferDays": 7, "replacementValue": null, "requireOneToOne": false }
   ],
+  "machineSlots": [
+    { "id": "PRN01-BLK", "machineId": "WIL-PRN-01", "slotName": "Black" },
+    { "id": "PRN01-DRM", "machineId": "WIL-PRN-01", "slotName": "Drum" },
+    { "id": "PRN02-BLK", "machineId": "WIL-PRN-02", "slotName": "Black" },
+    { "id": "PRN02-DRM", "machineId": "WIL-PRN-02", "slotName": "Drum" },
+    { "id": "3DP1-SPL1", "machineId": "WIL-3DP-001", "slotName": "Spool-1" },
+    { "id": "3DP1-SPL2", "machineId": "WIL-3DP-001", "slotName": "Spool-2" },
+    { "id": "3DP2-SPL1", "machineId": "WIL-3DP-002", "slotName": "Spool-1" }
+  ],
   "units": [
     { "assetId": "KB-0007", "itemId": "KB_USB", "itemName": "Keyboard (USB)", "category": "DURABLE", "location": "WIL workstation 5", "inventoryStatus": "RETIRED", "healthState": "CONDEMNED_BER", "deliveryRecordId": "DR-071", "deliveryDate": "2025-01-15", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "KB-0099", "itemId": "KB_USB", "itemName": "Keyboard (USB)", "category": "DURABLE", "location": "WIL workstation 2", "inventoryStatus": "IN_USE", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-090", "deliveryDate": "2025-03-10", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
@@ -69,9 +78,10 @@
     { "assetId": "MON-0031", "itemId": "MON", "itemName": "Testing monitor", "category": "DURABLE", "location": "WIL Lab 3", "inventoryStatus": "IN_USE", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-091", "deliveryDate": "2026-04-02", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "LAM-0001", "itemId": "LAM", "itemName": "Heavy laminator", "category": "DURABLE", "location": "WIL Lab 1", "inventoryStatus": "IN_USE", "healthState": "OPERATIONAL", "deliveryRecordId": "DR-019", "deliveryDate": "2025-08-15", "serialNumber": "LAM-77120", "linkedMachineId": null, "pendingDisbursement": false },
     { "assetId": "DRM-WIL-2026-003", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "WIL Lab 2", "inventoryStatus": "RETURNED_EMPTY", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-096", "deliveryDate": "2026-08-12", "serialNumber": null, "linkedMachineId": "WIL-PRN-02", "pendingDisbursement": false },
-    { "assetId": "DRM-WIL-2026-004", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "WIL Lab 2", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": "WIL-PRN-02", "pendingDisbursement": false },
-    { "assetId": "FIL-WIL-2026-014", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "WIL Lab 1", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "pendingDisbursement": false },
-    { "assetId": "FIL-WIL-2026-015", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "pendingDisbursement": true },
+    { "assetId": "DRM-WIL-2026-004", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "WIL Lab 2", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": "WIL-PRN-02", "slotId": "PRN02-DRM", "pendingDisbursement": false },
+    { "assetId": "DRM-WIL-2026-005", "itemId": "DRM", "itemName": "Imaging drum unit W1104A", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-102", "deliveryDate": "2026-10-02", "serialNumber": null, "linkedMachineId": null, "slotId": null, "pendingDisbursement": false },
+    { "assetId": "FIL-WIL-2026-014", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "WIL Lab 1", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "slotId": "3DP1-SPL1", "pendingDisbursement": false },
+    { "assetId": "FIL-WIL-2026-015", "itemId": "PLA", "itemName": "PLA filament spool 1 kg", "category": "CONSUMABLE", "location": "Property storeroom", "inventoryStatus": "IN_STOCK", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-105", "deliveryDate": "2026-10-10", "serialNumber": null, "linkedMachineId": "WIL-3DP-001", "slotId": null, "pendingDisbursement": true },
     { "assetId": "BP-A4-0028", "itemId": "A4", "itemName": "Bond paper A4 (ream)", "category": "CONSUMABLE", "location": "WIL Lab 3", "inventoryStatus": "IN_USE", "healthState": "NOT_APPLICABLE", "deliveryRecordId": "DR-110", "deliveryDate": "2026-11-05", "serialNumber": null, "linkedMachineId": null, "pendingDisbursement": false }
   ],
   "requisitions": [
@@ -83,9 +93,9 @@
     { "requisitionId": "RQ-1023", "labId": "WIL-LAB-3", "itemId": "THRM", "quantity": 6, "unit": "rolls", "baselineVolume": 0, "expectedVolume": null, "currentTermVolume": 6, "variancePercent": null, "band": "NO_BASELINE", "weeksElapsed": 10, "weeksInTerm": 16, "status": "LOCKED_REVIEW", "requestedAt": "2026-11-20T09:15:00+08:00", "justification": null }
   ],
   "turnovers": [
-    { "turnoverId": "TO-001", "machineId": "WIL-PRN-01", "location": "WIL Lab 3", "itemId": "TNR", "oldAssetId": "TNR-WIL-2026-001", "newAssetId": "TNR-WIL-2026-002", "status": "READY_TO_APPROVE", "requestedAt": "2026-11-19T10:40:00+08:00" },
-    { "turnoverId": "TO-002", "machineId": "WIL-3DP-001", "location": "WIL Lab 1", "itemId": "PLA", "oldAssetId": "FIL-WIL-2026-014", "newAssetId": "FIL-WIL-2026-015", "status": "AWAITING_SPENT_SCAN", "requestedAt": "2026-11-19T09:12:00+08:00" },
-    { "turnoverId": "TO-003", "machineId": "WIL-PRN-02", "location": "WIL Lab 2", "itemId": "DRM", "oldAssetId": "DRM-WIL-2026-003", "newAssetId": "DRM-WIL-2026-004", "status": "RELEASED", "requestedAt": "2026-11-18T16:30:00+08:00" }
+    { "turnoverId": "TO-001", "machineId": "WIL-PRN-01", "slotId": "PRN01-BLK", "location": "WIL Lab 3", "itemId": "TNR", "oldAssetId": "TNR-WIL-2026-001", "oldStatus": "RETURNED_EMPTY", "newAssetId": "TNR-WIL-2026-002", "status": "READY_TO_APPROVE", "requestedAt": "2026-11-19T10:40:00+08:00", "exceptionType": null, "exceptionReason": null },
+    { "turnoverId": "TO-002", "machineId": "WIL-3DP-001", "slotId": "3DP1-SPL1", "location": "WIL Lab 1", "itemId": "PLA", "oldAssetId": "FIL-WIL-2026-014", "oldStatus": null, "newAssetId": "FIL-WIL-2026-015", "status": "AWAITING_SPENT_SCAN", "requestedAt": "2026-11-19T09:12:00+08:00", "exceptionType": null, "exceptionReason": null },
+    { "turnoverId": "TO-003", "machineId": "WIL-PRN-02", "slotId": "PRN02-DRM", "location": "WIL Lab 2", "itemId": "DRM", "oldAssetId": "DRM-WIL-2026-003", "oldStatus": "RETURNED_EMPTY", "newAssetId": "DRM-WIL-2026-004", "status": "RELEASED", "requestedAt": "2026-11-18T16:30:00+08:00", "exceptionType": null, "exceptionReason": null }
   ],
   "workOrders": [
     { "workOrderId": "WO-0031", "assetId": "WIL-PRN-02", "title": "Recurring paper jam", "description": "Paper jams at tray 2 every 20 pages.", "reportedAt": "2026-11-18T10:20:00+08:00", "status": "TICKET_DISPATCHED", "quoteAmount": null, "berPercent": null, "closedAt": null },
@@ -103,5 +113,52 @@
     { "id": "f8", "type": "UNIT_AGE", "severity": "HIGH", "title": "'New' unit older than the unit it replaces", "entityId": "KB-0151", "meta": "KB-0151 (2023) → KB-0007 (2025)", "detail": "The proposed replacement was registered in 2023, two years before the unit it replaces. Check the manufacture and registration dates before the second approver confirms.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f9", "type": "LOCATION_RATE", "severity": "MEDIUM", "title": "Replacement rate far above peer locations", "entityId": "WIL-LAB-3", "meta": "WIL Lab 3 · 12 replacements in 30 days", "detail": "WIL Lab 3 replaced consumables about 4x as often as the peer labs over the same period (Lab 1: 3, Lab 2: 2). Review for possible misuse or a recurring machine fault.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null },
     { "id": "f10", "type": "RECONCILIATION", "severity": "MEDIUM", "title": "Reconciliation: 2 asset IDs missing from WIL Lab 3", "entityId": "WIL-LAB-3", "meta": "Session Nov 19 · 6 of 8 scanned", "detail": "MS-0031 and MON-0031 were expected in WIL Lab 3 but were not scanned. The session flagged both as missing; confirm their location.", "reviewed": false, "reviewNote": null, "reviewedBy": null, "reviewedAt": null }
+  ],
+  "auditLog": [
+      {
+          "id": "a1",
+          "at": "2026-11-19T10:42:00+08:00",
+          "actor": "Lab Assistant",
+          "action": "TURNOVER_SCANNED",
+          "entityType": "UNIT",
+          "entityId": "TNR-WIL-2026-001",
+          "detail": "TNR-WIL-2026-001 scanned as RETURNED_EMPTY on WIL-PRN-01/Black."
+      },
+      {
+          "id": "a2",
+          "at": "2026-11-19T10:15:00+08:00",
+          "actor": "Property Custodian",
+          "action": "REPLACEMENT_REJECTED",
+          "entityType": "UNIT",
+          "entityId": "KB-0099",
+          "detail": "Replacement rejected: KB-0099 was previously issued."
+      },
+      {
+          "id": "a3",
+          "at": "2026-11-19T09:30:00+08:00",
+          "actor": "System",
+          "action": "RESTOCK_ALERT",
+          "entityType": "ITEM",
+          "entityId": "TNR",
+          "detail": "Restock alert raised for HP LaserJet Toner W9004MC."
+      },
+      {
+          "id": "a4",
+          "at": "2026-11-18T16:20:00+08:00",
+          "actor": "Property Custodian",
+          "action": "INTAKE_COMPLETED",
+          "entityType": "DELIVERY",
+          "entityId": "DR-118",
+          "detail": "5 keyboards received under DR-118 (KB-0150 to KB-0154)."
+      },
+      {
+          "id": "a5",
+          "at": "2026-11-18T15:10:00+08:00",
+          "actor": "Lab Assistant",
+          "action": "STATUS_CHANGED",
+          "entityType": "UNIT",
+          "entityId": "WIL-PRN-02",
+          "detail": "WIL-PRN-02 set to NEEDS_MAINTENANCE (recurring jam)."
+      }
   ]
 }

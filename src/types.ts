@@ -46,8 +46,18 @@ export interface SeedUnit {
   deliveryDate: string
   serialNumber: string | null
   linkedMachineId: string | null
+  /** Machine slot for a 1-to-1 consumable; null when not installed. */
+  slotId?: string | null
   pendingDisbursement: boolean
 }
+
+export interface SeedMachineSlot {
+  id: string
+  machineId: string
+  slotName: string
+}
+
+export type TurnoverExceptionType = 'FIRST_INSTALL' | 'DEFECTIVE_ON_ARRIVAL'
 
 export type VarianceBand = 'NORMAL' | 'ELEVATED' | 'ABNORMAL' | 'NO_BASELINE'
 
@@ -91,12 +101,17 @@ export interface SeedRequisition {
 export interface SeedTurnover {
   turnoverId: string
   machineId: string
+  slotId: string | null
   location: string
   itemId: string
-  oldAssetId: string
+  oldAssetId: string | null
+  /** Return status recorded when the spent unit was scanned. */
+  oldStatus: 'RETURNED_EMPTY' | 'RETURNED_PARTIAL' | null
   newAssetId: string
   status: string
   requestedAt: string
+  exceptionType: TurnoverExceptionType | null
+  exceptionReason: string | null
 }
 
 export interface SeedWorkOrder {
@@ -125,6 +140,16 @@ export interface SeedAuditFlag {
   reviewedAt: string | null
 }
 
+export interface SeedAuditEntry {
+  id: string
+  at: string
+  actor: string
+  action: string
+  entityType: string
+  entityId: string
+  detail: string
+}
+
 export interface SeedData {
   meta: Record<string, unknown>
   term: TermCalendar
@@ -132,8 +157,10 @@ export interface SeedData {
   users: SeedUser[]
   items: SeedItem[]
   units: SeedUnit[]
+  machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
   workOrders: SeedWorkOrder[]
   auditFlags: SeedAuditFlag[]
+  auditLog: SeedAuditEntry[]
 }

@@ -9,8 +9,10 @@ import { initialForecast, type ForecastRow } from '../data/reorder'
 import { seed } from '../data/seed'
 import type {
   PolicySettings,
+  SeedAuditEntry,
   SeedAuditFlag,
   SeedItem,
+  SeedMachineSlot,
   SeedRequisition,
   SeedTurnover,
   SeedUnit,
@@ -21,10 +23,12 @@ import type {
 export interface AppData {
   units: SeedUnit[]
   items: SeedItem[]
+  machineSlots: SeedMachineSlot[]
   requisitions: SeedRequisition[]
   turnovers: SeedTurnover[]
   workOrders: SeedWorkOrder[]
   auditFlags: SeedAuditFlag[]
+  auditLog: SeedAuditEntry[]
   forecast: ForecastRow[]
   term: TermCalendar
   policy: PolicySettings
@@ -40,12 +44,25 @@ export type AppDataAction =
       note: string
       reviewer: string
     }
-  | { type: 'turnover/status'; id: string; status: string }
-  | { type: 'turnover/release'; turnoverId: string; oldUnitId: string; newUnit: SeedUnit }
+  | { type: 'turnover/add'; turnover: SeedTurnover }
+  | {
+      type: 'turnover/status'
+      id: string
+      status: string
+      oldStatus?: 'RETURNED_EMPTY' | 'RETURNED_PARTIAL'
+    }
+  | {
+      type: 'turnover/release'
+      turnoverId: string
+      oldUnitId: string | null
+      oldStatus: 'RETURNED_EMPTY' | 'RETURNED_PARTIAL'
+      newUnit: SeedUnit
+    }
   | { type: 'work-order/add'; workOrder: SeedWorkOrder }
   | { type: 'work-order/status'; id: string; status: string; patch?: Partial<SeedWorkOrder> }
   | { type: 'audit/add'; flag: SeedAuditFlag }
   | { type: 'audit/review'; id: string; note: string; reviewer: string }
+  | { type: 'audit/log'; entry: SeedAuditEntry }
   | { type: 'unit/patch'; id: string; patch: Partial<SeedUnit> }
   | { type: 'units/add'; units: SeedUnit[] }
   | { type: 'item/patch'; id: string; patch: Partial<SeedItem> }
@@ -61,10 +78,12 @@ interface AppDataContextValue {
 const initialData: AppData = {
   units: seed.units,
   items: seed.items,
+  machineSlots: seed.machineSlots,
   requisitions: seed.requisitions,
   turnovers: seed.turnovers,
   workOrders: seed.workOrders,
   auditFlags: seed.auditFlags,
+  auditLog: seed.auditLog,
   forecast: initialForecast,
   term: seed.term,
   policy: seed.policy,
@@ -101,17 +120,32 @@ function reducer(state: AppData, action: AppDataAction): AppData {
             : requisition,
         ),
       }
+    case 'turnover/add':
+      return {
+        ...state,
+        turnovers: [action.turnover, ...state.turnovers],
+      }
     case 'turnover/status':
       return {
         ...state,
         turnovers: state.turnovers.map((turnover) =>
-          turnover.turnoverId === action.id ? { ...turnover, status: action.status } : turnover,
+          turnover.turnoverId === action.id
+            ? {
+                ...turnover,
+                status: action.status,
+                ...(action.oldStatus ? { oldStatus: action.oldStatus } : {}),
+              }
+            : turnover,
         ),
       }
     case 'turnover/release': {
       let units = state.units.map((unit) =>
         unit.assetId === action.oldUnitId
-          ? { ...unit, inventoryStatus: 'RETURNED_EMPTY' }
+          ? {
+              ...unit,
+              inventoryStatus: action.oldStatus,
+              slotId: null,
+            }
           : unit,
       )
       units = units.some((unit) => unit.assetId === action.newUnit.assetId)
@@ -163,6 +197,11 @@ function reducer(state: AppData, action: AppDataAction): AppData {
               }
             : flag,
         ),
+      }
+    case 'audit/log':
+      return {
+        ...state,
+        auditLog: [action.entry, ...state.auditLog],
       }
     case 'unit/patch':
       return {

@@ -78,11 +78,3 @@ export const health = [
 ]
 
 export const healthTotal = health.reduce((total, item) => total + item.value, 0)
-
-export const activity = [
-  { text: 'TNR-WIL-2026-001 scanned as RETURNED_EMPTY on WIL-PRN-01', meta: 'Lab Assistant · 10:42' },
-  { text: 'Replacement rejected: KB-0099 was previously issued', meta: 'Property Custodian · 10:15' },
-  { text: 'Restock alert raised for HP LaserJet Toner W9004MC', meta: 'System · 09:30' },
-  { text: '5 keyboards received under DR-118 (KB-0150 to KB-0154)', meta: 'Property Custodian · Yesterday' },
-  { text: 'WIL-PRN-02 set to NEEDS_MAINTENANCE (recurring jam)', meta: 'Lab Assistant · Yesterday' },
-]

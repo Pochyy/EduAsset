@@ -4,12 +4,13 @@ import { useAppData } from '../context/AppDataContext'
 import {
   dashboardMachineIds,
   dashboardRequisitionIds,
+  activeUnitForSlot,
   healthStatus,
   isOpenWorkOrder,
   itemNameOf,
-  linkedConsumable,
   machineNote,
   machineTitle,
+  slotsForMachine,
   requisitionStatus,
   workOrderStatus,
 } from '../lib/lab'
@@ -108,7 +109,7 @@ export function LabDashboard() {
         <div className="grid divide-y divide-line-soft md:grid-cols-3 md:divide-x md:divide-y-0">
           {machines.map((machine) => {
             const health = healthStatus(machine.healthState)
-            const active = linkedConsumable(machine, data.units)
+            const slots = slotsForMachine(machine.assetId, data.machineSlots)
             return (
               <div
                 key={machine.assetId}
@@ -124,11 +125,22 @@ export function LabDashboard() {
                 <span className="text-[13px] font-medium text-ink">
                   {machineTitle(machine, data.items)}
                 </span>
-                <span className="text-[13px] text-ink">
-                  Active unit:{' '}
-                  <span className="font-mono text-xs font-semibold">
-                    {active?.assetId ?? '—'}
-                  </span>
+                <span className="flex flex-col gap-0.5 text-[13px] text-ink">
+                  {slots.length ? (
+                    slots.map((slot) => {
+                      const active = activeUnitForSlot(slot.id, data.units)
+                      return (
+                        <span key={slot.id}>
+                          {slot.slotName}:{' '}
+                          <span className="font-mono text-xs font-semibold">
+                            {active?.assetId ?? 'empty'}
+                          </span>
+                        </span>
+                      )
+                    })
+                  ) : (
+                    <span>No machine slotted consumable</span>
+                  )}
                 </span>
                 <span className="text-xs leading-relaxed text-muted">
                   {machineNote(machine, data.units, data.workOrders)}

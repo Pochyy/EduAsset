@@ -3,7 +3,7 @@ import { ArrowRight, Plus, QrCode, Search, Wrench, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useToast } from '../context/ToastContext'
-import { healthStatus, inventoryStatus } from '../lib/lab'
+import { healthStatus, inventoryStatus, slotNameFor } from '../lib/lab'
 import { qrPath } from '../lib/qr'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
@@ -423,6 +423,10 @@ export function MasterLedger() {
                 { k: 'Delivery record', v: openUnit.deliveryRecordId },
                 { k: 'Manufacturer serial', v: openUnit.serialNumber ?? '—' },
                 { k: 'Linked machine', v: openUnit.linkedMachineId ?? '—' },
+                {
+                  k: 'Machine slot',
+                  v: slotNameFor(data.machineSlots, openUnit.slotId ?? null),
+                },
                 { k: 'QR payload', v: `/items/${openUnit.assetId}` },
               ].map((field) => (
                 <div key={field.k}>

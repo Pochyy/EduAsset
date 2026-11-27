@@ -15,11 +15,19 @@ import { PageHeader } from '../components/ui/PageHeader'
 import { Tabs } from '../components/ui/Tabs'
 import { cn } from '../lib/utils'
 
-type FlagTab = 'pattern' | 'rejected' | 'dormant' | 'recon' | 'variance' | 'reviewed'
+type FlagTab =
+  | 'pattern'
+  | 'rejected'
+  | 'turnover'
+  | 'dormant'
+  | 'recon'
+  | 'variance'
+  | 'reviewed'
 
 const tabDefs: Array<{ id: FlagTab; label: string }> = [
   { id: 'pattern', label: 'Suspicious patterns' },
   { id: 'rejected', label: 'Rejected attempts' },
+  { id: 'turnover', label: 'Turnover exceptions' },
   { id: 'dormant', label: 'Dormant assets' },
   { id: 'recon', label: 'Reconciliation' },
   { id: 'variance', label: 'Variance anomalies' },
@@ -36,6 +44,7 @@ const patternTypes = new Set([
 const tabFor = (flag: SeedAuditFlag): FlagTab => {
   if (flag.reviewed) return 'reviewed'
   if (flag.type === 'REJECTED_REPLACEMENT') return 'rejected'
+  if (flag.type === 'TURNOVER_EXCEPTION') return 'turnover'
   if (flag.type === 'DORMANT') return 'dormant'
   if (flag.type === 'RECONCILIATION') return 'recon'
   if (flag.type === 'VARIANCE') return 'variance'
@@ -50,6 +59,8 @@ const badgeFor = (flag: SeedAuditFlag): { label: string; tone: BadgeTone } => {
       return { label: 'SUSPICIOUS PATTERN', tone: 'danger' }
     case 'REJECTED_REPLACEMENT':
       return { label: 'REJECTED ATTEMPT', tone: 'danger' }
+    case 'TURNOVER_EXCEPTION':
+      return { label: 'TURNOVER EXCEPTION', tone: 'warning' }
     case 'DORMANT':
       return { label: 'DORMANT', tone: 'warning' }
     case 'VARIANCE':
@@ -74,6 +85,8 @@ const actionFor = (flag: SeedAuditFlag): { to: string; label: string } => {
       return { to: '/central/replacements', label: 'Open replacements' }
     case 'VARIANCE':
       return { to: '/central/requisitions', label: 'Decide in Requisition Review' }
+    case 'TURNOVER_EXCEPTION':
+      return { to: '/central/turnover', label: 'Open turnover approval' }
     case 'RECONCILIATION':
       return { to: '/central/reconciliation', label: 'Open reconciliation' }
     default:
@@ -134,7 +147,7 @@ export function AuditQueue() {
           { label: 'Audit Queue' },
         ]}
         title="Audit queue"
-        description="Suspicious patterns, rejected replacement attempts, reconciliation discrepancies and dormant assets that need a custodian’s review."
+        description="Suspicious patterns, rejected attempts, turnover exceptions, reconciliation discrepancies and dormant assets that need a custodian’s review."
       />
 
       <Tabs

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ClipboardList, SlidersHorizontal } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import {
   formatShortDate,
@@ -97,6 +98,7 @@ const varianceSurface = (band: VarianceBand) =>
 export function RequisitionReview() {
   usePageTitle('Central · Requisition Review')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
 
   const [tab, setTab] = useState<QueueTab>('locked')
@@ -153,12 +155,25 @@ export function RequisitionReview() {
       return
     }
 
+    const reviewer = user?.name ?? 'Property Custodian'
     dispatch({
       type: 'requisition/decide',
       id: reviewing.requisitionId,
       decision,
       note: reason.trim(),
-      reviewer: 'Property Custodian',
+      reviewer,
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: reviewer,
+        action: 'REQUISITION_DECIDED',
+        entityType: 'REQUISITION',
+        entityId: reviewing.requisitionId,
+        detail: `${reviewing.requisitionId} ${decision === 'approve' ? 'approved' : 'rejected'}${reason.trim() ? `: ${reason.trim()}` : '.'}`,
+      },
     })
     setReviewingId(null)
     showToast(

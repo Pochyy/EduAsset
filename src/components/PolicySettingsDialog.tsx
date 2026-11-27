@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Info } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { Button } from './ui/Button'
 import { Dialog } from './ui/Dialog'
@@ -35,6 +36,7 @@ const draftsFrom = (policy: {
 
 export function PolicySettingsDialog({ open, onClose }: PolicySettingsDialogProps) {
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
   const [drafts, setDrafts] = useState<Drafts>(() => draftsFrom(data.policy))
   const [tried, setTried] = useState(false)
@@ -97,6 +99,18 @@ export function PolicySettingsDialog({ open, onClose }: PolicySettingsDialogProp
         forecastWindowDays: forecastWindow,
         lowVolumeWindowDays: lowVolumeWindow,
         lowVolumeIssueThreshold: lowVolumeThreshold,
+      },
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        action: 'POLICY_UPDATED',
+        entityType: 'POLICY',
+        entityId: 'POLICY',
+        detail: `Policy updated: variance ${normal}% / ${lock}%, forecast ${forecastWindow}/${lowVolumeWindow} days, low-volume threshold ${lowVolumeThreshold} issues.`,
       },
     })
     showToast(

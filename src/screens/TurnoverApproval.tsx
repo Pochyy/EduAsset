@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Check, Info, Lock, Repeat } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
+import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import {
   formatShortDate,
   itemNameOf,
   shortLocation,
-  turnoverDetails,
+  slotNameFor,
 } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import { cn } from '../lib/utils'
@@ -18,59 +19,63 @@ import { Dialog } from '../components/ui/Dialog'
 import { EmptyState } from '../components/ui/EmptyState'
 import { PageHeader } from '../components/ui/PageHeader'
 
-interface TurnoverMeta {
-  machineId: string
-  itemId: string
-  oldUnitId: string
-  newUnitId: string
-}
-
-const metaFor = (turnover: SeedTurnover): TurnoverMeta =>
-  turnoverDetails[turnover.turnoverId] ?? {
-    machineId: turnover.machineId,
-    itemId: turnover.itemId,
-    oldUnitId: turnover.oldAssetId,
-    newUnitId: turnover.newAssetId,
-  }
-
 const statusFor = (turnover: SeedTurnover): { label: string; tone: BadgeTone } => {
   if (turnover.status === 'RELEASED') return { label: 'RELEASED', tone: 'success' }
   if (turnover.status === 'READY_TO_APPROVE') {
     return { label: 'READY TO APPROVE', tone: 'warning' }
   }
+  if (turnover.status === 'AWAITING_APPROVAL') {
+    return { label: 'EXCEPTION AWAITING APPROVAL', tone: 'warning' }
+  }
   return { label: 'AWAITING SPENT-UNIT SCAN', tone: 'neutral' }
 }
 
+const exceptionLabel = (type: SeedTurnover['exceptionType']) =>
+  type === 'FIRST_INSTALL'
+    ? 'First install in an empty slot'
+    : type === 'DEFECTIVE_ON_ARRIVAL'
+      ? 'Defective on arrival'
+      : null
+
 function TurnoverSteps({
-  meta,
-  scanned,
+  turnover,
+  slotLabel,
+  oldUnit,
   released,
 }: {
-  meta: TurnoverMeta
-  scanned: boolean
+  turnover: SeedTurnover
+  slotLabel: string
+  oldUnit: SeedUnit | undefined
   released: boolean
 }) {
+  const exception = Boolean(turnover.exceptionType)
+  const ready = turnover.status === 'READY_TO_APPROVE'
+  const awaitingApproval = turnover.status === 'AWAITING_APPROVAL'
+  const scanned = ready || released
+
   const steps = [
     {
       title: 'Replacement requested',
-      detail: `${meta.newUnitId} for this machine`,
+      detail: `${turnover.newAssetId} for ${turnover.machineId}/${slotLabel}`,
       state: 'done' as const,
     },
     {
-      title: 'Spent unit scanned',
-      detail: scanned
-        ? `${meta.oldUnitId} → RETURNED_EMPTY`
-        : `Waiting for ${meta.oldUnitId}`,
-      state: scanned ? ('done' as const) : ('now' as const),
+      title: exception ? 'Exception recorded' : 'Spent unit scanned',
+      detail: exception
+        ? `${exceptionLabel(turnover.exceptionType)} · ${turnover.exceptionReason}`
+        : scanned
+          ? `${turnover.oldAssetId} → ${turnover.oldStatus ?? oldUnit?.inventoryStatus ?? 'RETURNED_EMPTY'}`
+          : `Waiting for ${turnover.oldAssetId}`,
+      state: exception || scanned ? ('done' as const) : ('now' as const),
     },
     {
       title: 'Custodian approval',
       detail: released
-        ? `Approved · ${meta.newUnitId} IN_USE`
-        : scanned
+        ? `Released · ${turnover.newAssetId} is IN_USE`
+        : ready || awaitingApproval
           ? 'Your decision'
           : 'Locked',
-      state: released ? ('done' as const) : scanned ? ('now' as const) : ('todo' as const),
+      state: released ? ('done' as const) : ready || awaitingApproval ? ('now' as const) : ('todo' as const),
     },
   ]
 
@@ -118,6 +123,7 @@ function TurnoverSteps({
 export function TurnoverApproval() {
   usePageTitle('Central · Turnover Approval')
   const { data, dispatch } = useAppData()
+  const { user } = useAuth()
   const { showToast } = useToast()
   const [confirmId, setConfirmId] = useState<string | null>(null)
 
@@ -125,37 +131,66 @@ export function TurnoverApproval() {
     b.requestedAt.localeCompare(a.requestedAt),
   )
   const confirming = turnovers.find((turnover) => turnover.turnoverId === confirmId)
-  const confirmingMeta = confirming ? metaFor(confirming) : null
 
-  function release(turnover: SeedTurnover, meta: TurnoverMeta) {
-    const oldUnit = data.units.find((unit) => unit.assetId === meta.oldUnitId)
-    const machine = data.units.find((unit) => unit.assetId === meta.machineId)
-    const newUnit: SeedUnit = {
-      assetId: meta.newUnitId,
-      itemId: meta.itemId,
-      itemName: itemNameOf(data.items, meta.itemId),
-      category: 'CONSUMABLE',
-      location: machine?.location ?? oldUnit?.location ?? 'WIL Lab',
-      inventoryStatus: 'IN_USE',
-      healthState: 'NOT_APPLICABLE',
-      deliveryRecordId: oldUnit?.deliveryRecordId ?? `TO-${turnover.turnoverId}`,
-      deliveryDate: new Date().toISOString().slice(0, 10),
-      serialNumber: null,
-      linkedMachineId: meta.machineId,
-      pendingDisbursement: false,
-    }
+  function release(turnover: SeedTurnover) {
+    const oldUnit = turnover.oldAssetId
+      ? data.units.find((unit) => unit.assetId === turnover.oldAssetId)
+      : undefined
+    const machine = data.units.find((unit) => unit.assetId === turnover.machineId)
+    const existingNew = data.units.find((unit) => unit.assetId === turnover.newAssetId)
+    const oldStatus = turnover.oldStatus ?? 'RETURNED_EMPTY'
+    const newUnit: SeedUnit = existingNew
+      ? {
+          ...existingNew,
+          inventoryStatus: 'IN_USE',
+          location: oldUnit?.location ?? machine?.location ?? existingNew.location,
+          linkedMachineId: turnover.machineId,
+          slotId: turnover.slotId,
+          pendingDisbursement: false,
+        }
+      : {
+          assetId: turnover.newAssetId,
+          itemId: turnover.itemId,
+          itemName: itemNameOf(data.items, turnover.itemId),
+          category: 'CONSUMABLE',
+          location: oldUnit?.location ?? machine?.location ?? 'WIL Lab',
+          inventoryStatus: 'IN_USE',
+          healthState: 'NOT_APPLICABLE',
+          deliveryRecordId: oldUnit?.deliveryRecordId ?? `TO-${turnover.turnoverId}`,
+          deliveryDate: new Date().toISOString().slice(0, 10),
+          serialNumber: null,
+          linkedMachineId: turnover.machineId,
+          slotId: turnover.slotId,
+          pendingDisbursement: false,
+        }
 
     dispatch({
       type: 'turnover/release',
       turnoverId: turnover.turnoverId,
-      oldUnitId: meta.oldUnitId,
+      oldUnitId: turnover.oldAssetId,
+      oldStatus,
       newUnit,
+    })
+    dispatch({
+      type: 'audit/log',
+      entry: {
+        id: crypto.randomUUID(),
+        at: new Date().toISOString(),
+        actor: user?.name ?? 'Property Custodian',
+        action: turnover.exceptionType ? 'TURNOVER_EXCEPTION_APPROVED' : 'TURNOVER_RELEASED',
+        entityType: 'UNIT',
+        entityId: turnover.newAssetId,
+        detail: `${turnover.newAssetId} released into ${turnover.machineId}/${slotNameFor(
+          data.machineSlots,
+          turnover.slotId,
+        )}${turnover.exceptionType ? ` after a ${exceptionLabel(turnover.exceptionType)?.toLowerCase()} exception` : ''}.`,
+      },
     })
     setConfirmId(null)
     showToast(
       'success',
-      `${meta.newUnitId} released`,
-      `Linked to ${meta.machineId} and logged in the audit trail.`,
+      `${turnover.newAssetId} released`,
+      `Linked to ${turnover.machineId}/${slotNameFor(data.machineSlots, turnover.slotId)} and logged in the audit trail.`,
     )
   }
 
@@ -168,14 +203,14 @@ export function TurnoverApproval() {
           { label: 'Turnover Approval' },
         ]}
         title="Turnover approval & disbursement"
-        description="A new unit is released only when the previous unit on that machine is RETURNED_EMPTY."
+        description="A new unit is released only when the spent unit in its machine slot is returned, or when you approve a logged exception."
       />
 
       <div className="flex items-start gap-3 rounded-control border border-butter-line bg-butter-soft p-4">
         <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-rust" aria-hidden="true" />
         <span className="text-[13px] leading-relaxed text-ink">
-          Lab assistants scan the spent unit in the WIL portal. You verify the turnover here and
-          approve the release; the new unit becomes IN_USE on the linked machine.
+          Lab assistants scan the spent unit in a machine slot. You verify the turnover or the
+          exception reason here; the new unit becomes IN_USE in that slot.
         </span>
       </div>
 
@@ -185,43 +220,62 @@ export function TurnoverApproval() {
             <EmptyState
               icon={Repeat}
               title="No turnover requests"
-              description="Turnovers appear here once a lab requests a replacement for a spent unit."
+              description="Turnovers appear here once a lab requests a replacement for a machine slot."
             />
           </Card>
         ) : (
           turnovers.map((turnover) => {
-            const meta = metaFor(turnover)
+            const slotLabel = slotNameFor(data.machineSlots, turnover.slotId)
             const scannerStatus = statusFor(turnover)
-            const scanned = turnover.status !== 'AWAITING_SPENT_SCAN'
             const released = turnover.status === 'RELEASED'
-            const canApprove = turnover.status === 'READY_TO_APPROVE'
-            const machine = data.units.find((unit) => unit.assetId === meta.machineId)
+            const canApprove =
+              turnover.status === 'READY_TO_APPROVE' ||
+              turnover.status === 'AWAITING_APPROVAL'
+            const machine = data.units.find((unit) => unit.assetId === turnover.machineId)
+            const oldUnit = turnover.oldAssetId
+              ? data.units.find((unit) => unit.assetId === turnover.oldAssetId)
+              : undefined
             const machineText = machine
               ? `${machine.assetId} · ${shortLocation(machine.location)}`
-              : meta.machineId
+              : turnover.machineId
 
             return (
               <Card key={turnover.turnoverId} className="flex flex-col gap-4 p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5">
                     <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
-                      {machineText}
+                      {machineText} / {slotLabel}
                     </h2>
                     <p className="text-[13px] text-muted">
-                      {itemNameOf(data.items, meta.itemId)} · requested{' '}
+                      {itemNameOf(data.items, turnover.itemId)} · requested{' '}
                       {formatShortDate(turnover.requestedAt)}
                     </p>
                   </div>
                   <Badge tone={scannerStatus.tone}>{scannerStatus.label}</Badge>
                 </div>
 
-                <TurnoverSteps meta={meta} scanned={scanned} released={released} />
+                {turnover.exceptionType ? (
+                  <div className="flex items-start gap-3 rounded-control border border-warning-line bg-warning-bg p-3">
+                    <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-warning" aria-hidden="true" />
+                    <span className="text-[13px] leading-relaxed text-ink">
+                      <strong>{exceptionLabel(turnover.exceptionType)}.</strong>{' '}
+                      {turnover.exceptionReason}
+                    </span>
+                  </div>
+                ) : null}
+
+                <TurnoverSteps
+                  turnover={turnover}
+                  slotLabel={slotLabel}
+                  oldUnit={oldUnit}
+                  released={released}
+                />
 
                 <div className="flex flex-wrap items-center justify-end gap-3">
                   {canApprove ? (
                     <Button onClick={() => setConfirmId(turnover.turnoverId)}>
                       <Check className="h-4 w-4" aria-hidden="true" />
-                      Approve disbursement
+                      {turnover.exceptionType ? 'Approve exception & release' : 'Approve disbursement'}
                     </Button>
                   ) : null}
 
@@ -229,7 +283,7 @@ export function TurnoverApproval() {
                     <>
                       <span className="flex items-center gap-1.5 text-[13px] text-muted">
                         <Lock className="h-4 w-4" aria-hidden="true" />
-                        Locked until the spent unit is scanned as RETURNED_EMPTY
+                        Locked until the spent unit is scanned as RETURNED_EMPTY or RETURNED_PARTIAL
                       </span>
                       <Button disabled>
                         <Check className="h-4 w-4" aria-hidden="true" />
@@ -241,7 +295,7 @@ export function TurnoverApproval() {
                   {released ? (
                     <span className="flex items-center gap-1.5 text-[13px] font-semibold text-success">
                       <Check className="h-4 w-4" aria-hidden="true" />
-                      Released · new unit is IN_USE on {meta.machineId}
+                      Released · new unit is IN_USE in {turnover.machineId}/{slotLabel}
                     </span>
                   ) : null}
                 </div>
@@ -252,9 +306,9 @@ export function TurnoverApproval() {
       </section>
 
       <Dialog
-        open={Boolean(confirming && confirmingMeta)}
+        open={Boolean(confirming)}
         onClose={() => setConfirmId(null)}
-        title={confirmingMeta ? `Release ${confirmingMeta.newUnitId}?` : 'Release unit'}
+        title={confirming ? `Release ${confirming.newAssetId}?` : 'Release unit'}
         className="max-w-lg"
         footer={
           <>
@@ -263,7 +317,7 @@ export function TurnoverApproval() {
             </Button>
             <Button
               onClick={() => {
-                if (confirming && confirmingMeta) release(confirming, confirmingMeta)
+                if (confirming) release(confirming)
               }}
             >
               Release unit
@@ -271,11 +325,22 @@ export function TurnoverApproval() {
           </>
         }
       >
-        {confirming && confirmingMeta ? (
+        {confirming ? (
           <p className="text-sm leading-relaxed text-neutral-text">
-            {confirmingMeta.oldUnitId} was verified as RETURNED_EMPTY.{' '}
-            {confirmingMeta.newUnitId} will be set to IN_USE and linked to{' '}
-            {confirmingMeta.machineId}. This is recorded in the audit log.
+            {confirming.exceptionType ? (
+              <>
+                The {exceptionLabel(confirming.exceptionType)?.toLowerCase() ?? 'turnover'}{' '}
+                exception was approved: “{confirming.exceptionReason}”.{' '}
+              </>
+            ) : (
+              <>
+                {confirming.oldAssetId} was verified as{' '}
+                {confirming.oldStatus ?? 'RETURNED_EMPTY'}.{' '}
+              </>
+            )}
+            {confirming.newAssetId} will be set to IN_USE in{' '}
+            {confirming.machineId}/{slotNameFor(data.machineSlots, confirming.slotId)}. This is
+            recorded in the audit log.
           </p>
         ) : null}
       </Dialog>

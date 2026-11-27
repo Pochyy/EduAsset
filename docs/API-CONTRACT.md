@@ -60,7 +60,8 @@ Store these as canonical tokens.
 | `ItemCategory` | `DURABLE`, `CONSUMABLE` |
 | `VarianceBand` | `NORMAL`, `ELEVATED`, `ABNORMAL`, `NO_BASELINE` |
 | `RequisitionStatus` | `AUTO_PROCESSED`, `LOCKED_REVIEW`, `APPROVED`, `REJECTED` |
-| `TurnoverStatus` | `AWAITING_SPENT_SCAN`, `READY_TO_APPROVE`, `RELEASED` |
+| `TurnoverStatus` | `AWAITING_SPENT_SCAN`, `READY_TO_APPROVE`, `AWAITING_APPROVAL`, `RELEASED` |
+| `TurnoverExceptionType` | `FIRST_INSTALL`, `DEFECTIVE_ON_ARRIVAL` |
 | `RepairDecision` | `REPAIR_APPROVED`, `UNDER_REPAIR`, `RETURNED_TO_SERVICE`, `CONDEMNED` |
 | `ReplacementStatus` | `DRAFT`, `OLD_UNIT_VERIFIED`, `PENDING_SECOND_APPROVAL`, `COMPLETED`, `REJECTED` |
 | `AuditFlagType` | `DUPLICATE_REPLACEMENT`, `RETIRED_RESCAN`, `UNIT_AGE`, `LOCATION_RATE`, `REJECTED_REPLACEMENT`, `DORMANT`, `VARIANCE`, `RECONCILIATION` |
@@ -211,27 +212,53 @@ Response: the requisition with `baselineVolume`, `expectedVolume`, `currentTermV
 
 ---
 
-## 6. Module 2 — 1-to-1 turnover
+## 6. Module 2 — 1-to-1 turnover and machine slots
+
+A machine slot is the 1-to-1 consumable position on a machine (for example `WIL-PRN-01/Black`).
+At most one `IN_USE` unit may occupy a slot.
 
 ### `GET /turnovers?status=`
-### `POST /turnovers/{machineId}/scan-spent`
+Returns turnover requests with `machineId`, `slotId`, `itemId`, `oldAssetId` (nullable),
+`oldStatus` (nullable), `newAssetId`, `status`, `exceptionType`, `exceptionReason` and timestamps.
 
-```json
-{ "assetId": "TNR-WIL-2026-001" }
-```
+### `POST /turnovers`
+`LAB_ASSISTANT` / `LAB_MANAGER`. Body: `{ "slotId": "PRN01-BLK", "newAssetId": "TNR-WIL-2026-002" }`.
+Requires an `IN_USE` unit in the slot; otherwise return `409 EMPTY_SLOT` and direct the user to the
+exception endpoint. Creates `AWAITING_SPENT_SCAN`.
 
-- If `assetId` matches the unit active on the machine: mark it `RETURNED_EMPTY`, set the turnover to
-  `READY_TO_APPROVE`, unlock the new unit, return `{ "match": true, "auditEntryId": "…" }`.
+### `POST /turnovers/exceptions`
+`LAB_ASSISTANT` / `LAB_MANAGER`.
+Body: `{ "slotId": "PRN01-DRM", "newAssetId": "DRM-WIL-2026-005", "exceptionType": "FIRST_INSTALL", "reason": "No drum was installed when the machine was delivered." }`.
+`exceptionType`: `FIRST_INSTALL` or `DEFECTIVE_ON_ARRIVAL`; `reason` is required and logged. Creates
+`AWAITING_APPROVAL` and a `TURNOVER_EXCEPTION` audit flag.
+
+### `POST /turnovers/{turnoverId}/scan`
+`LAB_ASSISTANT` / `LAB_MANAGER`.
+Body: `{ "assetId": "FIL-WIL-2026-014", "returnCondition": "EMPTY" | "PARTIAL" }`.
+
+- If `assetId` matches the unit `IN_USE` in the turnover’s slot: set it to `RETURNED_EMPTY` or
+  `RETURNED_PARTIAL`, clear its slot, set the turnover to `READY_TO_APPROVE`, and return
+  `{ "match": true, "oldStatus": "RETURNED_PARTIAL" }`.
+- Return `PARTIAL` only for an item flagged as a partial-return spool (FR-2.11). A partial spool is
+  not counted as a new unit and may be re-issued later.
 - Otherwise: keep issuance locked, write a `MISMATCH` audit entry with actor + timestamp, and return
   `409 SPENT_UNIT_MISMATCH` with `{ "match": false }`.
 
-### `POST /turnovers/{turnoverId}/approve`
-`CENTRAL_CUSTODIAN`. Re-checks the old unit is `RETURNED_EMPTY`, sets the new unit `IN_USE`,
-links it to the machine, writes the audit entry, returns `RELEASED`.
+### `PUT /turnovers/{turnoverId}/approve`
+`CENTRAL_CUSTODIAN`. Allowed for `READY_TO_APPROVE` or `AWAITING_APPROVAL`. Sets the new unit
+`IN_USE` in the turnover’s slot, assigns `slotId`, logs the release, and returns `RELEASED`. For a
+first-install or defective-on-arrival exception, the reason and decision are preserved in the audit
+log.
 
-### `GET /machines/{machineId}/active-unit`
-Used by Lab Inventory / Turnover Scan. Returns the installed unit and its status (which may be
-`RETURNED_EMPTY` while awaiting release — see the "installed" note in the UI).
+### `GET /labs/{labId}/inventory`
+Returns machine rows with `machineId`, `slotId`, `slotName`, the active `unitId` or `null`, and
+1-to-1 consumable lot/partial status. Partial spools are returned with `inventoryStatus =
+RETURNED_PARTIAL` and no slot until re-issued.
+
+### `POST /units/{assetId}/reissue`
+`LAB_ASSISTANT` / `LAB_MANAGER`. Re-issues a `RETURNED_PARTIAL` spool into an empty compatible slot.
+Requires the slot to be empty; sets the unit `IN_USE` and assigns `slotId`. It never creates a new
+unit record.
 
 ---
 

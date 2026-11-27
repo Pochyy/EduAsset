@@ -3,7 +3,7 @@
 **Date:** 27 November 2026
 **Branch:** `feat/srs-v2-update`
 **Sources:** `EduAsset_SRS_Revised.docx` (SRS v2), `EduAsset_SDD_Revised.docx`
-**Status:** Pass 1 complete. Modules 2–4 and the responsive/print/camera work remain pending.
+**Status:** Pass 1 and Pass 2 complete. Modules 3–4 and the responsive/print/camera work remain pending.
 
 This file records what changed, why it changed, and which parts are UI placement choices rather than SRS requirements. It is the audit trail for the revision-2 work.
 
@@ -14,9 +14,13 @@ This file records what changed, why it changed, and which parts are UI placement
 - Canonical inventory-status foundation (`IN_USE`; `RETURNED_PARTIAL` recognised).
 - Term calendar and policy settings foundation.
 - Module 1: consumable demand forecasting and consumption variance.
+- Module 2: machine slots, 1-to-1 turnover, partial returns and turnover exceptions.
+- Shared live audit-log foundation for turnover, requisition and policy events.
 - No new routes or screens. All additions are in existing screens, cards and dialogs.
 
-Not in this pass: machine slots, lots, partial-return actions, turnover exceptions, condemnation recommendation/override, BER threshold UI, dormancy policy, lot intake, print/camera implementation, phone navigation. Those belong to Modules 2–4 and the shell pass.
+Not in this pass: lots, condemnation recommendation/override, BER threshold UI, dormancy policy,
+lot intake, print/camera implementation, phone navigation. Those belong to Modules 3–4 and the shell
+pass.
 
 ---
 
@@ -102,7 +106,73 @@ These are the design decisions made to expose required capabilities without addi
   requisition payloads, `GET/PUT /settings/policy`, term-report endpoint.
 - `docs/REVISION-2-DELTA.md` — this record.
 
-## Verification for this pass
+## Pass 2 — Module 2
+
+### Requirement mapping
+
+| Requirement | What was added | Where |
+|---|---|---|
+| **FR-2.01** — link a 1-to-1 unit to a machine slot | Added 7 machine slots, `slotId` on units, and slot-aware active-unit lookup. One `IN_USE` unit per slot is enforced by the data and UI. | `SEED-DATA.json`, `types.ts`, `lib/lab.ts`, Lab Inventory, Lab Dashboard, Turnover Scan/Approval |
+| **FR-2.03 / 2.04 / 2.05 / 2.06** — request, scan and match the spent unit | Turnover Scan now selects a machine slot, reads the unit `IN_USE` in that slot, and accepts empty/partial returns. Mismatches stay locked and append to the live audit log. | LabTurnoverScan |
+| **FR-2.07 / 2.08** — Custodian approval and release | Turnover Approval shows the slot, old return status and new unit; release assigns the new unit to the slot as `IN_USE`. | TurnoverApproval, AppDataContext |
+| **FR-2.09** — machine-slot inventory | Lab Inventory shows every machine slot and its active unit; the Lab Dashboard shows each slot on the machine cards. Master Ledger adds a Machine slot field. | LabInventory, LabDashboard, MasterLedger |
+| **FR-2.10** — turnover exceptions | Added first-install and defective-on-arrival exception requests with a required reason, `AWAITING_APPROVAL` turnover status, Custodian approval and a `TURNOVER_EXCEPTION` audit flag. | LabTurnoverScan, TurnoverApproval, AuditQueue |
+| **FR-2.11** — partial filament return | Added a Returned empty/Returned partial choice for spool slots, `RETURNED_PARTIAL` storage, partial-spool display and a Re-issue action into an empty slot. | LabTurnoverScan, LabInventory, AppDataContext |
+| **FR-3.24 / NFR-S2** — audit attribution | Added a shared append-only-in-the-UI audit log with seeded entries and live turnover/exception/release/requisition/policy events. | `types.ts`, `SEED-DATA.json`, AppDataContext, CentralDashboard |
+
+### Data and seed changes
+
+- Added `machineSlots`:
+  - `PRN01-BLK`, `PRN01-DRM`, `PRN02-BLK`, `PRN02-DRM`, `3DP1-SPL1`, `3DP1-SPL2`, `3DP2-SPL1`.
+- Added `slotId` to `SeedUnit`; `slotId` is nullable and cleared when a unit is returned.
+- Added `oldStatus`, `slotId`, `exceptionType` and `exceptionReason` to `SeedTurnover`.
+- Added `DRM-WIL-2026-005` as an `IN_STOCK` drum for the first-install/defective exception demo.
+- Added `auditLog` with 5 seeded entries and `audit/log` to the shared store.
+- Unit count is now **29**; machine-slot count is **7**.
+
+### UI placement choices (not specified by the SRS)
+
+1. **Exception request** lives on Turnover Scan when a slot is empty and has an eligible new unit.
+   The SRS requires the exception, not a separate screen.
+2. **Re-issue partial spool** lives in the Lab Inventory Consumables tab as a row action. The SRS
+   requires later re-issue; it does not prescribe the control.
+3. **Turnover exceptions** get a dedicated Audit Queue tab. The SRS requires them to be listed, not a
+   specific tab.
+4. **Machine slot** is shown as a second line in the Turnover Scan/Approval headers and as a
+   per-slot list in the machine inventory.
+5. **Prototype limitation:** the defective-on-arrival exception is modelled as an empty-slot
+   exception with the defective unit recorded in the reason. The SDD backend can attach the
+   defective unit record explicitly.
+6. **Audit log:** the mock keeps an uneditable-in-the-UI array; server-side append-only enforcement
+   remains a backend requirement.
+
+### Verification for Pass 2
+
+- `npm run build` passes after the Module 2 changes.
+- Slot inventory loads without runtime errors.
+- Partial spool flow:
+  - FIL-WIL-2026-014 scanned as `RETURNED_PARTIAL` in `WIL-3DP-001/Spool-1`.
+  - Custodian approved the release; FIL-WIL-2026-015 became `IN_USE` in `Spool-1`.
+  - Lab Inventory showed FIL-014 as `RETURNED_PARTIAL` with a Re-issue action.
+  - Re-issue installed FIL-014 in `Spool-2` as `IN_USE`; no new unit record was created.
+- Turnover exception flow:
+  - Created a defective-on-arrival exception for `WIL-PRN-01/Drum` with DRM-WIL-2026-005 and a
+    required reason.
+  - Turnover Approval showed `EXCEPTION AWAITING APPROVAL`, the reason and the new unit.
+  - Approval released DRM-005 into `WIL-PRN-01/Drum`; the Audit Queue showed the
+    `TURNOVER EXCEPTION` flag and the live audit log recorded the request/approval.
+- Normal turnover:
+  - TNR-WIL-2026-001 → RETURNED_EMPTY; TNR-WIL-2026-002 released into `WIL-PRN-01/Black`.
+- Mismatch:
+  - FIL-WIL-2026-009 in `3DP1-SPL1` produced a mismatch, left issuance locked and logged the attempt.
+- 17 routes re-swept at 598 and 390 after Module 2: one `h1` each, no page-level overflow, no
+  console errors.
+- Lighthouse after Module 2: Central Dashboard, Turnover Approval and Audit Queue scored
+  **100/100/100**; Lab Dashboard, Turnover Scan and Lab Inventory scored **100/100/100**.
+- The live audit log showed the partial scan, release, exception request and release alongside the
+  seeded entries.
+
+## Verification for Pass 1
 
 - `npm run build` passes.
 - 17 routes checked at 598 and 390: one `h1` each, no page-level horizontal overflow, no console errors.

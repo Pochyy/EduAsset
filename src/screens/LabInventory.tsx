@@ -2,20 +2,24 @@ import { useState } from 'react'
 import { Boxes, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
+import { useToast } from '../context/ToastContext'
 import {
+  activeUnitForSlot,
   healthStatus,
   inventoryConsumableIds,
   inventoryMachineIds,
   inventoryPeripheralIds,
   inventoryStatus,
   itemNameOf,
-  linkedConsumable,
   shortLocation,
+  slotNameFor,
+  slotsForMachine,
 } from '../lib/lab'
 import { usePageTitle } from '../lib/usePageTitle'
 import type { SeedUnit } from '../types'
 import type { BadgeTone } from '../components/ui/Badge'
 import { Badge } from '../components/ui/Badge'
+import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Input } from '../components/ui/Field'
@@ -30,19 +34,22 @@ interface InventoryRow {
   item: string
   location: string
   extra: string
+  extraLines?: string[]
   status: string
   tone: BadgeTone
+  partial?: boolean
 }
 
 const columnFourLabel: Record<InventoryTab, string> = {
-  machines: 'Installed consumable',
+  machines: 'Installed consumables',
   consumables: 'Installed on / location',
   peripherals: 'Assigned to',
 }
 
 export function LabInventory() {
   usePageTitle('Lab · Inventory')
-  const { data } = useAppData()
+  const { data, dispatch } = useAppData()
+  const { showToast } = useToast()
   const [tab, setTab] = useState<InventoryTab>('machines')
   const [query, setQuery] = useState('')
 
@@ -51,11 +58,17 @@ export function LabInventory() {
     .filter((unit): unit is SeedUnit => Boolean(unit))
     .map((unit) => {
       const status = healthStatus(unit.healthState)
+      const slots = slotsForMachine(unit.assetId, data.machineSlots)
+      const extraLines = slots.map((slot) => {
+        const active = activeUnitForSlot(slot.id, data.units)
+        return `${slot.slotName}: ${active?.assetId ?? 'empty'}`
+      })
       return {
         id: unit.assetId,
         item: itemNameOf(data.items, unit.itemId),
         location: shortLocation(unit.location),
-        extra: linkedConsumable(unit, data.units)?.assetId ?? '—',
+        extra: extraLines.join(' · ') || '—',
+        extraLines: extraLines.length ? extraLines : undefined,
         status: status.label,
         tone: status.tone,
       }
@@ -66,13 +79,20 @@ export function LabInventory() {
     .filter((unit): unit is SeedUnit => Boolean(unit))
     .map((unit) => {
       const status = inventoryStatus(unit.inventoryStatus)
+      const slot = slotNameFor(data.machineSlots, unit.slotId ?? null)
       return {
         id: unit.assetId,
         item: itemNameOf(data.items, unit.itemId),
         location: shortLocation(unit.location),
-        extra: unit.linkedMachineId ?? '—',
+        extra:
+          unit.inventoryStatus === 'RETURNED_PARTIAL'
+            ? `Returned partial · ${unit.linkedMachineId ?? 'unassigned'}`
+            : unit.slotId
+              ? `${slot} · ${unit.linkedMachineId ?? '—'}`
+              : unit.linkedMachineId ?? '—',
         status: status.label,
         tone: status.tone,
+        partial: unit.inventoryStatus === 'RETURNED_PARTIAL',
       }
     })
 
@@ -104,6 +124,38 @@ export function LabInventory() {
       row.id.toLowerCase().includes(needle) ||
       row.item.toLowerCase().includes(needle),
   )
+
+  function reissuePartial(unit: SeedUnit) {
+    if (!unit.linkedMachineId) {
+      showToast(
+        'error',
+        'No machine for this spool',
+        'A partial spool needs a machine before it can be re-issued.',
+      )
+      return
+    }
+    const emptySlot = slotsForMachine(unit.linkedMachineId, data.machineSlots).find(
+      (slot) => !activeUnitForSlot(slot.id, data.units),
+    )
+    if (!emptySlot) {
+      showToast(
+        'error',
+        'No empty slot on that machine',
+        'Return or release the active unit before re-issuing this partial spool.',
+      )
+      return
+    }
+    dispatch({
+      type: 'unit/patch',
+      id: unit.assetId,
+      patch: { inventoryStatus: 'IN_USE', slotId: emptySlot.id },
+    })
+    showToast(
+      'success',
+      `${unit.assetId} re-issued`,
+      `Installed in ${unit.linkedMachineId}/${emptySlot.slotName}. A partial spool does not count as a new unit.`,
+    )
+  }
 
   return (
     <>
@@ -157,7 +209,7 @@ export function LabInventory() {
           />
         ) : (
           <TableWrap>
-            <Table className="min-w-[760px]">
+            <Table className="min-w-[900px]">
               <THead>
                 <tr>
                   <TH>Asset ID</TH>
@@ -165,22 +217,49 @@ export function LabInventory() {
                   <TH>Location</TH>
                   <TH>{columnFourLabel[tab]}</TH>
                   <TH>Status</TH>
+                  <TH>
+                    <span className="sr-only">Actions</span>
+                  </TH>
                 </tr>
               </THead>
               <TBody>
-                {rows.map((row) => (
-                  <TR key={row.id}>
-                    <TD className="whitespace-nowrap">
-                      <span className="font-mono text-xs font-bold">{row.id}</span>
-                    </TD>
-                    <TD>{row.item}</TD>
-                    <TD className="whitespace-nowrap">{row.location}</TD>
-                    <TD className="whitespace-nowrap font-mono text-xs">{row.extra}</TD>
-                    <TD>
-                      <Badge tone={row.tone}>{row.status}</Badge>
-                    </TD>
-                  </TR>
-                ))}
+                {rows.map((row) => {
+                  const unit = data.units.find((candidate) => candidate.assetId === row.id)
+                  return (
+                    <TR key={row.id}>
+                      <TD className="whitespace-nowrap">
+                        <span className="font-mono text-xs font-bold">{row.id}</span>
+                      </TD>
+                      <TD>{row.item}</TD>
+                      <TD className="whitespace-nowrap">{row.location}</TD>
+                      <TD className="font-mono text-xs">
+                        {row.extraLines ? (
+                          <span className="flex flex-col gap-0.5">
+                            {row.extraLines.map((line) => (
+                              <span key={line}>{line}</span>
+                            ))}
+                          </span>
+                        ) : (
+                          row.extra
+                        )}
+                      </TD>
+                      <TD>
+                        <Badge tone={row.tone}>{row.status}</Badge>
+                      </TD>
+                      <TD className="text-right">
+                        {row.partial && unit ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => reissuePartial(unit)}
+                          >
+                            Re-issue
+                          </Button>
+                        ) : null}
+                      </TD>
+                    </TR>
+                  )
+                })}
               </TBody>
             </Table>
           </TableWrap>
