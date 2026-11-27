@@ -232,6 +232,15 @@ These are the design decisions made to expose required capabilities without addi
   - Lot intake (creating a lot from Receive New Items) is Module 4.
   - Real PDF generation and server-side append-only auditing remain backend work.
 
+### Module 3 recheck (after Module 2 recheck)
+
+- **FR-3.16 non-repairable branch:** the UI previously required a valid quote before showing the
+  condemnation-recommendation action. A not-repairable unit now produces a recommendation from the
+  cumulative repair history even when no pending quote exists. The quote remains required for a
+  repairable decision.
+- The threshold decision copy, BER preview and form continue to use `berThresholdPct`.
+- Re-tested the not-repairable path and the existing approval/override paths after the fix.
+
 ### Module 2 recheck (after Pass 3)
 
 The recheck against FR-2.01–FR-2.11 found two gaps:

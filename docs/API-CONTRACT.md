@@ -293,7 +293,8 @@ If `recurring = true`: set `NEEDS_MAINTENANCE` and create a work order (`TICKET_
 ### `POST /units/{assetId}/repairs`
 Body: `{ "quoteAmount": 5000, "repairable": true }`. Stores the pending quote and computes
 `BER = ((cumulativeRepairCost + pendingQuote) / replacementValue) * 100` against
-`policy.berThresholdPct`.
+`policy.berThresholdPct`. A quote is required for a repairable decision; when `repairable = false`,
+the recommendation can be created from the cumulative repair history alone.
 
 - Repairable and below threshold: approve the repair, append the invoice, set `UNDER_REPAIR`.
 - Not repairable or at/above threshold: return a **recommendation**, not a condemnation. The system

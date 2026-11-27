@@ -79,12 +79,14 @@ export function RepairBer() {
   const ber = quoteValid
     ? ((cumulative + quoteNumber) / replacementValue) * 100
     : (cumulative / replacementValue) * 100
-  const blocked = quoteValid && (ber >= threshold || !repairable)
+  const blocked = !repairable || (quoteValid && ber >= threshold)
   const canRepair = quoteValid && ber < threshold && repairable
   const condemned = selected.healthState === 'CONDEMNED_BER'
   const underRepair = selected.healthState === 'UNDER_REPAIR'
   const quoteError =
-    tried && !quoteValid ? 'Enter the technician quote as an amount above ₱0.' : undefined
+    tried && repairable && !quoteValid
+      ? 'Enter the technician quote as an amount above ₱0.'
+      : undefined
 
   const recommendation = data.condemnations
     .filter((entry) => entry.assetId === selected.assetId)
@@ -195,7 +197,7 @@ export function RepairBer() {
   }
 
   function recommendCondemnation() {
-    if (!quoteValid) {
+    if (repairable && !quoteValid) {
       setTried(true)
       return
     }
@@ -498,6 +500,7 @@ export function RepairBer() {
                   label="Technician quote (₱)"
                   htmlFor="repair-quote"
                   error={quoteError}
+                  hint="Required for repairable decisions; optional when the unit is not repairable."
                 >
                   <Input
                     id="repair-quote"
@@ -570,7 +573,7 @@ export function RepairBer() {
                 </span>
                 <span className="flex flex-col gap-0.5">
                   <strong className="text-sm font-semibold text-ink">
-                    {!quoteValid
+                    {!quoteValid && repairable
                       ? 'Enter a quote to see the decision'
                       : blocked
                         ? repairable
@@ -580,7 +583,7 @@ export function RepairBer() {
                   </strong>
                   <span className="text-[13px] text-neutral-text">
                     {!quoteValid
-                      ? `Cumulative repairs so far: ${formatPeso(cumulative)} of ${formatPeso(replacementValue)}.`
+                      ? `Cumulative repairs so far: ${formatPeso(cumulative)} of ${formatPeso(replacementValue)}.${!repairable ? ' No pending quote is required for a non-repairable decision.' : ''}`
                       : `${formatPeso(cumulative)} + ${formatPeso(quoteNumber)} = ${formatPeso(cumulative + quoteNumber)} of ${formatPeso(replacementValue)} replacement value.`}
                   </span>
                 </span>
