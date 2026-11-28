@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
-import { Camera, Check, Printer, QrCode, Sparkles } from 'lucide-react'
+import { Check, Printer, QrCode, Sparkles, Upload } from 'lucide-react'
 import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
@@ -100,7 +100,7 @@ export function ReceiveItems() {
   const deliveryError =
     tried1 && !delivery ? 'Select the delivery record these items came with.' : undefined
   const photoError =
-    tried2 && !photo ? 'Take or upload a photo first, or register manually.' : undefined
+    tried2 && !photo ? 'Upload a photo first, or register manually.' : undefined
   const quantityNumber = Number(quantity)
   const nameError =
     tried3 && name.trim().length < 2 ? 'Enter the item name.' : undefined
@@ -458,7 +458,7 @@ export function ReceiveItems() {
       {step === 2 ? (
         <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
           <Card className="flex flex-col gap-4 p-5">
-            <h2 className="text-[15px] font-semibold text-ink">2 · Photograph one item type</h2>
+            <h2 className="text-[15px] font-semibold text-ink">2 · Upload one item type</h2>
             <label
               className={cn(
                 'flex min-h-[200px] cursor-pointer items-center justify-center rounded-card border-2 p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-rust/50',
@@ -470,7 +470,6 @@ export function ReceiveItems() {
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
                 onChange={choosePhoto}
                 className="sr-only"
               />
@@ -491,8 +490,8 @@ export function ReceiveItems() {
                   </>
                 ) : (
                   <>
-                    <Camera className="h-8 w-8" aria-hidden="true" />
-                    <strong className="text-sm">Take or upload a photo</strong>
+                    <Upload className="h-8 w-8" aria-hidden="true" />
+                    <strong className="text-sm">Upload a photo</strong>
                     <span className="text-xs text-muted">
                       One item type per photo · the AI does not count units
                     </span>

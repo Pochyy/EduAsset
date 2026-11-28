@@ -1,5 +1,5 @@
 import { useEffect, type ChangeEvent } from 'react'
-import { Camera, Check, X } from 'lucide-react'
+import { Check, Upload, X } from 'lucide-react'
 
 export interface PhotoValue {
   name: string
@@ -51,7 +51,6 @@ export function PhotoAttachment({
             id={id}
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={choose}
             className="sr-only"
           />
@@ -64,9 +63,9 @@ export function PhotoAttachment({
           ) : value ? (
             <Check className="h-5 w-5" aria-hidden="true" />
           ) : (
-            <Camera className="h-5 w-5" aria-hidden="true" />
+            <Upload className="h-5 w-5" aria-hidden="true" />
           )}
-          {value ? 'Replace photo' : 'Take or upload a photo'}
+          {value ? 'Replace photo' : 'Upload photo'}
         </label>
         {value ? (
           <button
