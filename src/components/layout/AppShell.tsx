@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import type { Portal } from '../../types'
-import { PhoneNav, Sidebar } from './Sidebar'
+import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
 
 export function AppShell({ portal }: { portal: Portal }) {
@@ -21,10 +21,9 @@ export function AppShell({ portal }: { portal: Portal }) {
       </a>
 
       <TopBar portal={portal} />
-      <PhoneNav portal={portal} />
 
       <div className="flex items-start">
-        <div className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[264px] shrink-0 overflow-y-auto lg:block">
+        <div className="sticky top-[72px] block h-[calc(100vh-72px)] w-[264px] shrink-0 overflow-y-auto">
           <Sidebar portal={portal} className="min-h-full" />
         </div>
 
