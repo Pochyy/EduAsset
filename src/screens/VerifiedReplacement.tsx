@@ -293,7 +293,7 @@ export function VerifiedReplacement() {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Scan the old unit with the camera"
+                aria-label="Scan the old unit with the webcam"
                 onClick={() => setScanTarget('old')}
               >
                 <QrCode className="h-5 w-5" aria-hidden="true" />
@@ -361,7 +361,7 @@ export function VerifiedReplacement() {
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Scan the new unit with the camera"
+              aria-label="Scan the new unit with the webcam"
               onClick={() => setScanTarget('new')}
             >
               <QrCode className="h-5 w-5" aria-hidden="true" />

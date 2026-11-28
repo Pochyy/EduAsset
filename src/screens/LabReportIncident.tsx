@@ -196,7 +196,7 @@ export function LabReportIncident() {
                   type="button"
                   variant="secondary"
                   size="icon"
-                  aria-label="Scan QR code with camera"
+                  aria-label="Scan QR code with webcam"
                   onClick={() => setScannerOpen(true)}
                 >
                   <QrCode className="h-5 w-5" aria-hidden="true" />

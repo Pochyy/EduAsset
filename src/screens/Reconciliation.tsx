@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AlertTriangle, Camera, Check, ScanLine } from 'lucide-react'
+import { AlertTriangle, Check, ScanLine, Webcam } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
@@ -234,7 +234,7 @@ export function Reconciliation() {
               </span>
               <strong className="text-base font-semibold text-ink">No session in progress</strong>
               <p className="max-w-[420px] text-[13px] leading-relaxed text-muted">
-                Pick a room and start a session. Staff scan each QR code with a phone camera or
+                Pick a room and start a session. Staff scan each QR code with the computer’s
                 webcam; nothing else is needed.
               </p>
             </div>
@@ -298,8 +298,8 @@ export function Reconciliation() {
               variant="secondary"
               onClick={() => setScannerOpen(true)}
             >
-              <Camera className="h-4 w-4" aria-hidden="true" />
-              Scan with camera
+              <Webcam className="h-4 w-4" aria-hidden="true" />
+              Scan with webcam
             </Button>
             {inputError ? (
               <span role="alert" className="w-full text-xs font-medium text-danger">

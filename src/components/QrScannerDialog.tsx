@@ -29,7 +29,7 @@ export function QrScannerDialog({
   const closeCallback = useRef(onClose)
 
   const [status, setStatus] = useState<ScannerStatus>('starting')
-  const [message, setMessage] = useState('Requesting camera access…')
+  const [message, setMessage] = useState('Requesting webcam access…')
 
   useEffect(() => {
     scanCallback.current = onScan
@@ -44,12 +44,12 @@ export function QrScannerDialog({
 
     scannedRef.current = false
     setStatus('starting')
-    setMessage('Requesting camera access…')
+    setMessage('Requesting webcam access…')
 
     if (!navigator.mediaDevices?.getUserMedia) {
       setStatus('error')
       setMessage(
-        'This browser cannot access a camera. Type the asset ID in the field instead.',
+        'This browser cannot access a webcam. Type the asset ID in the field instead.',
       )
       return
     }
@@ -69,7 +69,7 @@ export function QrScannerDialog({
     const start = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' } },
+          video: { facingMode: { ideal: 'user' } },
           audio: false,
         })
         if (cancelled) {
@@ -134,10 +134,10 @@ export function QrScannerDialog({
         setStatus('error')
         setMessage(
           name === 'NotAllowedError'
-            ? 'Camera permission was blocked. Allow camera access in the browser, or type the asset ID instead.'
+            ? 'Webcam permission was blocked. Allow webcam access in the browser, or type the asset ID instead.'
             : name === 'NotFoundError'
-              ? 'No camera was found on this device. Type the asset ID instead.'
-              : 'The camera could not start. Close this dialog and type the asset ID instead.',
+              ? 'No webcam was found on this computer. Type the asset ID instead.'
+              : 'The webcam could not start. Close this dialog and type the asset ID instead.',
         )
       }
     }
@@ -155,7 +155,7 @@ export function QrScannerDialog({
       open={open}
       onClose={onClose}
       title={title}
-      eyebrow="Camera / webcam"
+      eyebrow="Webcam"
       className="max-w-xl"
       footer={
         <Button variant="secondary" onClick={onClose}>
@@ -170,7 +170,7 @@ export function QrScannerDialog({
             muted
             playsInline
             autoPlay
-            aria-label="Camera preview"
+            aria-label="Webcam preview"
             className={cn(
               'h-full w-full object-cover',
               status !== 'scanning' && 'opacity-25',
@@ -185,7 +185,7 @@ export function QrScannerDialog({
             <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-10 text-center text-butter">
               <QrCode className="h-9 w-9" aria-hidden="true" />
               <span className="text-[13px]">
-                {status === 'starting' ? 'Starting camera…' : 'Camera unavailable'}
+                {status === 'starting' ? 'Starting webcam…' : 'Webcam unavailable'}
               </span>
             </span>
           ) : null}
@@ -203,8 +203,8 @@ export function QrScannerDialog({
         </p>
 
         <p className="m-0 text-xs leading-relaxed text-muted">
-          The camera starts only when this dialog opens and stops when it closes. The video is
-          decoded on this device; nothing is uploaded.
+          The webcam starts only when this dialog opens and stops when it closes. The video is
+          decoded on this computer; nothing is uploaded.
         </p>
       </div>
     </Dialog>

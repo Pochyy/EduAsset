@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Camera, Info, QrCode } from 'lucide-react'
+import { Info, QrCode, Webcam } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
 import { useAuth } from '../context/AuthContext'
@@ -462,12 +462,12 @@ export function LabTurnoverScan() {
       <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
         <Card className="flex flex-col gap-4 p-5">
           <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
-            Camera / webcam scanner
+            Webcam scanner
           </h2>
 
           <div
             role="img"
-            aria-label="Camera viewfinder"
+            aria-label="Webcam viewfinder"
             className="relative flex h-[280px] items-center justify-center rounded-card border-2 border-[#2A2418] bg-ink text-butter"
           >
             <span className="absolute left-5 top-5 h-9 w-9 rounded-tl-md border-l-[5px] border-t-[5px] border-amber" />
@@ -478,7 +478,7 @@ export function LabTurnoverScan() {
               <QrCode className="h-9 w-9" aria-hidden="true" />
               <span className="text-[13px]">
                 {canScan
-                  ? `Scan ${activeUnit?.assetId} with the camera`
+                  ? `Scan ${activeUnit?.assetId} with the webcam`
                   : 'Select a slot with an open turnover'}
               </span>
             </span>
@@ -492,11 +492,11 @@ export function LabTurnoverScan() {
                   variant="secondary"
                   onClick={() => setScannerOpen(true)}
                 >
-                  <Camera className="h-4 w-4" aria-hidden="true" />
-                  Scan with camera
+                  <Webcam className="h-4 w-4" aria-hidden="true" />
+                  Scan with webcam
                 </Button>
                 <span className="text-xs text-muted">
-                  Or type the asset ID below if the camera is unavailable.
+                  Or type the asset ID below if the webcam is unavailable.
                 </span>
               </div>
 
